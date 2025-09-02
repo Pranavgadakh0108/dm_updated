@@ -1,8 +1,10 @@
 // ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
 import 'package:dmboss/model/withdraw_coins_model.dart';
+import 'package:dmboss/provider/games_settings_provider.dart';
 import 'package:dmboss/provider/get_bank_details_provider.dart';
 import 'package:dmboss/provider/withdraw_coins_provider.dart';
+import 'package:dmboss/service/get_game_settings.dart';
 import 'package:dmboss/widgets/custom_profile_text_field.dart';
 import 'package:dmboss/util/make_whatsapp_chat.dart';
 import 'package:dmboss/widgets/orange_button.dart';
@@ -49,8 +51,13 @@ class _WithdrawPointsState extends State<WithdrawPoints> {
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final getGamesSettings = Provider.of<GamesSettingsProvider>(
+        context,
+        listen: false,
+      );
+      getGamesSettings.getGameSettings(context);
       Future.delayed(Duration.zero, () {
-        showTermsPopup(context);
+        showTermsPopup(context, getGamesSettings);
       });
     });
   }

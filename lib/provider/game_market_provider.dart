@@ -3,12 +3,17 @@ import 'package:dmboss/service/game_market_service.dart';
 import 'package:flutter/material.dart';
 
 class GameMarketProvider extends ChangeNotifier {
-  List<GamesModel>? _gamesList;
+  GamesModel? _gamesModel; // Changed from List<GamesModel> to GamesModel
   String? _errorMessage;
   bool _isLoading = false;
   String? _selectedGameId;
 
-  List<GamesModel>? get gamesList => _gamesList;
+  // Getter for the entire games model
+  GamesModel? get gamesModel => _gamesModel;
+
+  // Getter for the list of games (convenience accessor)
+  List<Game>? get gamesList => _gamesModel?.games;
+
   String? get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
   String? get selectedGameId => _selectedGameId;
@@ -21,10 +26,11 @@ class GameMarketProvider extends ChangeNotifier {
     final result = await service.getGamesService(context);
 
     if (result != null) {
-      _gamesList = result;
+      _gamesModel = result; // Store the entire GamesModel
       _errorMessage = null;
     } else {
       _errorMessage = 'Failed to fetch games.';
+      _gamesModel = null;
     }
 
     _isLoading = false;
@@ -41,38 +47,23 @@ class GameMarketProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Get the selected game object
-  GamesModel? getSelectedGame() {
-    if (_selectedGameId == null || _gamesList == null) return null;
-    return _gamesList!.firstWhere(
-      (game) => game.id == _selectedGameId,
-      orElse: () => GamesModel(
-        id: '',
-        game: '',
-        bazar: '',
-        open: '',
-        close: '',
-        days: '',
-        active: false,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        v: 0,
-      ),
+  // Helper method to get a specific game by ID
+  Game? getGameById(String gameId) {
+    if (_gamesModel?.games == null) return null;
+    return _gamesModel!.games.firstWhere(
+      (game) => game.id == gameId,
+      orElse: () => throw Exception('Game not found'),
     );
   }
 
-  // Optional: Helper method to get games by bazar type
-  List<GamesModel>? getGamesByBazar(String bazarType) {
-    return _gamesList?.where((game) => game.bazar == bazarType).toList();
-  }
-
-  // Optional: Helper method to get active games only
-  List<GamesModel>? getActiveGames() {
-    return _gamesList?.where((game) => game.active).toList();
-  }
-
-  // Optional: Helper method to get games by day
-  List<GamesModel>? getGamesByDay(String day) {
-    return _gamesList?.where((game) => game.days.contains(day)).toList();
+  // Helper method to get a specific game by market name
+  Game? getGameByMarketName(String marketName) {
+    if (_gamesModel?.games == null) return null;
+    return _gamesModel!.games.firstWhere(
+      (game) =>
+          game.bazar.toLowerCase().contains(marketName.toLowerCase()) ||
+          marketName.toLowerCase().contains(game.bazar.toLowerCase()),
+      orElse: () => throw Exception('Game not found'),
+    );
   }
 }

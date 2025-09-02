@@ -180,7 +180,14 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                               provider.gamesList?.bets[index].status ?? "",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.red,
+                                color:
+                                    provider.gamesList?.bets[index].status ==
+                                        "🎉 You won!"
+                                    ? Colors.green
+                                    : provider.gamesList?.bets[index].status ==
+                                          "Better luck next time"
+                                    ? Colors.red
+                                    : Colors.blue,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),

@@ -977,8 +977,8 @@ class DoublePatti extends StatefulWidget {
   final String openTime;
 
   const DoublePatti({
-    super.key, 
-    required this.title, 
+    super.key,
+    required this.title,
     required this.gameName,
     required this.marketId, // Added to constructor
     required this.openTime,
@@ -1011,7 +1011,7 @@ class _DoublePattiState extends State<DoublePatti> {
     _digitController.addListener(_filterNumbers);
     _digitFocusNode.addListener(_onFocusChange);
     _filteredNumbers = doublePattiNumbers;
-    
+
     // You can now use widget.marketId for any initialization
     print("Market ID in DoublePatti: ${widget.marketId}");
   }
@@ -1041,8 +1041,8 @@ class _DoublePattiState extends State<DoublePatti> {
       } else {
         try {
           _filteredNumbers = doublePattiNumbers.where((number) {
-           // return number.toString().contains(input);
-           return number.toString().startsWith(input);
+            // return number.toString().contains(input);
+            return number.toString().startsWith(input);
           }).toList();
         } catch (e) {
           _filteredNumbers = [];
@@ -1090,18 +1090,44 @@ class _DoublePattiState extends State<DoublePatti> {
                       itemCount: _filteredNumbers.length,
                       itemBuilder: (context, index) {
                         final number = _filteredNumbers[index];
-                        return ListTile(
-                          title: Text(number.toString()),
-                          onTap: () {
-                            setState(() {
-                              _digitController.text = number.toString();
-                              _digitController.selection = TextSelection.fromPosition(
-                                TextPosition(offset: _digitController.text.length),
-                              );
-                            });
-                            _removeOverlay();
-                          },
+                        return SizedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 7,
+                              horizontal: 15,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _digitController.text = number.toString();
+                                  _digitController.selection =
+                                      TextSelection.fromPosition(
+                                        TextPosition(
+                                          offset: _digitController.text.length,
+                                        ),
+                                      );
+                                });
+                                _removeOverlay();
+                              },
+                              child: Text(
+                                number.toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
                         );
+                        // ListTile(
+                        //   title: Text(number.toString()),
+                        //   onTap: () {
+                        //     setState(() {
+                        //       _digitController.text = number.toString();
+                        //       _digitController.selection = TextSelection.fromPosition(
+                        //         TextPosition(offset: _digitController.text.length),
+                        //       );
+                        //     });
+                        //     _removeOverlay();
+                        //   },
+                        // );
                       },
                     ),
             ),
@@ -1121,14 +1147,14 @@ class _DoublePattiState extends State<DoublePatti> {
   }
 
   void _addBid() {
+    FocusScope.of(context).unfocus();
     if (_globalKey.currentState!.validate()) {
       setState(() {
         _digitError = _digitController.text.isEmpty;
         _pointsError = _pointsController.text.isEmpty;
 
         // Use the function to determine game status
-          final gameStatus = getGameStatus(widget.openTime);
-          
+        final gameStatus = getGameStatus(widget.openTime);
 
         if (!_digitError && !_pointsError) {
           bids.add({
@@ -1152,18 +1178,18 @@ class _DoublePattiState extends State<DoublePatti> {
 
   void _submitAllBids(BuildContext context) {
     final provider = Provider.of<DoublePattiProvider>(context, listen: false);
-    
+
     for (var bid in bids) {
       final doublePattiModel = SingleAnkModel(
         gameId: widget.marketId,
-        gameType: "DOUBLE_PATTI", 
+        gameType: "DOUBLE_PATTI",
         number: bid['digit']!,
         amount: int.parse(bid['points']!),
       );
-      
+
       provider.placeSingleAnkBet(context, doublePattiModel);
     }
-    
+
     // Clear bids after submission
     setState(() {
       bids.clear();
@@ -1201,7 +1227,7 @@ class _DoublePattiState extends State<DoublePatti> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Wallet()
+                  child: Wallet(),
                 ),
               ],
             ),
@@ -1209,7 +1235,9 @@ class _DoublePattiState extends State<DoublePatti> {
               builder: (context, constraints) {
                 return SingleChildScrollView(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
                     child: Padding(
                       padding: EdgeInsets.all(
                         MediaQuery.of(context).size.width * 0.04,
@@ -1253,12 +1281,15 @@ class _DoublePattiState extends State<DoublePatti> {
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     SizedBox(width: 10),
                                     Text(
                                       "Bid Digits: ",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     SizedBox(width: 50),
                                     Expanded(
@@ -1283,7 +1314,9 @@ class _DoublePattiState extends State<DoublePatti> {
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty ||
-                                                !doublePattiNumbers.contains(value)) {
+                                                !doublePattiNumbers.contains(
+                                                  value,
+                                                )) {
                                               return "Enter the valid digits";
                                             }
                                             if (value.length > 3) {
@@ -1304,7 +1337,9 @@ class _DoublePattiState extends State<DoublePatti> {
                                     SizedBox(width: 10),
                                     Text(
                                       "Bid Points: ",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     SizedBox(width: 47),
                                     Expanded(
@@ -1342,10 +1377,14 @@ class _DoublePattiState extends State<DoublePatti> {
                           // Bid List Table
                           Container(
                             constraints: BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height * 0.4,
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.4,
                             ),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.orange, width: 2),
+                              border: Border.all(
+                                color: Colors.orange,
+                                width: 2,
+                              ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -1401,7 +1440,9 @@ class _DoublePattiState extends State<DoublePatti> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.grey,
@@ -1431,12 +1472,14 @@ class _DoublePattiState extends State<DoublePatti> {
                                                 Expanded(
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.center,
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       SizedBox(width: 5),
                                                       Text(
                                                         bids[index]['type']!,
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
                                                       const SizedBox(width: 8),
                                                       GestureDetector(
@@ -1476,9 +1519,13 @@ class _DoublePattiState extends State<DoublePatti> {
                                         if (bids.isNotEmpty) {
                                           _submitAllBids(context);
                                         } else {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
-                                              content: Text("Please add at least one bid"),
+                                              content: Text(
+                                                "Please add at least one bid",
+                                              ),
                                               backgroundColor: Colors.red,
                                             ),
                                           );

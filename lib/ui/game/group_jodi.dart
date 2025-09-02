@@ -1125,8 +1125,8 @@ class GroupJodi extends StatefulWidget {
   final String gameName;
   final String marketId; // Added marketId parameter
   const GroupJodi({
-    super.key, 
-    required this.title, 
+    super.key,
+    required this.title,
     required this.gameName,
     required this.marketId, // Added to constructor
   });
@@ -1292,7 +1292,7 @@ class _GroupJodiState extends State<GroupJodi> {
     _digitController.addListener(_filterNumbers);
     _digitFocusNode.addListener(_onFocusChange);
     _filteredNumbers = jodiNumbers;
-    
+
     // You can now use widget.marketId for any initialization
     print("Market ID in GroupJodi: ${widget.marketId}");
   }
@@ -1322,8 +1322,8 @@ class _GroupJodiState extends State<GroupJodi> {
       } else {
         try {
           _filteredNumbers = jodiNumbers.where((number) {
-           // return number.toString().contains(input);
-           return number.toString().startsWith(input);
+            // return number.toString().contains(input);
+            return number.toString().startsWith(input);
           }).toList();
         } catch (e) {
           _filteredNumbers = [];
@@ -1366,18 +1366,44 @@ class _GroupJodiState extends State<GroupJodi> {
                 itemCount: _filteredNumbers.length,
                 itemBuilder: (context, index) {
                   final number = _filteredNumbers[index];
-                  return ListTile(
-                    title: Text(number.toString()),
-                    onTap: () {
-                      setState(() {
-                        _digitController.text = number.toString();
-                        _digitController.selection = TextSelection.fromPosition(
-                          TextPosition(offset: _digitController.text.length),
-                        );
-                      });
-                      _removeOverlay();
-                    },
+                  return SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 7,
+                        horizontal: 15,
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _digitController.text = number.toString();
+                            _digitController.selection =
+                                TextSelection.fromPosition(
+                                  TextPosition(
+                                    offset: _digitController.text.length,
+                                  ),
+                                );
+                          });
+                          _removeOverlay();
+                        },
+                        child: Text(
+                          number.toString(),
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
                   );
+                  // ListTile(
+                  //   title: Text(number.toString()),
+                  //   onTap: () {
+                  //     setState(() {
+                  //       _digitController.text = number.toString();
+                  //       _digitController.selection = TextSelection.fromPosition(
+                  //         TextPosition(offset: _digitController.text.length),
+                  //       );
+                  //     });
+                  //     _removeOverlay();
+                  //   },
+                  // );
                 },
               ),
             ),
@@ -1403,6 +1429,7 @@ class _GroupJodiState extends State<GroupJodi> {
   }
 
   void _addBid() {
+    FocusScope.of(context).unfocus();
     if (_globalKey.currentState!.validate()) {
       setState(() {
         _digitError = _digitController.text.isEmpty;
@@ -1438,22 +1465,22 @@ class _GroupJodiState extends State<GroupJodi> {
 
   void _submitAllBids(BuildContext context) {
     final provider = Provider.of<GroupJodiProvider>(context, listen: false);
-    
+
     // Convert digits list to single string
     String digitsString = bids.map((bid) => bid['digit']!).join(',');
-    
+
     // Get the first amount from the list (all amounts should be the same)
     String amount = bids.isNotEmpty ? bids[0]['points']! : '0';
-    
+
     final groupJodiModel = SingleAnkModel(
       gameId: widget.marketId,
-      gameType: "GROUP_JODI", 
+      gameType: "GROUP_JODI",
       number: digitsString, // Send as comma-separated string
       amount: int.parse(amount), // Send as single amount
     );
-    
+
     provider.placeSingleAnkBet(context, groupJodiModel);
-    
+
     // Clear bids after submission
     setState(() {
       bids.clear();
@@ -1491,7 +1518,7 @@ class _GroupJodiState extends State<GroupJodi> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Wallet()
+                  child: Wallet(),
                 ),
               ],
             ),
@@ -1499,7 +1526,9 @@ class _GroupJodiState extends State<GroupJodi> {
               builder: (context, constraints) {
                 return SingleChildScrollView(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
                     child: Padding(
                       padding: EdgeInsets.all(
                         MediaQuery.of(context).size.width * 0.04,
@@ -1543,12 +1572,15 @@ class _GroupJodiState extends State<GroupJodi> {
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     SizedBox(width: 10),
                                     Text(
                                       "Bid Digits: ",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     SizedBox(width: 50),
                                     Expanded(
@@ -1581,7 +1613,9 @@ class _GroupJodiState extends State<GroupJodi> {
                                             validator: (value) {
                                               if (value == null ||
                                                   value.isEmpty ||
-                                                  !jodiNumbers.contains(value)) {
+                                                  !jodiNumbers.contains(
+                                                    value,
+                                                  )) {
                                                 return "Input don't have any family \njodi";
                                               }
                                               if (value.length != 2) {
@@ -1603,7 +1637,9 @@ class _GroupJodiState extends State<GroupJodi> {
                                     SizedBox(width: 10),
                                     Text(
                                       "Bid Points: ",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     SizedBox(width: 47),
                                     Expanded(
@@ -1641,10 +1677,14 @@ class _GroupJodiState extends State<GroupJodi> {
                           // Bid List Table
                           Container(
                             constraints: BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height * 0.4,
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.4,
                             ),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.orange, width: 2),
+                              border: Border.all(
+                                color: Colors.orange,
+                                width: 2,
+                              ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -1700,7 +1740,9 @@ class _GroupJodiState extends State<GroupJodi> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.grey,
@@ -1730,12 +1772,14 @@ class _GroupJodiState extends State<GroupJodi> {
                                                 Expanded(
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.center,
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       SizedBox(width: 5),
                                                       Text(
                                                         bids[index]['type']!,
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
                                                       const SizedBox(width: 8),
                                                       GestureDetector(
@@ -1775,9 +1819,13 @@ class _GroupJodiState extends State<GroupJodi> {
                                         if (bids.isNotEmpty) {
                                           _submitAllBids(context);
                                         } else {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
-                                              content: Text("Please add at least one bid"),
+                                              content: Text(
+                                                "Please add at least one bid",
+                                              ),
                                               backgroundColor: Colors.red,
                                             ),
                                           );

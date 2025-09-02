@@ -1019,11 +1019,11 @@ class PanelGroup extends StatefulWidget {
   final String marketId; // Added marketId parameter
   final String openTime;
   const PanelGroup({
-    super.key, 
-    required this.title, 
+    super.key,
+    required this.title,
     required this.gameName,
     required this.marketId, // Added to constructor
-    required this.openTime
+    required this.openTime,
   });
 
   @override
@@ -1053,7 +1053,7 @@ class _PanelGroupState extends State<PanelGroup> {
     _digitController.addListener(_filterNumbers);
     _digitFocusNode.addListener(_onFocusChange);
     _filteredNumbers = panelGroup;
-    
+
     // You can now use widget.marketId for any initialization
     print("Market ID in PanelGroup: ${widget.marketId}");
   }
@@ -1137,25 +1137,55 @@ class _PanelGroupState extends State<PanelGroup> {
                       itemCount: _filteredNumbers.length,
                       itemBuilder: (context, index) {
                         final number = _filteredNumbers[index];
-                        return ListTile(
-                          title: Text(number.toString()),
-                          onTap: () {
-                            setState(() {
-                              _digitController.text = number.toString();
-                              _digitController.selection =
-                                  TextSelection.fromPosition(
-                                    TextPosition(
-                                      offset: _digitController.text.length,
-                                    ),
-                                  );
-                            });
-                            _removeOverlay();
-                            // Remove focus from the text field to hide keyboard
-                            _digitFocusNode.unfocus();
-                            // Move focus to next field
-                            FocusScope.of(context).nextFocus();
-                          },
+                        return SizedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 7,
+                              horizontal: 15,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _digitController.text = number.toString();
+                                  _digitController.selection =
+                                      TextSelection.fromPosition(
+                                        TextPosition(
+                                          offset: _digitController.text.length,
+                                        ),
+                                      );
+                                });
+                                _removeOverlay();
+                                // Remove focus from the text field to hide keyboard
+                                _digitFocusNode.unfocus();
+                                // Move focus to next field
+                                FocusScope.of(context).nextFocus();
+                              },
+                              child: Text(
+                                number.toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
                         );
+                        // ListTile(
+                        //   title: Text(number.toString()),
+                        //   onTap: () {
+                        //     setState(() {
+                        //       _digitController.text = number.toString();
+                        //       _digitController.selection =
+                        //           TextSelection.fromPosition(
+                        //             TextPosition(
+                        //               offset: _digitController.text.length,
+                        //             ),
+                        //           );
+                        //     });
+                        //     _removeOverlay();
+                        //     // Remove focus from the text field to hide keyboard
+                        //     _digitFocusNode.unfocus();
+                        //     // Move focus to next field
+                        //     FocusScope.of(context).nextFocus();
+                        //   },
+                        // );
                       },
                     ),
             ),
@@ -1184,11 +1214,10 @@ class _PanelGroupState extends State<PanelGroup> {
 
     // Check if the digit exists in panelLists
     if (panelLists.containsKey(digit)) {
-      List<String> panelNumbers = panelLists[digit]!; 
+      List<String> panelNumbers = panelLists[digit]!;
 
       // Use the function to determine game status
       final gameStatus = getGameStatus(widget.openTime);
-          
 
       // Add each panel number with the same points
       for (String panelDigit in panelNumbers) {
@@ -1200,6 +1229,7 @@ class _PanelGroupState extends State<PanelGroup> {
   }
 
   void _addBid() {
+    FocusScope.of(context).unfocus();
     if (_globalKey.currentState!.validate()) {
       setState(() {
         _digitError = _digitController.text.isEmpty;
@@ -1231,22 +1261,22 @@ class _PanelGroupState extends State<PanelGroup> {
 
   void _submitAllBids(BuildContext context) {
     final provider = Provider.of<PanelGroupProvider>(context, listen: false);
-    
+
     // Convert digits list to single string
     String digitsString = bids.map((bid) => bid['digit']!).join(',');
-    
+
     // Get the first amount from the list (all amounts should be the same)
     String amount = bids.isNotEmpty ? bids[0]['points']! : '0';
-    
+
     final panelGroupModel = SingleAnkModel(
       gameId: widget.marketId,
-      gameType: "PANEL_GROUP", 
+      gameType: "PANEL_GROUP",
       number: digitsString, // Send as comma-separated string
       amount: int.parse(amount), // Send as single amount
     );
-    
+
     provider.placeSingleAnkBet(context, panelGroupModel);
-    
+
     // Clear bids after submission
     setState(() {
       bids.clear();
@@ -1284,7 +1314,7 @@ class _PanelGroupState extends State<PanelGroup> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Wallet()
+                  child: Wallet(),
                 ),
               ],
             ),
@@ -1292,7 +1322,9 @@ class _PanelGroupState extends State<PanelGroup> {
               builder: (context, constraints) {
                 return SingleChildScrollView(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
                     child: Padding(
                       padding: EdgeInsets.all(
                         MediaQuery.of(context).size.width * 0.04,
@@ -1336,12 +1368,15 @@ class _PanelGroupState extends State<PanelGroup> {
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     SizedBox(width: 10),
                                     Text(
                                       "Bid Digits: ",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     SizedBox(width: 50),
                                     Expanded(
@@ -1394,7 +1429,9 @@ class _PanelGroupState extends State<PanelGroup> {
                                     SizedBox(width: 10),
                                     Text(
                                       "Bid Points: ",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     SizedBox(width: 47),
                                     Expanded(
@@ -1432,10 +1469,14 @@ class _PanelGroupState extends State<PanelGroup> {
                           // Bid List Table
                           Container(
                             constraints: BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height * 0.4,
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.4,
                             ),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.orange, width: 2),
+                              border: Border.all(
+                                color: Colors.orange,
+                                width: 2,
+                              ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -1491,7 +1532,9 @@ class _PanelGroupState extends State<PanelGroup> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.grey,
@@ -1521,12 +1564,14 @@ class _PanelGroupState extends State<PanelGroup> {
                                                 Expanded(
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.center,
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       SizedBox(width: 5),
                                                       Text(
                                                         bids[index]['type']!,
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
                                                       const SizedBox(width: 8),
                                                       GestureDetector(
@@ -1566,9 +1611,13 @@ class _PanelGroupState extends State<PanelGroup> {
                                         if (bids.isNotEmpty) {
                                           _submitAllBids(context);
                                         } else {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
-                                              content: Text("Please add at least one bid"),
+                                              content: Text(
+                                                "Please add at least one bid",
+                                              ),
                                               backgroundColor: Colors.red,
                                             ),
                                           );

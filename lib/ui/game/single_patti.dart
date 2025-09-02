@@ -968,17 +968,17 @@ import 'package:dmboss/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class SinglePatti extends StatefulWidget {
   final String title;
   final String gameName;
   final String marketId; // Added marketId parameter
   final String openTime;
   const SinglePatti({
-    super.key, 
-    required this.title, 
+    super.key,
+    required this.title,
     required this.gameName,
-    required this.marketId, required this.openTime, // Added to constructor
+    required this.marketId,
+    required this.openTime, // Added to constructor
   });
 
   @override
@@ -1008,7 +1008,7 @@ class _SinglePattiState extends State<SinglePatti> {
     _digitController.addListener(_filterNumbers);
     _digitFocusNode.addListener(_onFocusChange);
     _filteredNumbers = singlePattiNumbers;
-    
+
     // You can now use widget.marketId for any initialization
     print("Market ID in SinglePatti: ${widget.marketId}");
   }
@@ -1038,8 +1038,8 @@ class _SinglePattiState extends State<SinglePatti> {
       } else {
         try {
           _filteredNumbers = singlePattiNumbers.where((number) {
-           // return number.toString().contains(input);
-           return number.toString().startsWith(input);
+            // return number.toString().contains(input);
+            return number.toString().startsWith(input);
           }).toList();
         } catch (e) {
           _filteredNumbers = [];
@@ -1087,18 +1087,44 @@ class _SinglePattiState extends State<SinglePatti> {
                       itemCount: _filteredNumbers.length,
                       itemBuilder: (context, index) {
                         final number = _filteredNumbers[index];
-                        return ListTile(
-                          title: Text(number.toString()),
-                          onTap: () {
-                            setState(() {
-                              _digitController.text = number.toString();
-                              _digitController.selection = TextSelection.fromPosition(
-                                TextPosition(offset: _digitController.text.length),
-                              );
-                            });
-                            _removeOverlay();
-                          },
+                        return SizedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 7,
+                              horizontal: 15,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _digitController.text = number.toString();
+                                  _digitController.selection =
+                                      TextSelection.fromPosition(
+                                        TextPosition(
+                                          offset: _digitController.text.length,
+                                        ),
+                                      );
+                                });
+                                _removeOverlay();
+                              },
+                              child: Text(
+                                number.toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
                         );
+                        // ListTile(
+                        //   title: Text(number.toString()),
+                        //   onTap: () {
+                        //     setState(() {
+                        //       _digitController.text = number.toString();
+                        //       _digitController.selection = TextSelection.fromPosition(
+                        //         TextPosition(offset: _digitController.text.length),
+                        //       );
+                        //     });
+                        //     _removeOverlay();
+                        //   },
+                        // );
                       },
                     ),
             ),
@@ -1118,14 +1144,14 @@ class _SinglePattiState extends State<SinglePatti> {
   }
 
   void _addBid() {
+    FocusScope.of(context).unfocus();
     if (_globalKey.currentState!.validate()) {
       setState(() {
         _digitError = _digitController.text.isEmpty;
         _pointsError = _pointsController.text.isEmpty;
 
-    // Use the function to determine game status
-          final gameStatus = getGameStatus(widget.openTime);
-          
+        // Use the function to determine game status
+        final gameStatus = getGameStatus(widget.openTime);
 
         if (!_digitError && !_pointsError) {
           bids.add({
@@ -1149,18 +1175,18 @@ class _SinglePattiState extends State<SinglePatti> {
 
   void _submitAllBids(BuildContext context) {
     final provider = Provider.of<SinglePattiProvider>(context, listen: false);
-    
+
     for (var bid in bids) {
       final singlePattiModel = SingleAnkModel(
         gameId: widget.marketId,
-        gameType: "SINGLE_PATTI", 
+        gameType: "SINGLE_PATTI",
         number: bid['digit']!,
         amount: int.parse(bid['points']!),
       );
-      
+
       provider.placeSingleAnkBet(context, singlePattiModel);
     }
-    
+
     // Clear bids after submission
     setState(() {
       bids.clear();
@@ -1198,7 +1224,7 @@ class _SinglePattiState extends State<SinglePatti> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Wallet()
+                  child: Wallet(),
                 ),
               ],
             ),
@@ -1206,7 +1232,9 @@ class _SinglePattiState extends State<SinglePatti> {
               builder: (context, constraints) {
                 return SingleChildScrollView(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
                     child: Padding(
                       padding: EdgeInsets.all(
                         MediaQuery.of(context).size.width * 0.04,
@@ -1250,12 +1278,15 @@ class _SinglePattiState extends State<SinglePatti> {
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     SizedBox(width: 10),
                                     Text(
                                       "Bid Digits: ",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     SizedBox(width: 50),
                                     Expanded(
@@ -1280,7 +1311,9 @@ class _SinglePattiState extends State<SinglePatti> {
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty ||
-                                                !singlePattiNumbers.contains(value)) {
+                                                !singlePattiNumbers.contains(
+                                                  value,
+                                                )) {
                                               return "Enter the valid digits";
                                             }
                                             if (value.length > 3) {
@@ -1301,7 +1334,9 @@ class _SinglePattiState extends State<SinglePatti> {
                                     SizedBox(width: 10),
                                     Text(
                                       "Bid Points: ",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     SizedBox(width: 47),
                                     Expanded(
@@ -1339,10 +1374,14 @@ class _SinglePattiState extends State<SinglePatti> {
                           // Bid List Table
                           Container(
                             constraints: BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height * 0.4,
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.4,
                             ),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.orange, width: 2),
+                              border: Border.all(
+                                color: Colors.orange,
+                                width: 2,
+                              ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -1398,7 +1437,9 @@ class _SinglePattiState extends State<SinglePatti> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.grey,
@@ -1428,12 +1469,14 @@ class _SinglePattiState extends State<SinglePatti> {
                                                 Expanded(
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.center,
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       SizedBox(width: 5),
                                                       Text(
                                                         bids[index]['type']!,
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
                                                       const SizedBox(width: 8),
                                                       GestureDetector(
@@ -1473,9 +1516,13 @@ class _SinglePattiState extends State<SinglePatti> {
                                         if (bids.isNotEmpty) {
                                           _submitAllBids(context);
                                         } else {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
-                                              content: Text("Please add at least one bid"),
+                                              content: Text(
+                                                "Please add at least one bid",
+                                              ),
                                               backgroundColor: Colors.red,
                                             ),
                                           );

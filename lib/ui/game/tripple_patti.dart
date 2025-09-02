@@ -1116,23 +1116,51 @@ class _TripplePattiState extends State<TripplePatti> {
                       itemCount: _filteredNumbers.length,
                       itemBuilder: (context, index) {
                         final number = _filteredNumbers[index];
-                        return ListTile(
-                          title: Text(number.toString()),
-                          onTap: () {
-                            setState(() {
-                              _digitController.text = number.toString();
-                              _digitController.selection =
-                                  TextSelection.fromPosition(
-                                    TextPosition(
-                                      offset: _digitController.text.length,
-                                    ),
-                                  );
-                            });
-                            _removeOverlay();
-                            // Move focus to next field
-                            FocusScope.of(context).nextFocus();
-                          },
+                        return SizedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 7,
+                              horizontal: 15,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _digitController.text = number.toString();
+                                  _digitController.selection =
+                                      TextSelection.fromPosition(
+                                        TextPosition(
+                                          offset: _digitController.text.length,
+                                        ),
+                                      );
+                                });
+                                _removeOverlay();
+                                // Move focus to next field
+                                FocusScope.of(context).nextFocus();
+                              },
+                              child: Text(
+                                number.toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
                         );
+                        // ListTile(
+                        //   title: Text(number.toString()),
+                        //   onTap: () {
+                        //     setState(() {
+                        //       _digitController.text = number.toString();
+                        //       _digitController.selection =
+                        //           TextSelection.fromPosition(
+                        //             TextPosition(
+                        //               offset: _digitController.text.length,
+                        //             ),
+                        //           );
+                        //     });
+                        //     _removeOverlay();
+                        //     // Move focus to next field
+                        //     FocusScope.of(context).nextFocus();
+                        //   },
+                        // );
                       },
                     ),
             ),
@@ -1152,14 +1180,14 @@ class _TripplePattiState extends State<TripplePatti> {
   }
 
   void _addBid() {
+    FocusScope.of(context).unfocus();
     if (_globalKey.currentState!.validate()) {
       setState(() {
         _digitError = _digitController.text.isEmpty;
         _pointsError = _pointsController.text.isEmpty;
 
         // Use the function to determine game status
-          final gameStatus = getGameStatus(widget.openTime);
-          
+        final gameStatus = getGameStatus(widget.openTime);
 
         if (!_digitError && !_pointsError) {
           bids.add({

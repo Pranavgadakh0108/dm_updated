@@ -355,30 +355,11 @@ final List<WinningHistory> winningHistory = [
   ),
 ];
 
-final List<WithdrawRequests> withdrawRequests = [
-  WithdrawRequests(
-    dateTime: "22 Aug 2025, 09:13 am",
-    amount: "₹500",
-    mode: "Mode: MANUAL",
-    status: "Pending",
-  ),
-  WithdrawRequests(
-    dateTime: "22 Aug 2025, 09:13 am",
-    amount: "₹500",
-    mode: "Mode: MANUAL",
-    status: "Pending",
-  ),
-  WithdrawRequests(
-    dateTime: "22 Aug 2025, 09:13 am",
-    amount: "₹500",
-    mode: "Mode: MANUAL",
-    status: "Pending",
-  ),
-];
-
 final RegExp emailRegex = RegExp(
   r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
 );
+
+final RegExp phoneRegex = RegExp(r'^[6-9]\d{9}$');
 
 final RegExp passwordRegExp = RegExp(
   r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$&*~]).{8,}$',
@@ -1188,7 +1169,7 @@ final List<String> halfSangam = [
   "990",
 ];
 
-final String baseUrl = "https://api.myjiomatka.com/api/v1";
+final String baseUrl = "https://api.dmbossbusiness.com/api/v1";
 
 //final String baseUrl = "http://localhost:3101/api/v1";
 

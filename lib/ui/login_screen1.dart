@@ -1,8 +1,8 @@
-
+import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/provider/mobile_exist_provider.dart';
 import 'package:dmboss/ui/login_screen2.dart';
 import 'package:dmboss/ui/login_screen3.dart';
-import 'package:dmboss/widgets/custom_text_field.dart';
+import 'package:dmboss/widgets/always_phone_prefix.dart';
 import 'package:dmboss/widgets/exit_dialog.dart';
 import 'package:dmboss/util/make_call.dart';
 import 'package:dmboss/util/make_whatsapp_chat.dart';
@@ -110,25 +110,43 @@ class _LoginScreen1State extends State<LoginScreen1> {
                       ),
                       SizedBox(height: screenHeight * 0.1),
 
-                      CustomTextField(
-                        hintText: "+91",
-                        keyboardType: TextInputType.number,
+                      CustomPhoneField(
                         controller: mobileController,
                         onChanged: (value) {
                           setState(() {
                             mobileController.text = value;
                           });
                         },
-                        validator: (value) {
+                        validator:  (value) {
                           if (value == null || value.isEmpty) {
                             return "Enter the Mobile Number first...";
                           }
-                          if (value.length < 10 || value.length > 10) {
+                          if (!phoneRegex.hasMatch(value)) {
                             return "Enter valid Mobile number";
                           }
                           return null;
                         },
                       ),
+
+                      // CustomTextField(
+                      //   hintText: "+91",
+                      //   keyboardType: TextInputType.number,
+                      //   controller: mobileController,
+                      //   onChanged: (value) {
+                      //     setState(() {
+                      //       mobileController.text = value;
+                      //     });
+                      //   },
+                      //   validator: (value) {
+                      //     if (value == null || value.isEmpty) {
+                      //       return "Enter the Mobile Number first...";
+                      //     }
+                      //     if (value.length < 10 || value.length > 10) {
+                      //       return "Enter valid Mobile number";
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
                       SizedBox(height: screenHeight * 0.025),
 
                       if (mobileCheckProvider.errorMessage != null)
@@ -149,8 +167,9 @@ class _LoginScreen1State extends State<LoginScreen1> {
                           ),
                           // padding: const EdgeInsets.symmetric(vertical: 15),
                           padding: EdgeInsets.symmetric(
-                            vertical:MediaQuery.of(context).size.height * 0.015,
-                            horizontal: MediaQuery.of(context).size.width * 0.3
+                            vertical:
+                                MediaQuery.of(context).size.height * 0.015,
+                            horizontal: MediaQuery.of(context).size.width * 0.3,
                           ),
                         ),
                         onPressed: mobileCheckProvider.isLoading
@@ -158,7 +177,13 @@ class _LoginScreen1State extends State<LoginScreen1> {
                             : handleContinue,
                         child: mobileCheckProvider.isLoading
                             ? CircularProgressIndicator(color: Colors.white)
-                            : Text('Continue', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+                            : Text(
+                                'Continue',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                       ),
                       SizedBox(height: screenHeight * 0.03),
 

@@ -25,7 +25,7 @@ class GetFundHistory {
     try {
       final dio = await _getDioInstance();
 
-      final result = await dio.get("/user/deposits/history");
+      final result = await dio.get("/users/deposit/history");
 
       if (result.statusCode == 200) {
         return FundHistoryModel.fromJson(result.data);

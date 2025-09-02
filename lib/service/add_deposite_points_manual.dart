@@ -29,7 +29,7 @@ class AddDepositePointsManual {
       final dio = await _getDioInstance();
 
       final response = await dio.post(
-        '/user/deposits/manual/create',
+        '/users/deposit/manual/create',
         data: depositeManualPoints.toJson(),
       );
 

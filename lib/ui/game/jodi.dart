@@ -1025,8 +1025,8 @@ class _JodiState extends State<Jodi> {
       } else {
         try {
           _filteredNumbers = jodiNumbers.where((number) {
-           // return number.toString().contains(input);
-           return number.toString().startsWith(input);
+            // return number.toString().contains(input);
+            return number.toString().startsWith(input);
           }).toList();
         } catch (e) {
           _filteredNumbers = [];
@@ -1076,21 +1076,47 @@ class _JodiState extends State<Jodi> {
                       itemCount: _filteredNumbers.length,
                       itemBuilder: (context, index) {
                         final number = _filteredNumbers[index];
-                        return ListTile(
-                          title: Text(number.toString()),
-                          onTap: () {
-                            setState(() {
-                              _digitController.text = number.toString();
-                              _digitController.selection =
-                                  TextSelection.fromPosition(
-                                    TextPosition(
-                                      offset: _digitController.text.length,
-                                    ),
-                                  );
-                            });
-                            _removeOverlay();
-                          },
+                        return SizedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 7,
+                              horizontal: 15,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _digitController.text = number.toString();
+                                  _digitController.selection =
+                                      TextSelection.fromPosition(
+                                        TextPosition(
+                                          offset: _digitController.text.length,
+                                        ),
+                                      );
+                                });
+                                _removeOverlay();
+                              },
+                              child: Text(
+                                number.toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
                         );
+                        // ListTile(
+                        //   title: Text(number.toString()),
+                        //   onTap: () {
+                        //     setState(() {
+                        //       _digitController.text = number.toString();
+                        //       _digitController.selection =
+                        //           TextSelection.fromPosition(
+                        //             TextPosition(
+                        //               offset: _digitController.text.length,
+                        //             ),
+                        //           );
+                        //     });
+                        //     _removeOverlay();
+                        //   },
+                        // );
                       },
                     ),
             ),
@@ -1110,6 +1136,7 @@ class _JodiState extends State<Jodi> {
   }
 
   void _addBid() {
+    FocusScope.of(context).unfocus();
     if (_globalKey.currentState!.validate()) {
       setState(() {
         _digitError = _digitController.text.isEmpty;
@@ -1186,7 +1213,7 @@ class _JodiState extends State<Jodi> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Wallet()
+                  child: Wallet(),
                 ),
               ],
             ),

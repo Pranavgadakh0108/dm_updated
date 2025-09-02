@@ -3,20 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class WithdrawRequests {
-  final String dateTime;
-  final String amount;
-  final String mode;
-  final String status;
-
-  WithdrawRequests({
-    required this.dateTime,
-    required this.amount,
-    required this.mode,
-    required this.status,
-  });
-}
-
 class WithdrawPendingRequests extends StatefulWidget {
   const WithdrawPendingRequests({super.key});
 

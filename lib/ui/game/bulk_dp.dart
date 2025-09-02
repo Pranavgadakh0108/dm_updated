@@ -910,6 +910,8 @@ class _BulkDpState extends State<BulkDp> {
 
     // Place the bet
     provider.placeBulkSpBet(context, provider.bulkSpModel);
+
+    resetBid();
   }
 
   Widget buildPointsSelector() {
@@ -1236,7 +1238,7 @@ class _BulkDpState extends State<BulkDp> {
 
                     // Buttons (fixed at bottom)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
+                      padding: const EdgeInsets.only(bottom: 20.0, top: 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -1293,6 +1295,7 @@ class _BulkDpState extends State<BulkDp> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 20,)
                   ],
                 ),
               );

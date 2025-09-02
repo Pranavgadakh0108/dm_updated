@@ -1,12 +1,10 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
-import 'package:dmboss/model/daily_result_model.dart';
+import 'package:dmboss/model/pending_withdraw_count.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class GetDailyResultService {
+class PendingWithdrawCountService {
   Future<Dio> _getDioInstance() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final token = sharedPreferences.getString('auth_token');
@@ -23,21 +21,20 @@ class GetDailyResultService {
     );
   }
 
-  Future<DailyResultModel?> getResultService(
+  Future<PendingWithdrawCountModel?> getWithDrawHistory(
     BuildContext context,
-    String userId,
   ) async {
     try {
       final dio = await _getDioInstance();
 
-      final result = await dio.get("/winner-counts/$userId");
+      final result = await dio.get("/users/withdraw/request-count");
 
       if (result.statusCode == 200) {
-        return DailyResultModel.fromJson(result.data);
+        return PendingWithdrawCountModel.fromJson(result.data);
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Failed to get Result")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to Fetch Withdraw count")),
+        );
       }
     } catch (e) {
       String errorMessage = "Something went wrong";

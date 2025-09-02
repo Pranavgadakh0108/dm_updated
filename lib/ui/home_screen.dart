@@ -760,9 +760,12 @@
 // }
 
 import 'package:dmboss/provider/game_market_provider.dart';
+import 'package:dmboss/provider/games_settings_provider.dart';
+import 'package:dmboss/provider/pending_withdraw_count.dart';
 import 'package:dmboss/provider/user_profile_provider.dart';
 import 'package:dmboss/ui/game/game_list_screen.dart';
 import 'package:dmboss/ui/my_wallet_screen.dart';
+import 'package:dmboss/ui/withdraw_pending_requests.dart';
 import 'package:dmboss/util/get_market_status.dart';
 import 'package:dmboss/util/get_time_in_12_hours.dart';
 import 'package:dmboss/widgets/blinking_container.dart';
@@ -798,6 +801,18 @@ class _HomeScreenState extends State<HomeScreen> {
         listen: false,
       );
       gamesMarketProvider.getGames(context);
+
+      final getPendingCount = Provider.of<GetPendingWithdrawCountProvider>(
+        context,
+        listen: false,
+      );
+      getPendingCount.getWithdrawPendingCount(context);
+
+      final getGameSettings = Provider.of<GamesSettingsProvider>(
+        context,
+        listen: false,
+      );
+      getGameSettings.getGameSettings(context);
     });
   }
 
@@ -828,14 +843,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         title: Row(
           children: [
-            // ClipOval(
-            //   child: Image.asset(
-            //     "assets/images/dmbossLogo.png",
-            //     height: 35,
-            //     width: 35,
-            //   ),
-            // ),
-            // const SizedBox(width: 4),
             const Text(
               "DM Boss",
               style: TextStyle(
@@ -847,9 +854,34 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.access_time, color: Colors.pink),
+          Consumer<GetPendingWithdrawCountProvider>(
+            builder: (context, provider, _) {
+              return IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WithdrawPendingRequests(),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.access_time, color: Colors.pink),
+              );
+            },
+          ),
+          Consumer<GetPendingWithdrawCountProvider>(
+            builder: (context, provider, _) {
+              return Text(
+                provider.pendingWithdrawCountModel?.data.pendingCount
+                        .toString() ??
+                    "0",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.pink,
+                ),
+              );
+            },
           ),
           IconButton(
             onPressed: () {},
@@ -889,8 +921,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Consumer<GameMarketProvider>(
-        builder: (context, provider, child) {
+      body: Consumer2<GameMarketProvider, GamesSettingsProvider>(
+        builder: (context, provider, gameSettings, child) {
           if (provider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -943,7 +975,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () => openWhatsApp("+919888195353"),
+                          onTap: () => openWhatsApp(
+                            gameSettings.gameSettings?.data.whatsapp ?? "",
+                          ),
                           child: Row(
                             children: const [
                               Icon(
@@ -968,13 +1002,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
 
-              // Scrollable list of games
               Expanded(
                 child: ListView.builder(
                   itemCount: provider.gamesList?.length ?? 0,
                   itemBuilder: (context, index) {
                     final game = provider.gamesList?[index];
-                    print(game?.bazar ?? "");
+
                     return GestureDetector(
                       onTap: () {
                         if (getMarketStatus(
@@ -991,13 +1024,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 "Holiday") {
                           showMarketCloseDialog(context);
                         } else {
-                          // Set the selected game ID in the provider
-                          final gameProvider = Provider.of<GameMarketProvider>(
-                            context,
-                            listen: false,
-                          );
-                          gameProvider.setSelectedGameId(game?.id ?? "");
-
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -1005,9 +1031,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 title: game?.bazar ?? "",
                                 openTime: game?.open ?? "",
                                 closeTime: game?.close ?? "",
-                                marketId:
-                                    game?.id ??
-                                    "", // Pass the market ID directly
+                                marketId: game?.id ?? "",
                               ),
                             ),
                           );
@@ -1015,7 +1039,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: GameCard(
                         title: game?.bazar ?? "",
-                        numbers: "***_**_***",
+                        numbers:
+                            "${game?.result.openPanna.isEmpty ?? false ? '***' : game?.result.openPanna}_"
+                            "${game?.result.open.isEmpty ?? false ? '*' : game?.result.open}"
+                            "${game?.result.close.isEmpty ?? false ? '*' : game?.result.close}_"
+                            "${game?.result.closePanna.isEmpty ?? false ? '***' : game?.result.closePanna}",
                         statusText: getMarketStatus(
                           game?.open ?? "",
                           game?.close ?? "",
