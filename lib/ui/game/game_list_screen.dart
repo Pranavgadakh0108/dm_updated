@@ -488,6 +488,7 @@ import 'package:dmboss/ui/game/single_ank.dart';
 import 'package:dmboss/ui/game/single_patti.dart';
 import 'package:dmboss/ui/game/tripple_patti.dart';
 import 'package:dmboss/util/get_current_time.dart';
+import 'package:dmboss/util/get_time_in_12_hours.dart';
 import 'package:dmboss/widgets/game_list_card.dart';
 import 'package:flutter/material.dart';
 
@@ -498,7 +499,7 @@ class GameListScreen extends StatelessWidget {
     required this.title,
     required this.openTime,
     required this.closeTime,
-    required this.marketId, 
+    required this.marketId,
   });
 
   // // Function to check if current time is before open time
@@ -560,7 +561,7 @@ class GameListScreen extends StatelessWidget {
   // Function to check if current time is before open time
   bool _isBeforeOpenTime() {
     final currentTime = getCurrentTimeFormatted();
-    return _compareTimes(currentTime, openTime) < 0; // Changed to < 0
+    return _compareTimes(currentTime, openTime) > 0; // Changed to < 0
   }
 
   // Helper function to compare two time strings
@@ -660,7 +661,7 @@ class GameListScreen extends StatelessWidget {
             padding: EdgeInsets.only(right: 10),
             child: Center(
               child: Text(
-                "$openTime - $closeTime ",
+                "${convertTimeStringTo12HourFormat(openTime)} - ${convertTimeStringTo12HourFormat(closeTime)}",
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
@@ -716,8 +717,7 @@ class GameListScreen extends StatelessWidget {
                         title: filteredGames[index]['title'],
                         gameName: title,
                         marketId: marketId, // Pass marketId
-                        openTime : openTime,
-
+                        openTime: openTime,
                       ),
                     ),
                   );
@@ -752,7 +752,7 @@ class GameListScreen extends StatelessWidget {
                         title: filteredGames[index]['title'],
                         gameName: title,
                         marketId: marketId, // Pass marketId
-                        openTime: openTime
+                        openTime: openTime,
                       ),
                     ),
                   );
@@ -776,7 +776,6 @@ class GameListScreen extends StatelessWidget {
                         title: filteredGames[index]['title'],
                         gameName: title,
                         marketId: marketId, // Pass marketId
-                        
                       ),
                     ),
                   );
@@ -788,7 +787,7 @@ class GameListScreen extends StatelessWidget {
                         title: filteredGames[index]['title'],
                         gameName: title,
                         marketId: marketId, // Pass marketId
-                        openTime:openTime
+                        openTime: openTime,
                       ),
                     ),
                   );

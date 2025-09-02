@@ -87,7 +87,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   static const String _tokenKey = 'auth_token';
-  static const String _userDataKey = 'user_data';
   static const String _isLoggedInKey = 'is_logged_in';
 
   Future<Dio> getDioInstance() async {

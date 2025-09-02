@@ -39,7 +39,7 @@ class GetFundHistory {
 
       if (e is DioException) {
         if (e.response != null && e.response?.data != null) {
-          errorMessage = e.response?.data['message'] ?? errorMessage;
+          errorMessage = e.response?.data['msg'] ?? errorMessage;
         } else {
           errorMessage = e.message ?? "";
         }

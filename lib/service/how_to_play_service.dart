@@ -32,7 +32,7 @@ class HowToPlayService {
         return HowToPlayModel.fromJson(result.data);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to fetch help information"))
+          SnackBar(content: Text("Failed to fetch help information")),
         );
         return null;
       }
@@ -41,7 +41,7 @@ class HowToPlayService {
 
       if (e is DioException) {
         if (e.response != null && e.response?.data != null) {
-          errorMessage = e.response?.data['message'] ?? errorMessage;
+          errorMessage = e.response?.data['msg'] ?? errorMessage;
         } else {
           errorMessage = e.message ?? "";
         }
@@ -49,9 +49,9 @@ class HowToPlayService {
         errorMessage = e.toString();
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $errorMessage"))
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
 
       return null;
     }

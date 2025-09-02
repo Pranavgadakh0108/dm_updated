@@ -41,7 +41,7 @@ class AddBankDetailsService {
       if (e.response != null && e.response?.data != null) {
         if (e.response!.data is Map<String, dynamic>) {
           errorMessage =
-              e.response!.data['message'] ??
+              e.response!.data['msg'] ??
               e.response!.data['error'] ??
               errorMessage;
         } else if (e.response!.data is String) {
@@ -66,7 +66,7 @@ class AddBankDetailsService {
 
       if (e is DioException) {
         if (e.response != null && e.response?.data != null) {
-          errorMessage = e.response?.data['message'] ?? errorMessage;
+          errorMessage = e.response?.data['msg'] ?? errorMessage;
         } else {
           errorMessage = e.message ?? "";
         }
