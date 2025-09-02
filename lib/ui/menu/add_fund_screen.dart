@@ -1,7 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:dmboss/provider/add_deposite_manual_provider.dart';
+import 'package:dmboss/provider/user_profile_provider.dart';
+import 'package:dmboss/ui/menu/add_funds_with_qr_or_transactionid.dart';
 import 'package:dmboss/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddFundScreen extends StatefulWidget {
   const AddFundScreen({super.key});
@@ -13,13 +17,23 @@ class AddFundScreen extends StatefulWidget {
 class _AddFundScreenState extends State<AddFundScreen> {
   final TextEditingController _amountController = TextEditingController();
   final GlobalKey<FormState> _globalKey = GlobalKey();
-  // bool _showErrorIcon = false;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // final provider = Provider.of<AddDepositePointsManualProvider>(
+      //   context,
+      //   listen: false,
+      // );
+      // _amountController.text = provider.amount;
 
-  // void _validateAmount() {
-  //   setState(() {
-  //     _showErrorIcon = _amountController.text.isEmpty;
-  //   });
-  // }
+      final userProvider = Provider.of<UserProfileProvider>(
+        context,
+        listen: false,
+      );
+      userProvider.fetchUserProfile();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,133 +58,108 @@ class _AddFundScreenState extends State<AddFundScreen> {
         child: SingleChildScrollView(
           child: Form(
             key: _globalKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 30),
-                Text(
-                  "Balance :  24897",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 30),
-                // TextFormField(
-                //   controller: _amountController,
-                //   keyboardType: TextInputType.number,
-                //   cursorColor: Colors.pink,
-                //   decoration: InputDecoration(
-                //     hintText: "Enter Amount",
-                //     filled: true,
-                //     fillColor: Colors.grey.shade100,
-                //     contentPadding: EdgeInsets.symmetric(
-                //       horizontal: 12,
-                //       vertical: 14,
-                //     ),
-                //     border: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(15),
-                //       borderSide: BorderSide.none,
-                //     ),
+            child: Consumer<UserProfileProvider>(
+              builder: (context, provider, _) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 30),
+                    Text(
+                      "Balance : ${provider.userProfile?.user.wallet}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 30),
 
-                //     // suffixIcon: _showErrorIcon
-                //     //     ? IconButton(onPressed: (){
-                //     //       Tooltip(message: "Please Enter Amount",
-                //     //       preferBelow: true,
-                //     //       );
-                //     //     }, icon: Icon(Icons.error, color: Colors.red))
-                //     //     :null,
-                //     suffixIcon: _showErrorIcon
-                //         ? Builder(
-                //             builder: (context) {
-                //               final GlobalKey<TooltipState> tooltipKey =
-                //                   GlobalKey<TooltipState>();
-                //               return Tooltip(
-                //                 key: tooltipKey,
-                //                 message: "Please Enter Amount",
-                //                 triggerMode: TooltipTriggerMode
-                //                     .manual, // Disable automatic triggers
-                //                 child: IconButton(
-                //                   onPressed: () {
-                //                     tooltipKey.currentState?.ensureTooltipVisible();
-                //                     // Hide after 2 seconds
-                //                     Future.delayed(const Duration(seconds: 2), () {
-                //                       if (tooltipKey.currentState?.mounted ??
-                //                           false) {
-                //                         tooltipKey.currentState?.deactivate();
-                //                       }
-                //                     });
-                //                   },
-                //                   icon: const Icon(Icons.error, color: Colors.red),
-                //                 ),
-                //               );
-                //             },
-                //           )
-                //         : null,
-                //   ),
-                // ),
-                CustomTextField(
-                  hintText: "Enter Amount",
-                  keyboardType: TextInputType.number,
-                  controller: _amountController,
-                  onChanged: (value) {
-                    setState(() {
-                      _amountController.text = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "⚠️ Enter the Amount";
-                    }
-                    if (value.contains('.')) {
-                      return "⚠️ Enter the Correct Amount (Remove '.')";
-                    }
-                    if (int.parse(value) < 100) {
-                      return "⚠️ Amount must be at least 100";
-                    }
+                    CustomTextField(
+                      hintText: "Enter Amount",
+                      keyboardType: TextInputType.number,
+                      controller: _amountController,
+                      onChanged: (value) {
+                        setState(() {
+                          _amountController.text = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "⚠️ Enter the Amount";
+                        }
+                        if (value.contains('.')) {
+                          return "⚠️ Enter the Correct Amount (Remove '.')";
+                        }
+                        if (int.parse(value) < 100) {
+                          return "⚠️ Amount must be at least 100";
+                        }
 
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  // onPressed: _validateAmount,
-                  onPressed: () {
-                    if (_globalKey.currentState!.validate()) {}
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    minimumSize: Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                        return null;
+                      },
                     ),
-                  ),
-                  child: Text(
-                    "ADD MANUAL PAYMENT",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      // onPressed: _validateAmount,
+                      onPressed: () {
+                        if (_globalKey.currentState!.validate()) {
+                          setState(() {
+                            final provider =
+                                Provider.of<AddDepositePointsManualProvider>(
+                                  context,
+                                  listen: false,
+                                );
+                            provider.setAmount(_amountController.text);
+                          });
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddFundScreenWithQR(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        minimumSize: Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        "ADD MANUAL PAYMENT",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(196, 25, 127, 211),
-                    minimumSize: Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(
+                          196,
+                          25,
+                          127,
+                          211,
+                        ),
+                        minimumSize: Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        "PAYMENT GATEWAY",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    "PAYMENT GATEWAY",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
+                  ],
+                );
+              },
             ),
           ),
         ),

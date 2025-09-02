@@ -1003,6 +1003,8 @@ import 'package:dmboss/provider/games_provider/panel_group_provider.dart';
 import 'package:dmboss/widgets/add_button.dart';
 import 'package:dmboss/widgets/custom_textfield_screen1.dart';
 import 'package:dmboss/widgets/date_container.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
+import 'package:dmboss/widgets/game_status.dart';
 import 'package:dmboss/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -1015,11 +1017,13 @@ class PanelGroup extends StatefulWidget {
   final String title;
   final String gameName;
   final String marketId; // Added marketId parameter
+  final String openTime;
   const PanelGroup({
     super.key, 
     required this.title, 
     required this.gameName,
     required this.marketId, // Added to constructor
+    required this.openTime
   });
 
   @override
@@ -1079,7 +1083,8 @@ class _PanelGroupState extends State<PanelGroup> {
       } else {
         try {
           _filteredNumbers = panelGroup.where((number) {
-            return number.toString().contains(input);
+            //return number.toString().contains(input);
+            return number.toString().startsWith(input);
           }).toList();
         } catch (e) {
           _filteredNumbers = [];
@@ -1179,11 +1184,15 @@ class _PanelGroupState extends State<PanelGroup> {
 
     // Check if the digit exists in panelLists
     if (panelLists.containsKey(digit)) {
-      List<String> panelNumbers = panelLists[digit]!;
+      List<String> panelNumbers = panelLists[digit]!; 
+
+      // Use the function to determine game status
+      final gameStatus = getGameStatus(widget.openTime);
+          
 
       // Add each panel number with the same points
       for (String panelDigit in panelNumbers) {
-        levels.add({'digit': panelDigit, 'points': points, 'type': 'OPEN'});
+        levels.add({'digit': panelDigit, 'points': points, 'type': gameStatus});
       }
     }
 
@@ -1275,13 +1284,7 @@ class _PanelGroupState extends State<PanelGroup> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.wallet, color: Colors.black),
-                      SizedBox(width: 5),
-                      Text("24897", style: TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
+                  child: Wallet()
                 ),
               ],
             ),

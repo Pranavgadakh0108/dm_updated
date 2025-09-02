@@ -1022,10 +1022,11 @@ import 'package:dmboss/provider/games_provider/single_ank_provider.dart';
 import 'package:dmboss/widgets/add_button.dart';
 import 'package:dmboss/widgets/custom_textfield_screen1.dart';
 import 'package:dmboss/widgets/date_container.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
+import 'package:dmboss/widgets/game_status.dart';
 import 'package:dmboss/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 
 // class SingleAnk extends StatefulWidget {
 //   final String title;
@@ -1187,7 +1188,7 @@ import 'package:provider/provider.dart';
 
 //   void _submitAllBids(BuildContext context) {
 //     final provider = Provider.of<SingleAnkBetProvider>(context, listen: false);
-    
+
 //     for (var bid in bids) {
 //       final singleAnkModel = SingleAnkModel(
 //         gameId: widget.gameName, // Using gameName as gameId
@@ -1195,10 +1196,10 @@ import 'package:provider/provider.dart';
 //         number: bid['digit']!,
 //         amount: int.parse(bid['points']!),
 //       );
-      
+
 //       provider.placeSingleAnkBet(context, singleAnkModel);
 //     }
-    
+
 //     // Clear bids after submission
 //     setState(() {
 //       bids.clear();
@@ -1543,16 +1544,17 @@ import 'package:provider/provider.dart';
 //   }
 // }
 
-
 class SingleAnk extends StatefulWidget {
   final String title;
   final String gameName;
   final String marketId; // Added marketId parameter
+  final String openTime;
   const SingleAnk({
-    super.key, 
-    required this.title, 
+    super.key,
+    required this.title,
     required this.gameName,
     required this.marketId, // Added to constructor
+    required this.openTime
   });
 
   @override
@@ -1582,7 +1584,7 @@ class _SingleAnkState extends State<SingleAnk> {
     _digitController.addListener(_filterNumbers);
     _digitFocusNode.addListener(_onFocusChange);
     _filteredNumbers = singleAnkNumbers;
-    
+
     // You can now use widget.marketId for any initialization
     print("Market ID in SingleAnk: ${widget.marketId}");
   }
@@ -1685,6 +1687,26 @@ class _SingleAnkState extends State<SingleAnk> {
     }
   }
 
+  // void _addBid() {
+  //   if (_globalKey.currentState!.validate()) {
+  //     setState(() {
+  //       _digitError = _digitController.text.isEmpty;
+  //       _pointsError = _pointsController.text.isEmpty;
+
+  //       if (!_digitError && !_pointsError) {
+  //         bids.add({
+  //           'digit': _digitController.text,
+  //           'points': _pointsController.text,
+  //           'type': 'OPEN',
+  //         });
+  //         _digitController.clear();
+  //         _pointsController.clear();
+  //         _removeOverlay();
+  //       }
+  //     });
+  //   }
+  // }
+
   void _addBid() {
     if (_globalKey.currentState!.validate()) {
       setState(() {
@@ -1692,10 +1714,13 @@ class _SingleAnkState extends State<SingleAnk> {
         _pointsError = _pointsController.text.isEmpty;
 
         if (!_digitError && !_pointsError) {
+          // Use the function to determine game status
+          final gameStatus = getGameStatus(widget.openTime);
+          
           bids.add({
             'digit': _digitController.text,
             'points': _pointsController.text,
-            'type': 'OPEN',
+            'type': gameStatus, // Use the determined status
           });
           _digitController.clear();
           _pointsController.clear();
@@ -1713,19 +1738,18 @@ class _SingleAnkState extends State<SingleAnk> {
 
   void _submitAllBids(BuildContext context) {
     final provider = Provider.of<SingleAnkBetProvider>(context, listen: false);
-    
+
     for (var bid in bids) {
       final singleAnkModel = SingleAnkModel(
         gameId: widget.marketId,
-        gameType: "SINGLE_ANK", 
+        gameType: "SINGLE_ANK",
         number: bid['digit']!,
         amount: int.parse(bid['points']!),
-       
       );
-      
+
       provider.placeSingleAnkBet(context, singleAnkModel);
     }
-    
+
     // Clear bids after submission
     setState(() {
       bids.clear();
@@ -1763,13 +1787,8 @@ class _SingleAnkState extends State<SingleAnk> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.wallet, color: Colors.black),
-                      SizedBox(width: 5),
-                      Text("24897", style: TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
+                  child: Wallet(),
+                  
                 ),
               ],
             ),
@@ -1777,7 +1796,9 @@ class _SingleAnkState extends State<SingleAnk> {
               builder: (context, constraints) {
                 return SingleChildScrollView(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
                     child: Padding(
                       padding: EdgeInsets.all(
                         MediaQuery.of(context).size.width * 0.04,
@@ -1821,12 +1842,15 @@ class _SingleAnkState extends State<SingleAnk> {
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     SizedBox(width: 10),
                                     Text(
                                       "Bid Digits: ",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     SizedBox(width: 50),
                                     Expanded(
@@ -1851,7 +1875,9 @@ class _SingleAnkState extends State<SingleAnk> {
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty ||
-                                                !singleAnkNumbers.contains(value)) {
+                                                !singleAnkNumbers.contains(
+                                                  value,
+                                                )) {
                                               return "Enter the valid digits";
                                             }
                                             if (value.length > 1) {
@@ -1872,7 +1898,9 @@ class _SingleAnkState extends State<SingleAnk> {
                                     SizedBox(width: 10),
                                     Text(
                                       "Bid Points: ",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     SizedBox(width: 47),
                                     Expanded(
@@ -1910,10 +1938,14 @@ class _SingleAnkState extends State<SingleAnk> {
                           // Bid List Table
                           Container(
                             constraints: BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height * 0.4,
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.4,
                             ),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.orange, width: 2),
+                              border: Border.all(
+                                color: Colors.orange,
+                                width: 2,
+                              ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -1969,7 +2001,9 @@ class _SingleAnkState extends State<SingleAnk> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.grey,
@@ -1999,12 +2033,14 @@ class _SingleAnkState extends State<SingleAnk> {
                                                 Expanded(
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.center,
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       SizedBox(width: 5),
                                                       Text(
                                                         bids[index]['type']!,
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
                                                       const SizedBox(width: 8),
                                                       GestureDetector(
@@ -2044,9 +2080,13 @@ class _SingleAnkState extends State<SingleAnk> {
                                         if (bids.isNotEmpty) {
                                           _submitAllBids(context);
                                         } else {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
-                                              content: Text("Please add at least one bid"),
+                                              content: Text(
+                                                "Please add at least one bid",
+                                              ),
                                               backgroundColor: Colors.red,
                                             ),
                                           );

@@ -1,10 +1,11 @@
-import 'package:dmboss/model/games_model/bulk_model.dart';
-import 'package:dmboss/service/games_service/bulk_service.dart';
+
+import 'package:dmboss/model/games_model/bulk_sp_model.dart';
+import 'package:dmboss/service/games_service/bulk_sp_service.dart';
 import 'package:flutter/material.dart';
 
-class BulkSPProvider extends ChangeNotifier {
+class BulkSpBetProvider extends ChangeNotifier {
   bool _isLoading = false;
-  BulkModel _bulkModel = BulkModel(
+  BulkSpModel _bulkSpModel = BulkSpModel(
     gameId: "",
     gameType: "",
     bulkSp: [],
@@ -12,25 +13,25 @@ class BulkSPProvider extends ChangeNotifier {
   Map<String, dynamic>? _betResponse;
 
   bool get isLoading => _isLoading;
-  BulkModel get bulkModel => _bulkModel;
+  BulkSpModel get bulkSpModel => _bulkSpModel;
   Map<String, dynamic>? get betResponse => _betResponse;
 
-  void updateBulkModel(BulkModel model) {
-    _bulkModel = model;
+  void updateBulkSpModel(BulkSpModel model) {
+    _bulkSpModel = model;
     notifyListeners();
   }
 
-  Future<void> placeBulkBet(
+  Future<void> placeBulkSpBet(
     BuildContext context,
-    BulkModel bulkModel,
+    BulkSpModel bulkSpModel,
   ) async {
     _isLoading = true;
     notifyListeners();
 
-    final bulkBetService = BulkBetService();
-    final response = await bulkBetService.placeBulkBet(
+    final bulkSpBetService = BulkSpBetService();
+    final response = await bulkSpBetService.placeBulkSpBet(
       context,
-      bulkModel,
+      bulkSpModel,
     );
 
     _isLoading = false;
@@ -39,14 +40,14 @@ class BulkSPProvider extends ChangeNotifier {
       _betResponse = response;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Bulk bet placed successfully!"),
+          content: Text("Bulk SP bet placed successfully!"),
           backgroundColor: Colors.green,
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Failed to place bulk bet"),
+          content: Text("Failed to place bulk SP bet"),
           backgroundColor: Colors.redAccent,
         ),
       );
@@ -55,8 +56,8 @@ class BulkSPProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetBulkModel() {
-    _bulkModel = BulkModel(
+  void resetBulkSpModel() {
+    _bulkSpModel = BulkSpModel(
       gameId: "",
       gameType: "",
       bulkSp: [],
@@ -66,76 +67,71 @@ class BulkSPProvider extends ChangeNotifier {
 
   // Individual setters for each property
   void setGameId(String value) {
-    _bulkModel = BulkModel(
+    _bulkSpModel = BulkSpModel(
       gameId: value,
-      gameType: _bulkModel.gameType,
-      bulkSp: _bulkModel.bulkSp,
+      gameType: _bulkSpModel.gameType,
+      bulkSp: _bulkSpModel.bulkSp,
     );
     notifyListeners();
   }
 
   void setGameType(String value) {
-    _bulkModel = BulkModel(
-      gameId: _bulkModel.gameId,
+    _bulkSpModel = BulkSpModel(
+      gameId: _bulkSpModel.gameId,
       gameType: value,
-      bulkSp: _bulkModel.bulkSp,
+      bulkSp: _bulkSpModel.bulkSp,
     );
     notifyListeners();
   }
 
-  // Methods to manage bulkSp list
+  // Methods to manage the bulkSp list
   void addBulkSpItem(BulkSp item) {
-    _bulkModel = BulkModel(
-      gameId: _bulkModel.gameId,
-      gameType: _bulkModel.gameType,
-      bulkSp: [..._bulkModel.bulkSp, item],
+    _bulkSpModel = BulkSpModel(
+      gameId: _bulkSpModel.gameId,
+      gameType: _bulkSpModel.gameType,
+      bulkSp: [..._bulkSpModel.bulkSp, item],
     );
     notifyListeners();
   }
 
   void removeBulkSpItem(int index) {
-    final newBulkSp = List<BulkSp>.from(_bulkModel.bulkSp);
-    newBulkSp.removeAt(index);
-    _bulkModel = BulkModel(
-      gameId: _bulkModel.gameId,
-      gameType: _bulkModel.gameType,
-      bulkSp: newBulkSp,
+    final newBulkSpList = List<BulkSp>.from(_bulkSpModel.bulkSp);
+    newBulkSpList.removeAt(index);
+    _bulkSpModel = BulkSpModel(
+      gameId: _bulkSpModel.gameId,
+      gameType: _bulkSpModel.gameType,
+      bulkSp: newBulkSpList,
     );
     notifyListeners();
   }
 
   void updateBulkSpItem(int index, BulkSp newItem) {
-    final newBulkSp = List<BulkSp>.from(_bulkModel.bulkSp);
-    newBulkSp[index] = newItem;
-    _bulkModel = BulkModel(
-      gameId: _bulkModel.gameId,
-      gameType: _bulkModel.gameType,
-      bulkSp: newBulkSp,
+    final newBulkSpList = List<BulkSp>.from(_bulkSpModel.bulkSp);
+    newBulkSpList[index] = newItem;
+    _bulkSpModel = BulkSpModel(
+      gameId: _bulkSpModel.gameId,
+      gameType: _bulkSpModel.gameType,
+      bulkSp: newBulkSpList,
     );
     notifyListeners();
   }
 
-  void clearBulkSp() {
-    _bulkModel = BulkModel(
-      gameId: _bulkModel.gameId,
-      gameType: _bulkModel.gameType,
+  void clearBulkSpItems() {
+    _bulkSpModel = BulkSpModel(
+      gameId: _bulkSpModel.gameId,
+      gameType: _bulkSpModel.gameType,
       bulkSp: [],
     );
     notifyListeners();
   }
 
-  // Helper method to get total amount of all bulkSp items
-  int get totalAmount {
-    return _bulkModel.bulkSp.fold(0, (sum, item) => sum + item.amount);
+  // Helper method to get total amount from all bulkSp items
+  int getTotalAmount() {
+    return _bulkSpModel.bulkSp.fold(0, (sum, item) => sum + item.amount);
   }
 
   // Helper method to get count of bulkSp items
-  int get itemCount {
-    return _bulkModel.bulkSp.length;
-  }
-
-  // Check if bulkSp is empty
-  bool get isBulkSpEmpty {
-    return _bulkModel.bulkSp.isEmpty;
+  int getBulkSpCount() {
+    return _bulkSpModel.bulkSp.length;
   }
 }

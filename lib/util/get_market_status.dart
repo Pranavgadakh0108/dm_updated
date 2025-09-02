@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-// String constants for market status
 const String marketStatusRunningForToday = "Running For Today";
-const String marketStatusRunningForClose = "Running For Today";
+const String marketStatusRunningForClose = "Running For Today"; // Changed this
 const String marketStatusClosedForToday = "Closed For Today";
 const String marketStatusHoliday = "Holiday";
 const String marketStatusInvalidData = "Invalid Data";
 
-// List of all week days
 const List<String> allWeekDays = [
   "MONDAY",
   "TUESDAY",
@@ -21,7 +19,6 @@ const List<String> allWeekDays = [
 
 String getMarketStatus(String openTime, String closeTime, String days) {
   try {
-    // First check if today is a market day
     if (!isMarketDayToday(days)) {
       return marketStatusHoliday;
     }
@@ -29,7 +26,6 @@ String getMarketStatus(String openTime, String closeTime, String days) {
     final now = DateTime.now();
     final currentTime = TimeOfDay.fromDateTime(now);
 
-    // Parse open and close times
     final openParts = openTime.split(':');
     final closeParts = closeTime.split(':');
 
@@ -41,15 +37,19 @@ String getMarketStatus(String openTime, String closeTime, String days) {
     final openTimeOfDay = TimeOfDay(hour: openHour, minute: openMinute);
     final closeTimeOfDay = TimeOfDay(hour: closeHour, minute: closeMinute);
 
-    // Convert TimeOfDay to minutes for easier comparison
     final currentMinutes = currentTime.hour * 60 + currentTime.minute;
     final openMinutes = openTimeOfDay.hour * 60 + openTimeOfDay.minute;
     final closeMinutes = closeTimeOfDay.hour * 60 + closeTimeOfDay.minute;
 
-    // Check market status based on your exact conditions
+    // Handle the case where market is between 12:00 AM and open time
+    if (currentMinutes < openMinutes) {
+      return marketStatusRunningForClose; // Market is running but not open yet
+    }
+
+    // Handle normal open hours
     if (currentMinutes >= openMinutes && currentMinutes < closeMinutes) {
       return marketStatusRunningForToday;
-    } else if (currentMinutes >= closeMinutes || currentMinutes < openMinutes) {
+    } else if (currentMinutes >= closeMinutes) {
       return marketStatusClosedForToday;
     }
 
@@ -59,45 +59,39 @@ String getMarketStatus(String openTime, String closeTime, String days) {
   }
 }
 
-// Helper function to check if market is open on a specific day
 bool isMarketDayToday(String days) {
   try {
     final now = DateTime.now();
     final currentDay = DateFormat('EEEE').format(now).toUpperCase();
 
-    // Handle empty or null days - assume all days are open
     if (days.isEmpty || days.trim().isEmpty) {
       return true;
     }
 
     final daysUpper = days.toUpperCase().trim();
 
-    // If the days string only contains closed days, then all other days are open
-    // Check if current day is explicitly marked as closed
     final daysList = daysUpper.split(',');
 
     for (var dayEntry in daysList) {
       final trimmedDay = dayEntry.trim();
 
-      // Check if this entry contains the current day and is marked as closed
       if (trimmedDay.contains(currentDay) && trimmedDay.contains("(CLOSED)")) {
-        return false; // Today is a holiday
+        return false;
       }
     }
 
-    // If current day is not explicitly marked as closed, it's open
     return true;
   } catch (e) {
-    return true; // Assume open if there's an error
+    return true;
   }
 }
 
-// Helper function to get status message
 String getMarketStatusMessage(String status) {
   switch (status) {
     case marketStatusRunningForToday:
-    case marketStatusRunningForClose:
       return 'Play Now';
+    case marketStatusRunningForClose:
+      return 'Play Now'; // Different message for pre-open
     case marketStatusClosedForToday:
       return 'Closed Now';
     case marketStatusHoliday:
@@ -109,7 +103,6 @@ String getMarketStatusMessage(String status) {
   }
 }
 
-// Complete market status check with day validation
 String getCompleteMarketStatus(String openTime, String closeTime, String days) {
   if (!isMarketDayToday(days)) {
     return marketStatusHoliday;
@@ -118,13 +111,12 @@ String getCompleteMarketStatus(String openTime, String closeTime, String days) {
   return getMarketStatus(openTime, closeTime, days);
 }
 
-// Helper function to get status color
 Color getMarketStatusColor(String status) {
   switch (status) {
     case marketStatusRunningForToday:
       return Colors.green;
     case marketStatusRunningForClose:
-      return Colors.orange;
+      return Colors.green; // Different color for pre-open
     case marketStatusClosedForToday:
       return Colors.red;
     case marketStatusHoliday:
@@ -141,7 +133,7 @@ Color getMarketButtonColor(String status) {
     case marketStatusRunningForToday:
       return Colors.orange;
     case marketStatusRunningForClose:
-      return Colors.orange;
+      return Colors.orange; // Different color for pre-open button
     case marketStatusClosedForToday:
       return Colors.red;
     case marketStatusHoliday:
@@ -153,13 +145,16 @@ Color getMarketButtonColor(String status) {
   }
 }
 
-// Helper function to check if market is open
 bool isMarketOpen(String status) {
+  return status == marketStatusRunningForToday;
+  // marketStatusRunningForClose is not considered "open" yet
+}
+
+bool isMarketRunning(String status) {
   return status == marketStatusRunningForToday ||
       status == marketStatusRunningForClose;
 }
 
-// Helper function to get day status (for display purposes)
 String getDayStatus(String days) {
   try {
     final now = DateTime.now();
@@ -175,7 +170,6 @@ String getDayStatus(String days) {
   }
 }
 
-// Helper function to get formatted days list for display
 String getFormattedDays(String days) {
   try {
     if (days.isEmpty) return "Open All Days";
@@ -194,5 +188,39 @@ String getFormattedDays(String days) {
     }
   } catch (e) {
     return days;
+  }
+}
+
+// Additional helper function to get time until market opens
+String getTimeUntilOpen(String openTime) {
+  try {
+    final now = DateTime.now();
+    final openParts = openTime.split(':');
+    final openHour = int.parse(openParts[0]);
+    final openMinute = int.parse(openParts[1]);
+
+    final openToday = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      openHour,
+      openMinute,
+    );
+
+    if (now.isBefore(openToday)) {
+      final difference = openToday.difference(now);
+      final hours = difference.inHours;
+      final minutes = difference.inMinutes.remainder(60);
+
+      if (hours > 0) {
+        return 'Opens in $hours ${minutes}m';
+      } else {
+        return 'Opens in ${minutes}m';
+      }
+    }
+
+    return 'Open now';
+  } catch (e) {
+    return 'Opening time unknown';
   }
 }

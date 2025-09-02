@@ -58,20 +58,20 @@
 //   @override
 //   void initState() {
 //     super.initState();
-    
+
 //     // Initialize all dropdowns
 //     _openDigitsController.addListener(() => _filterOpenDigitsNumbers());
 //     _openDigitsFocusNode.addListener(() => _onOpenDigitsFocusChange());
 //     _filteredOpenDigitsNumbers = halfSangam;
-    
+
 //     _openPannaController.addListener(() => _filterOpenPannaNumbers());
 //     _openPannaFocusNode.addListener(() => _onOpenPannaFocusChange());
 //     _filteredOpenPannaNumbers = singleAnkNumbers;
-    
+
 //     _closeDigitsController.addListener(() => _filterCloseDigitsNumbers());
 //     _closeDigitsFocusNode.addListener(() => _onCloseDigitsFocusChange());
 //     _filteredCloseDigitsNumbers = halfSangam;
-    
+
 //     _closePannaController.addListener(() => _filterClosePannaNumbers());
 //     _closePannaFocusNode.addListener(() => _onClosePannaFocusChange());
 //     _filteredClosePannaNumbers = singleAnkNumbers;
@@ -85,17 +85,17 @@
 //     _closeDigitsController.dispose();
 //     _closePannaController.dispose();
 //     _pointsController.dispose();
-    
+
 //     _openDigitsFocusNode.dispose();
 //     _openPannaFocusNode.dispose();
 //     _closeDigitsFocusNode.dispose();
 //     _closePannaFocusNode.dispose();
-    
+
 //     _removeOpenDigitsOverlay();
 //     _removeOpenPannaOverlay();
 //     _removeCloseDigitsOverlay();
 //     _removeClosePannaOverlay();
-    
+
 //     super.dispose();
 //   }
 
@@ -485,14 +485,14 @@
 //             'displayDigit': "${_openDigitsController.text}-${_closePannaController.text}",
 //           });
 //         }
-        
+
 //         // Clear all fields
 //         _openDigitsController.clear();
 //         _openPannaController.clear();
 //         _closeDigitsController.clear();
 //         _closePannaController.clear();
 //         _pointsController.clear();
-        
+
 //         // Remove any active overlays
 //         _removeOpenDigitsOverlay();
 //         _removeOpenPannaOverlay();
@@ -765,7 +765,7 @@
 //                             ),
 //                           ],
 //                           const SizedBox(height: 10),
-                          
+
 //                           // Enter Points
 //                           Row(
 //                             children: [
@@ -1014,20 +1014,20 @@
 //   @override
 //   void initState() {
 //     super.initState();
-    
+
 //     // Initialize all dropdowns
 //     _openDigitsController.addListener(() => _filterOpenDigitsNumbers());
 //     _openDigitsFocusNode.addListener(() => _onOpenDigitsFocusChange());
 //     _filteredOpenDigitsNumbers = singleAnkNumbers;
-    
+
 //     _openPannaController.addListener(() => _filterOpenPannaNumbers());
 //     _openPannaFocusNode.addListener(() => _onOpenPannaFocusChange());
 //     _filteredOpenPannaNumbers = halfSangam;
-    
+
 //     _closeDigitsController.addListener(() => _filterCloseDigitsNumbers());
 //     _closeDigitsFocusNode.addListener(() => _onCloseDigitsFocusChange());
 //     _filteredCloseDigitsNumbers = singleAnkNumbers;
-    
+
 //     _closePannaController.addListener(() => _filterClosePannaNumbers());
 //     _closePannaFocusNode.addListener(() => _onClosePannaFocusChange());
 //     _filteredClosePannaNumbers = halfSangam;
@@ -1041,17 +1041,17 @@
 //     _closeDigitsController.dispose();
 //     _closePannaController.dispose();
 //     _pointsController.dispose();
-    
+
 //     _openDigitsFocusNode.dispose();
 //     _openPannaFocusNode.dispose();
 //     _closeDigitsFocusNode.dispose();
 //     _closePannaFocusNode.dispose();
-    
+
 //     _removeOpenDigitsOverlay();
 //     _removeOpenPannaOverlay();
 //     _removeCloseDigitsOverlay();
 //     _removeClosePannaOverlay();
-    
+
 //     super.dispose();
 //   }
 
@@ -1441,14 +1441,14 @@
 //             'displayDigit': "${_openDigitsController.text}-${_closePannaController.text}",
 //           });
 //         }
-        
+
 //         // Clear all fields
 //         _openDigitsController.clear();
 //         _openPannaController.clear();
 //         _closeDigitsController.clear();
 //         _closePannaController.clear();
 //         _pointsController.clear();
-        
+
 //         // Remove any active overlays
 //         _removeOpenDigitsOverlay();
 //         _removeOpenPannaOverlay();
@@ -1745,7 +1745,7 @@
 //                             ),
 //                           ],
 //                           const SizedBox(height: 10),
-                          
+
 //                           // Enter Points
 //                           Row(
 //                             children: [
@@ -1941,6 +1941,7 @@ import 'package:dmboss/provider/games_provider/half_sangam_provider.dart';
 import 'package:dmboss/widgets/add_button.dart';
 import 'package:dmboss/widgets/custom_textfield_screen1.dart';
 import 'package:dmboss/widgets/date_container.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:dmboss/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -2000,24 +2001,24 @@ class _HalfSangamState extends State<HalfSangam> {
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize all dropdowns
     _openDigitsController.addListener(() => _filterOpenDigitsNumbers());
     _openDigitsFocusNode.addListener(() => _onOpenDigitsFocusChange());
     _filteredOpenDigitsNumbers = singleAnkNumbers;
-    
+
     _openPannaController.addListener(() => _filterOpenPannaNumbers());
     _openPannaFocusNode.addListener(() => _onOpenPannaFocusChange());
     _filteredOpenPannaNumbers = halfSangam;
-    
+
     _closeDigitsController.addListener(() => _filterCloseDigitsNumbers());
     _closeDigitsFocusNode.addListener(() => _onCloseDigitsFocusChange());
     _filteredCloseDigitsNumbers = singleAnkNumbers;
-    
+
     _closePannaController.addListener(() => _filterClosePannaNumbers());
     _closePannaFocusNode.addListener(() => _onClosePannaFocusChange());
     _filteredClosePannaNumbers = halfSangam;
-    
+
     // You can now use widget.marketId for any initialization
     print("Market ID in HalfSangam: ${widget.marketId}");
   }
@@ -2030,17 +2031,17 @@ class _HalfSangamState extends State<HalfSangam> {
     _closeDigitsController.dispose();
     _closePannaController.dispose();
     _pointsController.dispose();
-    
+
     _openDigitsFocusNode.dispose();
     _openPannaFocusNode.dispose();
     _closeDigitsFocusNode.dispose();
     _closePannaFocusNode.dispose();
-    
+
     _removeOpenDigitsOverlay();
     _removeOpenPannaOverlay();
     _removeCloseDigitsOverlay();
     _removeClosePannaOverlay();
-    
+
     super.dispose();
   }
 
@@ -2061,7 +2062,8 @@ class _HalfSangamState extends State<HalfSangam> {
       } else {
         try {
           _filteredOpenDigitsNumbers = singleAnkNumbers.where((number) {
-            return number.toString().contains(input);
+           // return number.toString().contains(input);
+           return number.toString().startsWith(input);
           }).toList();
         } catch (e) {
           _filteredOpenDigitsNumbers = [];
@@ -2116,9 +2118,12 @@ class _HalfSangamState extends State<HalfSangam> {
                           onTap: () {
                             setState(() {
                               _openDigitsController.text = number.toString();
-                              _openDigitsController.selection = TextSelection.fromPosition(
-                                TextPosition(offset: _openDigitsController.text.length),
-                              );
+                              _openDigitsController.selection =
+                                  TextSelection.fromPosition(
+                                    TextPosition(
+                                      offset: _openDigitsController.text.length,
+                                    ),
+                                  );
                             });
                             _removeOpenDigitsOverlay();
                           },
@@ -2157,7 +2162,8 @@ class _HalfSangamState extends State<HalfSangam> {
       } else {
         try {
           _filteredOpenPannaNumbers = halfSangam.where((number) {
-            return number.toString().contains(input);
+           // return number.toString().contains(input);
+           return number.toString().startsWith(input);
           }).toList();
         } catch (e) {
           _filteredOpenPannaNumbers = [];
@@ -2212,9 +2218,12 @@ class _HalfSangamState extends State<HalfSangam> {
                           onTap: () {
                             setState(() {
                               _openPannaController.text = number.toString();
-                              _openPannaController.selection = TextSelection.fromPosition(
-                                TextPosition(offset: _openPannaController.text.length),
-                              );
+                              _openPannaController.selection =
+                                  TextSelection.fromPosition(
+                                    TextPosition(
+                                      offset: _openPannaController.text.length,
+                                    ),
+                                  );
                             });
                             _removeOpenPannaOverlay();
                           },
@@ -2254,7 +2263,8 @@ class _HalfSangamState extends State<HalfSangam> {
       } else {
         try {
           _filteredCloseDigitsNumbers = singleAnkNumbers.where((number) {
-            return number.toString().contains(input);
+            //return number.toString().contains(input);
+            return number.toString().startsWith(input);
           }).toList();
         } catch (e) {
           _filteredCloseDigitsNumbers = [];
@@ -2309,8 +2319,11 @@ class _HalfSangamState extends State<HalfSangam> {
                           onTap: () {
                             setState(() {
                               _closeDigitsController.text = number.toString();
-                              _closeDigitsController.selection = TextSelection.fromPosition(
-                                TextPosition(offset: _closeDigitsController.text.length),
+                              _closeDigitsController
+                                  .selection = TextSelection.fromPosition(
+                                TextPosition(
+                                  offset: _closeDigitsController.text.length,
+                                ),
                               );
                             });
                             _removeCloseDigitsOverlay();
@@ -2351,7 +2364,8 @@ class _HalfSangamState extends State<HalfSangam> {
       } else {
         try {
           _filteredClosePannaNumbers = halfSangam.where((number) {
-            return number.toString().contains(input);
+            //return number.toString().contains(input);
+            return number.toString().startsWith(input);
           }).toList();
         } catch (e) {
           _filteredClosePannaNumbers = [];
@@ -2406,9 +2420,12 @@ class _HalfSangamState extends State<HalfSangam> {
                           onTap: () {
                             setState(() {
                               _closePannaController.text = number.toString();
-                              _closePannaController.selection = TextSelection.fromPosition(
-                                TextPosition(offset: _closePannaController.text.length),
-                              );
+                              _closePannaController.selection =
+                                  TextSelection.fromPosition(
+                                    TextPosition(
+                                      offset: _closePannaController.text.length,
+                                    ),
+                                  );
                             });
                             _removeClosePannaOverlay();
                           },
@@ -2431,6 +2448,7 @@ class _HalfSangamState extends State<HalfSangam> {
     }
   }
 
+  
   void _addBid() {
     if (_globalKey.currentState!.validate()) {
       setState(() {
@@ -2438,34 +2456,40 @@ class _HalfSangamState extends State<HalfSangam> {
         if (_isFlipped) {
           // When flipped, use open panna and close digits
           bids.add({
-            'openDigits': _openPannaController.text,
-            'openPanna': _openPannaController.text,
-            'closeDigits': _closeDigitsController.text,
-            'closePanna': _closeDigitsController.text,
+            'openDigits':
+                _openPannaController.text, // This should be panna value
+            //'openPanna': _openPannaController.text,
+           // 'closeDigits': _closeDigitsController.text,
+            'closePanna':
+                _closeDigitsController.text, // This should be digits value
             'points': _pointsController.text,
             'type': 'OPEN',
-            'displayDigit': "${_openPannaController.text}-${_closeDigitsController.text}",
+            'displayDigit':
+                "${_openPannaController.text}-${_closeDigitsController.text}",
           });
         } else {
           // When not flipped, use open digits and close panna
           bids.add({
             'openDigits': _openDigitsController.text,
-            'openPanna': _openDigitsController.text,
-            'closeDigits': _closePannaController.text,
+            'openPanna':
+                _openDigitsController.text, // This should be digits value
+            'closeDigits':
+                _closePannaController.text, // This should be panna value
             'closePanna': _closePannaController.text,
             'points': _pointsController.text,
             'type': 'OPEN',
-            'displayDigit': "${_openDigitsController.text}-${_closePannaController.text}",
+            'displayDigit':
+                "${_openDigitsController.text}-${_closePannaController.text}",
           });
         }
-        
+
         // Clear all fields
         _openDigitsController.clear();
         _openPannaController.clear();
         _closeDigitsController.clear();
         _closePannaController.clear();
         _pointsController.clear();
-        
+
         // Remove any active overlays
         _removeOpenDigitsOverlay();
         _removeOpenPannaOverlay();
@@ -2481,6 +2505,19 @@ class _HalfSangamState extends State<HalfSangam> {
     });
   }
 
+  // void _flipGame() {
+  //   setState(() {
+  //     _isFlipped = !_isFlipped;
+  //     // Update display digits for all existing bids
+  //     for (var bid in bids) {
+  //       if (_isFlipped) {
+  //         bid['displayDigit'] = "${bid['openPanna']}-${bid['closeDigits']}";
+  //       } else {
+  //         bid['displayDigit'] = "${bid['openDigits']}-${bid['closePanna']}";
+  //       }
+  //     }
+  //   });
+  // }
   void _flipGame() {
     setState(() {
       _isFlipped = !_isFlipped;
@@ -2497,7 +2534,7 @@ class _HalfSangamState extends State<HalfSangam> {
 
   void _submitAllBids(BuildContext context) {
     final provider = Provider.of<HalfSangamProvider>(context, listen: false);
-    
+
     for (var bid in bids) {
       // For Half Sangam, we need to send both open and close values
       // Adjust this based on your API requirements
@@ -2509,10 +2546,10 @@ class _HalfSangamState extends State<HalfSangam> {
         // You might need to add additional fields for open/close values
         // depending on your API requirements
       );
-      
+
       provider.placeSingleAnkBet(context, singleAnkModel);
     }
-    
+
     // Clear bids after submission
     setState(() {
       bids.clear();
@@ -2542,18 +2579,15 @@ class _HalfSangamState extends State<HalfSangam> {
               actions: [
                 Container(
                   margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.wallet, color: Colors.black),
-                      SizedBox(width: 5),
-                      Text("24897", style: TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
+                  child: Wallet()
                 ),
               ],
             ),
@@ -2561,7 +2595,9 @@ class _HalfSangamState extends State<HalfSangam> {
               builder: (context, constraints) {
                 return SingleChildScrollView(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(15),
                       child: Column(
@@ -2605,12 +2641,15 @@ class _HalfSangamState extends State<HalfSangam> {
                                 if (!_isFlipped) ...[
                                   // Open Digits field (visible when not flipped)
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(width: 10),
                                       Text(
                                         "Enter Open Digits: ",
-                                        style: TextStyle(fontWeight: FontWeight.w600),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                       SizedBox(width: 50),
                                       Expanded(
@@ -2618,7 +2657,11 @@ class _HalfSangamState extends State<HalfSangam> {
                                           link: _openDigitsLayerLink,
                                           child: GestureDetector(
                                             onTap: () {
-                                              FocusScope.of(context).requestFocus(_openDigitsFocusNode);
+                                              FocusScope.of(
+                                                context,
+                                              ).requestFocus(
+                                                _openDigitsFocusNode,
+                                              );
                                               _showOpenDigitsDropdownOverlay();
                                             },
                                             child: CustomTextfieldScreen1(
@@ -2628,16 +2671,24 @@ class _HalfSangamState extends State<HalfSangam> {
                                               onChanged: (value) {
                                                 // For Single Digit - limit to 1 digit
                                                 if (value.length > 1) {
-                                                  _openDigitsController.text = value[0];
-                                                  _openDigitsController.selection = TextSelection.fromPosition(
-                                                    TextPosition(offset: 1),
-                                                  );
+                                                  _openDigitsController.text =
+                                                      value[0];
+                                                  _openDigitsController
+                                                          .selection =
+                                                      TextSelection.fromPosition(
+                                                        TextPosition(offset: 1),
+                                                      );
                                                 } else {
-                                                  _openDigitsController.text = value;
+                                                  _openDigitsController.text =
+                                                      value;
                                                 }
                                               },
                                               validator: (value) {
-                                                if (value == null || value.isEmpty || !singleAnkNumbers.contains(value)) {
+                                                if (value == null ||
+                                                    value.isEmpty ||
+                                                    !singleAnkNumbers.contains(
+                                                      value,
+                                                    )) {
                                                   return "Enter valid digit";
                                                 }
                                                 return null;
@@ -2652,12 +2703,15 @@ class _HalfSangamState extends State<HalfSangam> {
 
                                   // Close Panna field (visible when not flipped)
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(width: 10),
                                       Text(
                                         "Enter Close Panna: ",
-                                        style: TextStyle(fontWeight: FontWeight.w600),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                       SizedBox(width: 43),
                                       Expanded(
@@ -2665,7 +2719,11 @@ class _HalfSangamState extends State<HalfSangam> {
                                           link: _closePannaLayerLink,
                                           child: GestureDetector(
                                             onTap: () {
-                                              FocusScope.of(context).requestFocus(_closePannaFocusNode);
+                                              FocusScope.of(
+                                                context,
+                                              ).requestFocus(
+                                                _closePannaFocusNode,
+                                              );
                                               _showClosePannaDropdownOverlay();
                                             },
                                             child: CustomTextfieldScreen1(
@@ -2675,16 +2733,24 @@ class _HalfSangamState extends State<HalfSangam> {
                                               onChanged: (value) {
                                                 // For Panna - limit to 3 digits
                                                 if (value.length > 3) {
-                                                  _closePannaController.text = value.substring(0, 3);
-                                                  _closePannaController.selection = TextSelection.fromPosition(
-                                                    TextPosition(offset: 3),
-                                                  );
+                                                  _closePannaController.text =
+                                                      value.substring(0, 3);
+                                                  _closePannaController
+                                                          .selection =
+                                                      TextSelection.fromPosition(
+                                                        TextPosition(offset: 3),
+                                                      );
                                                 } else {
-                                                  _closePannaController.text = value;
+                                                  _closePannaController.text =
+                                                      value;
                                                 }
                                               },
                                               validator: (value) {
-                                                if (value == null || value.isEmpty || !halfSangam.contains(value)) {
+                                                if (value == null ||
+                                                    value.isEmpty ||
+                                                    !halfSangam.contains(
+                                                      value,
+                                                    )) {
                                                   return "Enter valid panna";
                                                 }
                                                 return null;
@@ -2698,12 +2764,15 @@ class _HalfSangamState extends State<HalfSangam> {
                                 ] else ...[
                                   // Open Panna field (visible when flipped)
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(width: 10),
                                       Text(
                                         "Enter Open Panna: ",
-                                        style: TextStyle(fontWeight: FontWeight.w600),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                       SizedBox(width: 50),
                                       Expanded(
@@ -2711,7 +2780,11 @@ class _HalfSangamState extends State<HalfSangam> {
                                           link: _openPannaLayerLink,
                                           child: GestureDetector(
                                             onTap: () {
-                                              FocusScope.of(context).requestFocus(_openPannaFocusNode);
+                                              FocusScope.of(
+                                                context,
+                                              ).requestFocus(
+                                                _openPannaFocusNode,
+                                              );
                                               _showOpenPannaDropdownOverlay();
                                             },
                                             child: CustomTextfieldScreen1(
@@ -2721,16 +2794,24 @@ class _HalfSangamState extends State<HalfSangam> {
                                               onChanged: (value) {
                                                 // For Panna - limit to 3 digits
                                                 if (value.length > 3) {
-                                                  _openPannaController.text = value.substring(0, 3);
-                                                  _openPannaController.selection = TextSelection.fromPosition(
-                                                    TextPosition(offset: 3),
-                                                  );
+                                                  _openPannaController.text =
+                                                      value.substring(0, 3);
+                                                  _openPannaController
+                                                          .selection =
+                                                      TextSelection.fromPosition(
+                                                        TextPosition(offset: 3),
+                                                      );
                                                 } else {
-                                                  _openPannaController.text = value;
+                                                  _openPannaController.text =
+                                                      value;
                                                 }
                                               },
                                               validator: (value) {
-                                                if (value == null || value.isEmpty || !halfSangam.contains(value)) {
+                                                if (value == null ||
+                                                    value.isEmpty ||
+                                                    !halfSangam.contains(
+                                                      value,
+                                                    )) {
                                                   return "Enter valid panna";
                                                 }
                                                 return null;
@@ -2745,12 +2826,15 @@ class _HalfSangamState extends State<HalfSangam> {
 
                                   // Close Digits field (visible when flipped)
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(width: 10),
                                       Text(
                                         "Enter Close Digits: ",
-                                        style: TextStyle(fontWeight: FontWeight.w600),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                       SizedBox(width: 43),
                                       Expanded(
@@ -2758,26 +2842,39 @@ class _HalfSangamState extends State<HalfSangam> {
                                           link: _closeDigitsLayerLink,
                                           child: GestureDetector(
                                             onTap: () {
-                                              FocusScope.of(context).requestFocus(_closeDigitsFocusNode);
+                                              FocusScope.of(
+                                                context,
+                                              ).requestFocus(
+                                                _closeDigitsFocusNode,
+                                              );
                                               _showCloseDigitsDropdownOverlay();
                                             },
                                             child: CustomTextfieldScreen1(
-                                              controller: _closeDigitsController,
+                                              controller:
+                                                  _closeDigitsController,
                                               focusNode: _closeDigitsFocusNode,
                                               hintText: "Enter Single",
                                               onChanged: (value) {
                                                 // For Single Digit - limit to 1 digit
                                                 if (value.length > 1) {
-                                                  _closeDigitsController.text = value[0];
-                                                  _closeDigitsController.selection = TextSelection.fromPosition(
-                                                    TextPosition(offset: 1),
-                                                  );
+                                                  _closeDigitsController.text =
+                                                      value[0];
+                                                  _closeDigitsController
+                                                          .selection =
+                                                      TextSelection.fromPosition(
+                                                        TextPosition(offset: 1),
+                                                      );
                                                 } else {
-                                                  _closeDigitsController.text = value;
+                                                  _closeDigitsController.text =
+                                                      value;
                                                 }
                                               },
                                               validator: (value) {
-                                                if (value == null || value.isEmpty || !singleAnkNumbers.contains(value)) {
+                                                if (value == null ||
+                                                    value.isEmpty ||
+                                                    !singleAnkNumbers.contains(
+                                                      value,
+                                                    )) {
                                                   return "Enter valid digit";
                                                 }
                                                 return null;
@@ -2790,14 +2887,16 @@ class _HalfSangamState extends State<HalfSangam> {
                                   ),
                                 ],
                                 const SizedBox(height: 10),
-                                
+
                                 // Enter Points
                                 Row(
                                   children: [
                                     SizedBox(width: 10),
                                     Text(
                                       "Enter Points: ",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                     SizedBox(width: 95),
                                     Expanded(
@@ -2829,7 +2928,10 @@ class _HalfSangamState extends State<HalfSangam> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    AddButton(data: "ADD BID", onPressed: _addBid),
+                                    AddButton(
+                                      data: "ADD BID",
+                                      onPressed: _addBid,
+                                    ),
                                     SizedBox(width: 20),
                                     AddButton(
                                       data: "FLIP GAME",
@@ -2845,10 +2947,14 @@ class _HalfSangamState extends State<HalfSangam> {
                           // Bid List Table
                           Container(
                             constraints: BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height * 0.4,
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.4,
                             ),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.orange, width: 2),
+                              border: Border.all(
+                                color: Colors.orange,
+                                width: 2,
+                              ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -2902,7 +3008,9 @@ class _HalfSangamState extends State<HalfSangam> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.grey,
@@ -2932,12 +3040,14 @@ class _HalfSangamState extends State<HalfSangam> {
                                                 Expanded(
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.center,
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       SizedBox(width: 5),
                                                       Text(
                                                         bids[index]['type']!,
-                                                        textAlign: TextAlign.center,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
                                                       const SizedBox(width: 8),
                                                       GestureDetector(
@@ -2977,9 +3087,13 @@ class _HalfSangamState extends State<HalfSangam> {
                                         if (bids.isNotEmpty) {
                                           _submitAllBids(context);
                                         } else {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
-                                              content: Text("Please add at least one bid"),
+                                              content: Text(
+                                                "Please add at least one bid",
+                                              ),
                                               backgroundColor: Colors.red,
                                             ),
                                           );

@@ -962,6 +962,8 @@ import 'package:dmboss/provider/games_provider/single_patti_provider.dart';
 import 'package:dmboss/widgets/add_button.dart';
 import 'package:dmboss/widgets/custom_textfield_screen1.dart';
 import 'package:dmboss/widgets/date_container.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
+import 'package:dmboss/widgets/game_status.dart';
 import 'package:dmboss/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -971,11 +973,12 @@ class SinglePatti extends StatefulWidget {
   final String title;
   final String gameName;
   final String marketId; // Added marketId parameter
+  final String openTime;
   const SinglePatti({
     super.key, 
     required this.title, 
     required this.gameName,
-    required this.marketId, // Added to constructor
+    required this.marketId, required this.openTime, // Added to constructor
   });
 
   @override
@@ -1035,7 +1038,8 @@ class _SinglePattiState extends State<SinglePatti> {
       } else {
         try {
           _filteredNumbers = singlePattiNumbers.where((number) {
-            return number.toString().contains(input);
+           // return number.toString().contains(input);
+           return number.toString().startsWith(input);
           }).toList();
         } catch (e) {
           _filteredNumbers = [];
@@ -1119,11 +1123,15 @@ class _SinglePattiState extends State<SinglePatti> {
         _digitError = _digitController.text.isEmpty;
         _pointsError = _pointsController.text.isEmpty;
 
+    // Use the function to determine game status
+          final gameStatus = getGameStatus(widget.openTime);
+          
+
         if (!_digitError && !_pointsError) {
           bids.add({
             'digit': _digitController.text,
             'points': _pointsController.text,
-            'type': 'OPEN',
+            'type': gameStatus,
           });
           _digitController.clear();
           _pointsController.clear();
@@ -1190,13 +1198,7 @@ class _SinglePattiState extends State<SinglePatti> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.wallet, color: Colors.black),
-                      SizedBox(width: 5),
-                      Text("24897", style: TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
+                  child: Wallet()
                 ),
               ],
             ),

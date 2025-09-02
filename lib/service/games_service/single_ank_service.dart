@@ -34,16 +34,16 @@ class SingleAnkBetService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Bet placed successfully!")),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text("Bet placed successfully!")),
+        // );
         return response.data;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Failed to place bet: ${response.statusCode}"),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text("Failed to place bet: ${response.statusCode}"),
+        //   ),
+        // );
         return null;
       }
     } catch (e) {

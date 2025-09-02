@@ -29,7 +29,8 @@ class UserProfileService {
 
   Future<UserModel?> getUserProfile() async {
     try {
-      // Check if user is logged in first
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
 
       final dio = await _getAuthenticatedDio();
 

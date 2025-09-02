@@ -764,6 +764,7 @@ import 'package:dmboss/provider/user_profile_provider.dart';
 import 'package:dmboss/ui/game/game_list_screen.dart';
 import 'package:dmboss/ui/my_wallet_screen.dart';
 import 'package:dmboss/util/get_market_status.dart';
+import 'package:dmboss/util/get_time_in_12_hours.dart';
 import 'package:dmboss/widgets/blinking_container.dart';
 import 'package:dmboss/util/make_call.dart';
 import 'package:dmboss/widgets/game_card.dart';
@@ -827,20 +828,20 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         title: Row(
           children: [
-            ClipOval(
-              child: Image.asset(
-                "assets/images/dmbossLogo.png",
-                height: 35,
-                width: 35,
-              ),
-            ),
-            const SizedBox(width: 4),
+            // ClipOval(
+            //   child: Image.asset(
+            //     "assets/images/dmbossLogo.png",
+            //     height: 35,
+            //     width: 35,
+            //   ),
+            // ),
+            // const SizedBox(width: 4),
             const Text(
               "DM Boss",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
-                fontSize: 18,
+                fontSize: 16,
               ),
             ),
           ],
@@ -996,7 +997,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             listen: false,
                           );
                           gameProvider.setSelectedGameId(game?.id ?? "");
-                          
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -1004,7 +1005,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 title: game?.bazar ?? "",
                                 openTime: game?.open ?? "",
                                 closeTime: game?.close ?? "",
-                                marketId: game?.id ?? "", // Pass the market ID directly
+                                marketId:
+                                    game?.id ??
+                                    "", // Pass the market ID directly
                               ),
                             ),
                           );
@@ -1039,8 +1042,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             game?.days ?? "",
                           ),
                         ),
-                        openTime: game?.open ?? "",
-                        closeTime: game?.close ?? "",
+                        openTime: convertTimeStringTo12HourFormat(
+                          game?.open ?? "",
+                        ),
+                        closeTime: convertTimeStringTo12HourFormat(
+                          game?.close ?? "",
+                        ),
                       ),
                     );
                   },

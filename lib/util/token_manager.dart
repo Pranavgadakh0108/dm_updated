@@ -42,5 +42,6 @@ class TokenManager {
     await prefs.remove(_tokenKey);
     await prefs.remove(_userDataKey);
     await prefs.remove(_isLoggedInKey);
+    await prefs.remove('user_id');
   }
 }

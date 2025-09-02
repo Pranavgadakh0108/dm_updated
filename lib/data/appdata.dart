@@ -1,5 +1,6 @@
 import 'package:dmboss/ui/add_bank_details.dart';
 import 'package:dmboss/ui/fund_pending_requests.dart';
+import 'package:dmboss/ui/menu/add_fund_history.dart';
 import 'package:dmboss/ui/menu/add_fund_screen.dart';
 import 'package:dmboss/ui/menu/bid_history_screen.dart';
 import 'package:dmboss/ui/menu/transaction_history_screen.dart';
@@ -200,10 +201,10 @@ final List<IconData> menuIcons = const [
 
 final List<Widget> walletScreens = [
   AddFundScreen(),
-  AddBankDetails(),
+  AddBankDetailsPage(),
   WithdrawPoints(),
   WinningHistoryScreen(),
-  FundPendingRequests(),
+  AddFundHistoryScreen(),
   WithdrawPendingRequests(),
 ];
 
@@ -964,6 +965,16 @@ final List<String> panelGroup = [
 ];
 
 final List<String> halfSangam = [
+  "000",
+  "111",
+  "222",
+  "333",
+  "444",
+  "555",
+  "666",
+  "777",
+  "888",
+  "999",
   "120",
   "130",
   "140",

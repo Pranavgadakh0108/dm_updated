@@ -1,22 +1,22 @@
 
 import 'dart:convert';
 
-BulkModel bulkModelFromJson(String str) => BulkModel.fromJson(json.decode(str));
+BulkSpModel bulkSpModelFromJson(String str) => BulkSpModel.fromJson(json.decode(str));
 
-String bulkModelToJson(BulkModel data) => json.encode(data.toJson());
+String bulkSpModelToJson(BulkSpModel data) => json.encode(data.toJson());
 
-class BulkModel {
+class BulkSpModel {
     String gameId;
     String gameType;
     List<BulkSp> bulkSp;
 
-    BulkModel({
+    BulkSpModel({
         required this.gameId,
         required this.gameType,
         required this.bulkSp,
     });
 
-    factory BulkModel.fromJson(Map<String, dynamic> json) => BulkModel(
+    factory BulkSpModel.fromJson(Map<String, dynamic> json) => BulkSpModel(
         gameId: json["gameId"],
         gameType: json["gameType"],
         bulkSp: List<BulkSp>.from(json["bulkSP"].map((x) => BulkSp.fromJson(x))),

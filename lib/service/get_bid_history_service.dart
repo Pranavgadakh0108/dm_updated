@@ -1,11 +1,11 @@
-
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
-import 'package:dmboss/model/games_model/bulk_model.dart';
+import 'package:dmboss/model/bid_history_model.dart';
+import 'package:dmboss/model/fund_history.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class BulkBetService {
+class GetBidHistoryService {
   Future<Dio> _getDioInstance() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final token = sharedPreferences.getString('auth_token');
@@ -22,33 +22,21 @@ class BulkBetService {
     );
   }
 
-  Future<Map<String, dynamic>?> placeBulkBet(
-    BuildContext context,
-    BulkModel bulkModel,
-  ) async {
+  Future<BidHistoryModel?> getBidHistory(BuildContext context) async {
     try {
       final dio = await _getDioInstance();
 
-      final response = await dio.post(
-        '/user/bets/place-bet', 
-        data: bulkModel.toJson(),
-      );
+      final result = await dio.get("/users/bets/history");
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Bulk bet placed successfully!")),
-        );
-        return response.data;
+      if (result.statusCode == 200) {
+        return BidHistoryModel.fromJson(result.data);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Failed to place bulk bet: ${response.statusCode}"),
-          ),
-        );
-        return null;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Failed to Fetch bet History")));
       }
     } catch (e) {
-      String errorMessage = "Something went wrong while placing your bulk bet";
+      String errorMessage = "Something went wrong";
 
       if (e is DioException) {
         if (e.response != null && e.response?.data != null) {
@@ -66,5 +54,6 @@ class BulkBetService {
 
       return null;
     }
+    return null;
   }
 }

@@ -127,7 +127,7 @@ class AuthService {
         final loginUserModel = LoginUserModel.fromJson(response.data);
 
         // Store token after successful login
-        await storeToken(loginUserModel.token);
+        await storeToken(loginUserModel.token, loginUserModel.user.id);
 
         return loginUserModel;
       } else {
@@ -144,9 +144,10 @@ class AuthService {
   }
 
   // Store token method
-  Future<void> storeToken(String token) async {
+  Future<void> storeToken(String token, String userId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_tokenKey, token);
+    await prefs.setString("user_id", userId);
   }
 
   // Get stored token
@@ -197,7 +198,7 @@ class AuthService {
         final loginUserModel = LoginUserModel.fromJson(response.data);
 
         // Store token
-        await storeToken(loginUserModel.token);
+        await storeToken(loginUserModel.token, loginUserModel.user.id);
 
         return loginUserModel.success;
       } else {

@@ -1111,6 +1111,7 @@ import 'package:dmboss/provider/games_provider/group_jodi_provider.dart';
 import 'package:dmboss/widgets/add_button.dart';
 import 'package:dmboss/widgets/custom_textfield_screen1.dart';
 import 'package:dmboss/widgets/date_container.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:dmboss/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -1321,7 +1322,8 @@ class _GroupJodiState extends State<GroupJodi> {
       } else {
         try {
           _filteredNumbers = jodiNumbers.where((number) {
-            return number.toString().contains(input);
+           // return number.toString().contains(input);
+           return number.toString().startsWith(input);
           }).toList();
         } catch (e) {
           _filteredNumbers = [];
@@ -1489,13 +1491,7 @@ class _GroupJodiState extends State<GroupJodi> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.wallet, color: Colors.black),
-                      SizedBox(width: 5),
-                      Text("24897", style: TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
+                  child: Wallet()
                 ),
               ],
             ),

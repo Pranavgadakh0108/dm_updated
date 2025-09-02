@@ -498,7 +498,7 @@ class GameListScreen extends StatelessWidget {
     required this.title,
     required this.openTime,
     required this.closeTime,
-    required this.marketId,
+    required this.marketId, 
   });
 
   // // Function to check if current time is before open time
@@ -694,7 +694,7 @@ class GameListScreen extends StatelessWidget {
                       builder: (context) => FullSangam(
                         title: filteredGames[index]['title'],
                         gameName: title,
-                        //  marketId: marketId, // Pass marketId
+                        marketId: marketId, // Pass marketId
                       ),
                     ),
                   );
@@ -704,7 +704,7 @@ class GameListScreen extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => BulkDp(
                         title: filteredGames[index]['title'],
-                        //  marketId: marketId, // Pass marketId
+                        marketId: marketId, // Pass marketId
                       ),
                     ),
                   );
@@ -716,6 +716,8 @@ class GameListScreen extends StatelessWidget {
                         title: filteredGames[index]['title'],
                         gameName: title,
                         marketId: marketId, // Pass marketId
+                        openTime : openTime,
+
                       ),
                     ),
                   );
@@ -738,6 +740,7 @@ class GameListScreen extends StatelessWidget {
                         title: filteredGames[index]['title'],
                         gameName: title,
                         marketId: marketId, // Pass marketId
+                        openTime: openTime,
                       ),
                     ),
                   );
@@ -749,6 +752,7 @@ class GameListScreen extends StatelessWidget {
                         title: filteredGames[index]['title'],
                         gameName: title,
                         marketId: marketId, // Pass marketId
+                        openTime: openTime
                       ),
                     ),
                   );
@@ -760,6 +764,7 @@ class GameListScreen extends StatelessWidget {
                         title: filteredGames[index]['title'],
                         gameName: title,
                         marketId: marketId, // Pass marketId
+                        openTime: openTime,
                       ),
                     ),
                   );
@@ -771,6 +776,7 @@ class GameListScreen extends StatelessWidget {
                         title: filteredGames[index]['title'],
                         gameName: title,
                         marketId: marketId, // Pass marketId
+                        
                       ),
                     ),
                   );
@@ -782,6 +788,7 @@ class GameListScreen extends StatelessWidget {
                         title: filteredGames[index]['title'],
                         gameName: title,
                         marketId: marketId, // Pass marketId
+                        openTime:openTime
                       ),
                     ),
                   );
@@ -800,9 +807,9 @@ class GameListScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BulkJodi(
+                      builder: (context) => BulkJodii(
                         title: filteredGames[index]['title'],
-                        //   marketId: marketId, // Pass marketId
+                        marketId: marketId, // Pass marketId
                       ),
                     ),
                   );
@@ -810,9 +817,9 @@ class GameListScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BulkSp(
+                      builder: (context) => BulkSP(
                         title: filteredGames[index]['title'],
-                        // marketId: marketId, // Pass marketId
+                        marketId: marketId, // Pass marketId
                       ),
                     ),
                   );
