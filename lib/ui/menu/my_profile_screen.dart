@@ -123,26 +123,26 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Notification toggle
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Enable / Disable Notifications",
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(width: 5),
-                    Switch(
-                      value: false,
-                      onChanged: null,
-                      inactiveTrackColor: Colors.grey,
-                      inactiveThumbColor: Colors.white,
-                      activeColor: Colors.orange,
-                    ),
-                  ],
-                ),
+                // const Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Text(
+                //       "Enable / Disable Notifications",
+                //       style: TextStyle(
+                //         color: Colors.red,
+                //         fontWeight: FontWeight.w500,
+                //       ),
+                //     ),
+                //     SizedBox(width: 5),
+                //     Switch(
+                //       value: false,
+                //       onChanged: null,
+                //       inactiveTrackColor: Colors.grey,
+                //       inactiveThumbColor: Colors.white,
+                //       activeColor: Colors.orange,
+                //     ),
+                //   ],
+                // ),
                 const SizedBox(height: 20),
 
                 Form(
@@ -162,6 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         controller: _nameController,
                         hintText: "Name",
                         icon: Icons.person,
+                        readOnly: true,
                         onChanged: (value) => provider.setName(value),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -200,11 +201,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         validator: (value) {
                           if (value != null &&
                               value.isNotEmpty &&
-                              value.length < 6) {
-                            return "Password must be at least 6 characters";
+                              value.length < 4) {
+                            return "Password must be at least 4 characters";
                           }
                           return null;
                         },
+                        keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 15),
 
@@ -215,6 +217,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         obscureText: true,
                         onChanged: (value) =>
                             provider.setConfirmPassword(value),
+                        keyboardType: TextInputType.number,
                         validator: (value) {
                           final newPassword = _newPasswordController.text;
                           if (newPassword.isNotEmpty) {
@@ -224,8 +227,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             if (value != newPassword) {
                               return "Passwords do not match";
                             }
-                            if (value.length < 6) {
-                              return "Password must be at least 6 characters";
+                            if (value.length < 4) {
+                              return "Password must be at least 4 characters";
                             }
                           }
                           return null;

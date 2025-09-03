@@ -37,7 +37,7 @@ void showTermsPopup(
                   children: [
                     Icon(
                       Icons.warning_amber_rounded,
-                      size: 80,
+                      size: 60,
                       color: Colors.red,
                     ),
                     const SizedBox(height: 10),
@@ -61,7 +61,7 @@ void showTermsPopup(
                       ),
                     ),
                     const Text(
-                      "Note: Please Confirm That Bank Details You Have Entered Are Correct, If You Entered Wrong Bank Details Is Not Our Responsibility. After submitting the withdraw request, if there is no valid balance in your wallet, then the request will be automatically declined.",
+                      "Note: Please Confirm That Bank Details You Have Entered Are Correct, If You Entered Wrong Bank Details Is Not Our Responsibility.",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.red,
@@ -69,10 +69,10 @@ void showTermsPopup(
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     SizedBox(
                       width: double.infinity,
-                      height: 50,
+                      height: 40,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,

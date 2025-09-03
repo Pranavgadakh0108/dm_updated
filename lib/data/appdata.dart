@@ -224,18 +224,18 @@ final List<Widget> walletScreens = [
 // ];
 
 final List<Map<String, dynamic>> gameList = [
-  {"id": 1, "title": "Single Ank", "icon": Icons.casino},
-  {"id": 2, "title": "Jodi", "icon": Icons.casino_outlined},
-  {"id": 3, "title": "Single Patti", "icon": Icons.filter_1},
-  {"id": 4, "title": "Double Patti", "icon": Icons.filter_2},
-  {"id": 5, "title": "Tripple Patti", "icon": Icons.filter_3},
-  {"id": 6, "title": "Half Sangam", "icon": Icons.star_half},
-  {"id": 7, "title": "Full Sangam", "icon": Icons.star},
-  {"id": 8, "title": "Group Jodi", "icon": Icons.group},
-  {"id": 9, "title": "Panel Group", "icon": Icons.groups_3_rounded},
-  {"id": 10, "title": "Bulk Jodi", "icon": Icons.casino_outlined},
-  {"id": 11, "title": "Bulk SP", "icon": Icons.sports_bar},
-  {"id": 12, "title": "Bulk DP", "icon": Icons.sports_basketball},
+  {"id": 1, "title": "Single Ank", "icon": "single_ank.png"},
+  {"id": 2, "title": "Jodi", "icon": "jodi.png"},
+  {"id": 3, "title": "Single Patti", "icon": "single_patti.png"},
+  {"id": 4, "title": "Double Patti", "icon": "double_patti.png"},
+  {"id": 5, "title": "Tripple Patti", "icon": "tripple_patti.png"},
+  {"id": 6, "title": "Half Sangam", "icon": "half_sangam.png"},
+  {"id": 7, "title": "Full Sangam", "icon": "full_sangam.png"},
+  {"id": 8, "title": "Group Jodi", "icon": "group_jodi.png"},
+  {"id": 9, "title": "Panel Group", "icon": "panel_group.png"},
+  {"id": 10, "title": "Bulk Jodi", "icon": "bulk_jodi.png"},
+  {"id": 11, "title": "Bulk SP", "icon": "bulk_sp.png"},
+  {"id": 12, "title": "Bulk DP", "icon": "bulk_dp.png"},
 ];
 
 final List<Bid> bidList = [

@@ -1,8 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:dmboss/provider/add_deposite_manual_provider.dart';
+import 'package:dmboss/provider/payment_gateway_provider.dart';
 import 'package:dmboss/provider/user_profile_provider.dart';
+import 'package:dmboss/service/post_payment_gateway.dart';
 import 'package:dmboss/ui/menu/add_funds_with_qr_or_transactionid.dart';
+import 'package:dmboss/ui/payment_gateway_screen.dart';
 import 'package:dmboss/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -135,7 +138,24 @@ class _AddFundScreenState extends State<AddFundScreen> {
                     ),
                     SizedBox(height: 12),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (_globalKey.currentState!.validate()) {
+                          setState(() {
+                            final provider =
+                                Provider.of<PaymentGatewayProvider>(
+                                  context,
+                                  listen: false,
+                                );
+                            provider.setAmount(_amountController.text);
+                          });
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PaymentGatewayScreen(),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(
                           196,

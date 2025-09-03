@@ -710,6 +710,7 @@ import 'package:dmboss/widgets/add_button.dart';
 import 'package:dmboss/widgets/custom_textfield_screen1.dart';
 import 'package:dmboss/widgets/date_container.dart';
 import 'package:dmboss/widgets/game_app_bar.dart';
+import 'package:dmboss/widgets/game_status.dart';
 import 'package:dmboss/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -1127,32 +1128,52 @@ class _FullSangamState extends State<FullSangam> {
                   children: [
                     // Date and Game Name
                     Row(
-                      children: [
-                        Expanded(child: DateContainer()),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.orange,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: Text(
-                                widget.gameName,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.orange,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      widget.gameName,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.orange,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "OPEN",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 15),
 
                     Expanded(

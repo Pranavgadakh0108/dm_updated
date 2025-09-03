@@ -12,15 +12,6 @@ class UserProfileProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  // Convenience getters for user data
-  // String get userName => _userProfile?.user.name ?? '';
-  // String get userEmail => _userProfile?.user.email ?? '';
-  // String get userMobile => _userProfile?.user.mobile ?? '';
-  // int get userWallet => _userProfile?.user.wallet ?? 0;
-  // String get userPaytm => _userProfile?.user.paytm ?? '';
-  // bool get isVerified => _userProfile?.user.verify == '1';
-  // bool get isProfileComplete => userName.isNotEmpty && userEmail.isNotEmpty;
-
   Future<void> fetchUserProfile() async {
     _isLoading = true;
     _errorMessage = null;
@@ -36,7 +27,7 @@ class UserProfileProvider extends ChangeNotifier {
         if (kDebugMode) {
           print('User profile fetched successfully:');
           print('Name: ${profile.user.name}');
-          print('Email: ${profile.user.email}');
+
           print('Wallet: ${profile.user.wallet}');
           print('Mobile: ${profile.user.mobile}');
         }
@@ -59,7 +50,7 @@ class UserProfileProvider extends ChangeNotifier {
 
   Future<bool> updateUserProfile({
     String? name,
-    String? email,
+    // String? email,
     String? paytm,
   }) async {
     _isLoading = true;
@@ -69,7 +60,7 @@ class UserProfileProvider extends ChangeNotifier {
     try {
       final updatedProfile = await _userProfileService.updateUserProfile(
         name: name,
-        email: email,
+        // email: email,
         paytm: paytm,
       );
 

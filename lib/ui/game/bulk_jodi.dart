@@ -10,7 +10,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class BulkJodii extends StatefulWidget {
   final String title;
   final String marketId;
-  const BulkJodii({super.key, required this.title, required this.marketId});
+  final String gameName;
+  const BulkJodii({
+    super.key,
+    required this.title,
+    required this.marketId,
+    required this.gameName,
+  });
 
   @override
   State<BulkJodii> createState() => _BulkJodiState();
@@ -302,28 +308,52 @@ class _BulkJodiState extends State<BulkJodii> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               // Date Container
-                              Container(
-                                padding: EdgeInsets.all(
-                                  MediaQuery.of(context).size.width * 0.02,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.orange,
-                                    width: 2,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Icon(
-                                      Icons.calendar_today,
-                                      color: Colors.black,
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.orange,
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          widget.gameName,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                    SizedBox(width: 5),
-                                    CurrentDateWidget(),
-                                  ],
-                                ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.orange,
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "OPEN",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SizedBox(height: 15),
 
@@ -431,7 +461,7 @@ class _BulkJodiState extends State<BulkJodii> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 15,)
+                          SizedBox(height: 15),
                         ],
                       ),
                     );

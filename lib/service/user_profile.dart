@@ -158,6 +158,6 @@ class UserProfileService {
     if (profile == null) return false;
 
     final user = profile.user;
-    return user.name!.isNotEmpty && user.email!.isNotEmpty;
+    return user.name!.isNotEmpty;
   }
 }

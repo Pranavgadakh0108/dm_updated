@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/provider/get_bet_history_provider.dart';
 import 'package:dmboss/widgets/navigation_bar.dart';
@@ -36,7 +38,9 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    _loadBetHistory();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadBetHistory();
+    });
   }
 
   Future<void> _loadBetHistory() async {
@@ -220,162 +224,169 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
       child: Padding(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
         child: ListView.builder(
-          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.015),
           itemCount: provider.gamesList!.bets.length,
           itemBuilder: (context, index) {
             final bid = provider.gamesList!.bets[index];
-            final isWon = bid.status?.contains("won") == true;
-            final isLost = bid.status?.contains("luck") == true;
-            final isPending =
-                bid.status?.contains("Pending") == true ||
-                (bid.status != "🎉 You won!" &&
-                    bid.status != "Better luck next time");
+            final isWon = bid.status.contains("won") == true;
+            final isLost = bid.status.contains("luck") == true;
 
             return Card(
               margin: const EdgeInsets.symmetric(vertical: 6),
               color: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: BorderSide(
-                  color: isWon
-                      ? Colors.green.withOpacity(0.3)
-                      : isLost
-                      ? Colors.red.withOpacity(0.3)
-                      : Colors.blue.withOpacity(0.3),
-                  width: 1.5,
-                ),
+                borderRadius: BorderRadius.circular(10),
+                // side: BorderSide(
+                //   color: isWon
+                //       ? Colors.green.withOpacity(0.3)
+                //       : isLost
+                //       ? Colors.red.withOpacity(0.3)
+                //       : Colors.blue.withOpacity(0.3),
+                //   width: 1.2,
+                // ),
               ),
-              elevation: 3,
+              elevation: 4,
               child: Padding(
                 padding: EdgeInsets.all(
-                  MediaQuery.of(context).size.width * 0.04,
+                  MediaQuery.of(context).size.width * 0.03,
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header Row with Date and Status Badge
+                    // Header row with date and status
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          bid.date ?? "No date",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: Colors.grey,
+                          bid.date,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 11,
+                            color: Colors.grey[600],
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _getStatusColor(bid.status ?? ""),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            _getStatusText(bid.status ?? ""),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   padding: const EdgeInsets.symmetric(
+                        //     horizontal: 6,
+                        //     vertical: 3,
+                        //   ),
+                        //   decoration: BoxDecoration(
+                        //     color: _getStatusColor(bid.status),
+                        //     borderRadius: BorderRadius.circular(10),
+                        //   ),
+                        //   child: Text(
+                        //     _getStatusText(bid.status),
+                        //     style: const TextStyle(
+                        //       color: Colors.white,
+                        //       fontSize: 9,
+                        //       fontWeight: FontWeight.w500,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
-                    const SizedBox(height: 12),
 
-                    // Main Content Row
+                    const SizedBox(height: 8),
+
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Left Column - Market Details
                         Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildDetailRow("Market", bid.market ?? "N/A"),
-                              const SizedBox(height: 4),
-                              _buildDetailRow("Session", bid.session ?? "N/A"),
-                              const SizedBox(height: 4),
-                              _buildDetailRow(
+                              _buildCompactDetail("Market", bid.market),
+                              const SizedBox(height: 2),
+                              _buildCompactDetail("Session", bid.session),
+                              const SizedBox(height: 2),
+                              _buildCompactDetail(
                                 "Game Type",
-                                bid.gameType ?? "N/A",
+                                bid.gameType,
                                 isHighlighted: true,
                               ),
                             ],
                           ),
                         ),
 
-                        const SizedBox(width: 16),
-
-                        // Middle Column - Bet Number
                         Expanded(
-                          flex: 1,
+                          flex: 2,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Text(
-                                "Bet Number",
+                              Text(
+                                "Number",
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10,
+                                  color: Colors.grey[600],
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                bid.number ?? "N/A",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue,
+                              const SizedBox(height: 2),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  bid.number,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
 
-                        const SizedBox(width: 16),
-
-                        // Right Column - Coins
                         Expanded(
-                          flex: 1,
+                          flex: 2,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Text(
+                              Text(
                                 "Coins",
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10,
+                                  color: Colors.grey[600],
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: 2),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    bid.amount?.toString() ?? "0",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: isWon
-                                          ? Colors.green
-                                          : isLost
-                                          ? Colors.red
-                                          : Colors.orange,
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 4,
                                     ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Icon(
-                                    Icons.monetization_on,
-                                    color: Colors.orange,
-                                    size: 16,
+                                    decoration: BoxDecoration(
+                                      color: isWon
+                                          ? Colors.green.withOpacity(0.1)
+                                          : isLost
+                                          ? Colors.red.withOpacity(0.1)
+                                          : Colors.orange.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      bid.amount.toString(),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: isWon
+                                            ? Colors.green
+                                            : isLost
+                                            ? Colors.red
+                                            : Colors.orange,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -385,68 +396,50 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                       ],
                     ),
 
-                    const SizedBox(height: 12),
-
-                    // Status Message
-                    if (bid.status != null && bid.status!.isNotEmpty)
+                    if (bid.status.isNotEmpty) ...[
+                      const SizedBox(height: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
+                          horizontal: 8,
+                          vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: _getStatusColor(bid.status!).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: _getStatusColor(bid.status!),
-                            width: 0.5,
-                          ),
+                          color: _getStatusColor(bid.status).withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Text(
-                          bid.status!,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: _getStatusColor(bid.status!),
-                          ),
-                          textAlign: TextAlign.center,
+                        child: Row(
+                          children: [
+                            Icon(
+                              _getStatusIcon(bid.status),
+                              size: 12,
+                              color: _getStatusColor(bid.status),
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                bid.status,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: _getStatusColor(bid.status),
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                    ],
                   ],
                 ),
               ),
             );
+
+            // Helper method for compact detail rows
           },
         ),
       ),
-    );
-  }
-
-  Widget _buildDetailRow(
-    String label,
-    String value, {
-    bool isHighlighted = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 10,
-            color: Colors.grey,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: isHighlighted ? Colors.orange : Colors.black,
-          ),
-        ),
-      ],
     );
   }
 
@@ -458,17 +451,48 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
     } else if (status.contains("Pending") || status.contains("Processing")) {
       return Colors.blue;
     }
-    return Colors.grey;
+    return Colors.grey[600]!;
   }
 
-  String _getStatusText(String status) {
-    if (status.contains("won") || status.contains("🎉")) {
-      return "WON";
-    } else if (status.contains("luck") || status.contains("lost")) {
-      return "LOST";
-    } else if (status.contains("Pending") || status.contains("Processing")) {
-      return "PENDING";
+  Widget _buildCompactDetail(
+    String label,
+    String value, {
+    bool isHighlighted = false,
+  }) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: "$label: ",
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          TextSpan(
+            text: value,
+            style: TextStyle(
+              fontSize: 12,
+              color: isHighlighted ? Colors.blue : Colors.black,
+              fontWeight: isHighlighted ? FontWeight.bold : FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to get status icon
+  IconData _getStatusIcon(String status) {
+    if (status.toLowerCase().contains('win') ||
+        status.toLowerCase().contains('success')) {
+      return Icons.check_circle;
+    } else if (status.toLowerCase().contains('loss') ||
+        status.toLowerCase().contains('fail')) {
+      return Icons.cancel;
+    } else {
+      return Icons.access_time;
     }
-    return status.length > 10 ? status.substring(0, 10) + "..." : status;
   }
 }

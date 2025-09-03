@@ -454,6 +454,7 @@
 import 'package:dmboss/model/games_model/bulk_sp_model.dart';
 import 'package:dmboss/widgets/current_date.dart';
 import 'package:dmboss/widgets/game_app_bar.dart';
+import 'package:dmboss/widgets/game_status.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dmboss/provider/games_provider/bulk_sp_provider.dart';
@@ -461,7 +462,9 @@ import 'package:dmboss/provider/games_provider/bulk_sp_provider.dart';
 class BulkSP extends StatefulWidget {
   final String title;
   final String marketId;
-  const BulkSP({super.key, required this.title, required this.marketId});
+  final String gameName;
+  final String openTime;
+  const BulkSP({super.key, required this.title, required this.marketId, required this.gameName, required this.openTime});
 
   @override
   State<BulkSP> createState() => _BulkSPState();
@@ -793,6 +796,7 @@ class _BulkSPState extends State<BulkSP> {
 
   @override
   Widget build(BuildContext context) {
+    final gameStatus = getGameStatus(widget.openTime);
     return Consumer<BulkSpBetProvider>(
       builder: (context, provider, child) {
         return Scaffold(
@@ -843,28 +847,52 @@ class _BulkSPState extends State<BulkSP> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             // Date Container
-                            Container(
-                              padding: EdgeInsets.all(
-                                MediaQuery.of(context).size.width * 0.02,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.orange,
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(
-                                    Icons.calendar_today,
-                                    color: Colors.black,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.orange,
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        widget.gameName,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  SizedBox(width: 5),
-                                  CurrentDateWidget(),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.orange,
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        gameStatus,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 15),
 

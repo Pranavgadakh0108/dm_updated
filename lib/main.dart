@@ -13,10 +13,13 @@ import 'package:dmboss/provider/get_bank_details_provider.dart';
 import 'package:dmboss/provider/get_bet_history_provider.dart';
 import 'package:dmboss/provider/get_daily_result_provider.dart';
 import 'package:dmboss/provider/get_fund_history_provider.dart';
+import 'package:dmboss/provider/get_image_sliders.dart';
+import 'package:dmboss/provider/get_pending_request_count.dart';
 import 'package:dmboss/provider/get_qr_code_provider.dart';
 import 'package:dmboss/provider/how_to_play_provider.dart';
 import 'package:dmboss/provider/login_user_provider.dart';
 import 'package:dmboss/provider/mobile_exist_provider.dart';
+import 'package:dmboss/provider/payment_gateway_provider.dart';
 import 'package:dmboss/provider/pending_withdraw_count.dart';
 import 'package:dmboss/provider/register_user_provider.dart';
 import 'package:dmboss/provider/transaction_history_provider.dart';
@@ -73,6 +76,11 @@ void main() async {
         ChangeNotifierProvider(create: (_) => GetTransactionHistoryProvider()),
         ChangeNotifierProvider(create: (_) => GamesSettingsProvider()),
         ChangeNotifierProvider(create: (_) => WinningHistoryProvider()),
+        ChangeNotifierProvider(create: (_) => PaymentGatewayProvider()),
+        ChangeNotifierProvider(
+          create: (_) => GetPendingDepositeCountProvider(),
+        ),
+        ChangeNotifierProvider(create: (_) => GetImageSlidersProvider()),
       ],
       child: const MyApp(),
     ),

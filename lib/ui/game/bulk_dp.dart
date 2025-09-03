@@ -816,6 +816,7 @@ import 'package:dmboss/model/games_model/bulk_sp_model.dart';
 import 'package:dmboss/provider/games_provider/bulk_dp_provider.dart';
 import 'package:dmboss/widgets/current_date.dart';
 import 'package:dmboss/widgets/game_app_bar.dart';
+import 'package:dmboss/widgets/game_status.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dmboss/provider/games_provider/bulk_sp_provider.dart';
@@ -823,7 +824,15 @@ import 'package:dmboss/provider/games_provider/bulk_sp_provider.dart';
 class BulkDp extends StatefulWidget {
   final String title;
   final String marketId;
-  const BulkDp({super.key, required this.title, required this.marketId});
+  final String gameName;
+  final String openTime;
+  const BulkDp({
+    super.key,
+    required this.title,
+    required this.marketId,
+    required this.gameName,
+    required this.openTime,
+  });
 
   @override
   State<BulkDp> createState() => _BulkDpState();
@@ -870,10 +879,12 @@ class _BulkDpState extends State<BulkDp> {
 
     // Update the provider with the new digit selection
     final provider = Provider.of<BulkDpBetProvider>(context, listen: false);
-    
+
     // Check if this digit already exists in the provider's list
-    final existingIndex = provider.bulkSpModel.bulkSp.indexWhere((item) => item.number == digit.toString());
-    
+    final existingIndex = provider.bulkSpModel.bulkSp.indexWhere(
+      (item) => item.number == digit.toString(),
+    );
+
     if (existingIndex != -1) {
       // Update existing item
       final newItem = BulkSp(
@@ -883,10 +894,7 @@ class _BulkDpState extends State<BulkDp> {
       provider.updateBulkSpItem(existingIndex, newItem);
     } else {
       // Add new item
-      final newItem = BulkSp(
-        number: digit.toString(),
-        amount: selectedPoint!,
-      );
+      final newItem = BulkSp(number: digit.toString(), amount: selectedPoint!);
       provider.addBulkSpItem(newItem);
     }
   }
@@ -903,7 +911,7 @@ class _BulkDpState extends State<BulkDp> {
     }
 
     final provider = Provider.of<BulkDpBetProvider>(context, listen: false);
-    
+
     // Set game ID and type (you might want to get these from somewhere)
     provider.setGameId(widget.marketId); // Replace with actual game ID
     provider.setGameType("BULK_DP"); // Changed to bulk_dp for this screen
@@ -1026,6 +1034,7 @@ class _BulkDpState extends State<BulkDp> {
 
   @override
   Widget build(BuildContext context) {
+    final gameStatus = getGameStatus(widget.openTime);
     return Consumer<BulkDpBetProvider>(
       builder: (context, provider, child) {
         return Scaffold(
@@ -1056,9 +1065,7 @@ class _BulkDpState extends State<BulkDp> {
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Wallet()
-                  ]
+                  children: [Wallet()],
                 ),
               ),
             ],
@@ -1066,7 +1073,9 @@ class _BulkDpState extends State<BulkDp> {
           body: LayoutBuilder(
             builder: (context, constraints) {
               return Padding(
-                padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
+                padding: EdgeInsets.all(
+                  MediaQuery.of(context).size.width * 0.04,
+                ),
                 child: Column(
                   children: [
                     // Top Content
@@ -1076,22 +1085,52 @@ class _BulkDpState extends State<BulkDp> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             // Date Container
-                            Container(
-                              padding: EdgeInsets.all(
-                                MediaQuery.of(context).size.width * 0.02,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.orange, width: 2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(Icons.calendar_today, color: Colors.black),
-                                  SizedBox(width: 5),
-                                  CurrentDateWidget(),
-                                ],
-                              ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.orange,
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        widget.gameName,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.orange,
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        gameStatus,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 15),
 
@@ -1267,7 +1306,9 @@ class _BulkDpState extends State<BulkDp> {
                             child: ElevatedButton(
                               onPressed: provider.isLoading ? null : submitBid,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: provider.isLoading ? Colors.grey : Colors.orange,
+                                backgroundColor: provider.isLoading
+                                    ? Colors.grey
+                                    : Colors.orange,
                                 padding: EdgeInsets.symmetric(
                                   horizontal:
                                       MediaQuery.of(context).size.width * 0.06,
@@ -1295,7 +1336,7 @@ class _BulkDpState extends State<BulkDp> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20,)
+                    SizedBox(height: 20),
                   ],
                 ),
               );

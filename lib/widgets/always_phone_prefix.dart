@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -29,6 +28,7 @@ class _CustomPhoneFieldState extends State<CustomPhoneField> {
       cursorColor: Colors.pink,
       enabled: widget.enabled,
       // Only allow digits
+      style: TextStyle(color: Colors.black),
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
         prefixIcon: Padding(

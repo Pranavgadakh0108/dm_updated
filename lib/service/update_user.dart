@@ -33,8 +33,8 @@ class UpdateProfileService {
         if (newPassword != confirmPassword) {
           throw Exception('Passwords do not match');
         }
-        if (newPassword.length < 6) {
-          throw Exception('Password must be at least 6 characters');
+        if (newPassword.length < 4 || newPassword.length > 4) {
+          throw Exception('Password must be 4 digits');
         }
       }
 

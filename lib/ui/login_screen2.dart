@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:dmboss/provider/login_user_provider.dart';
 import 'package:dmboss/ui/login_screen1.dart';
 import 'package:dmboss/util/make_call.dart';
@@ -75,7 +77,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                       key: _globalKey,
                       child: Column(
                         children: [
-                          SizedBox(height: screenHeight * 0.08),
+                          SizedBox(height: screenHeight * 0.05),
 
                           // App logo
                           Container(
@@ -94,7 +96,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                               ),
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.1),
+                          SizedBox(height: screenHeight * 0.05),
 
                           // Mobile field (read-only)
                           CustomPhoneField(
@@ -129,13 +131,8 @@ class _LoginScreen2State extends State<LoginScreen2> {
                               return null;
                             },
                           ),
-                          SizedBox(height: screenHeight * 0.05),
+                          SizedBox(height: screenHeight * 0.03),
 
-                          // Continue Button
-                          // OrangeButton(
-                          //   text: 'Continue',
-                          //   onPressed: loginProvider.isLoading ? null : handleContinue,
-                          // ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.orangeAccent,
@@ -238,7 +235,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
               child: Column(
                 children: [
                   Icon(
-                    FontAwesomeIcons.squareWhatsapp,
+                    FontAwesomeIcons.whatsapp,
                     color: Colors.green,
                     size: isSmallScreen ? 30 : 40,
                   ),
@@ -258,11 +255,11 @@ class _LoginScreen2State extends State<LoginScreen2> {
               child: Column(
                 children: [
                   Icon(
-                    FontAwesomeIcons.whatsapp,
-                    color: Colors.black,
-                    size: isSmallScreen ? 30 : 40,
+                    FontAwesomeIcons.phone,
+                    color: Colors.blue,
+                    size: isSmallScreen ? 21 : 31,
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 12),
                   Text(
                     '+919888395353',
                     style: TextStyle(

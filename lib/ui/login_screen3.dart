@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/provider/register_user_provider.dart';
 import 'package:dmboss/ui/login_screen1.dart';
@@ -35,7 +37,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
       final success = await registerProvider.registerUser(
         mobile: widget.mobileNumber,
         name: nameController.text,
-        email: emailController.text,
+
         password: passwordController.text,
         confirmPassword: confirmPasswordController.text,
         context: context,
@@ -80,7 +82,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                   key: _globalKey,
                   child: Column(
                     children: [
-                      SizedBox(height: screenHeight * 0.08),
+                      SizedBox(height: screenHeight * 0.05),
 
                       // App logo
                       Container(
@@ -97,7 +99,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                           child: Image.asset('assets/images/dmbossLogo.png'),
                         ),
                       ),
-                      SizedBox(height: screenHeight * 0.1),
+                      SizedBox(height: screenHeight * 0.03),
 
                       // Mobile field (read-only)
                       CustomPhoneField(
@@ -128,26 +130,26 @@ class _LoginScreen3State extends State<LoginScreen3> {
                       SizedBox(height: screenHeight * 0.025),
 
                       // Email field
-                      CustomTextField(
-                        controller: emailController,
-                        hintText: 'Email',
-                        icon: Icons.email,
-                        keyboardType: TextInputType.emailAddress,
-                        onChanged: (value) {
-                          emailController.text = value;
-                          registerProvider.setEmail(value);
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Enter the Email first...";
-                          }
-                          if (!emailRegex.hasMatch(value)) {
-                            return "Enter valid Email address";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: screenHeight * 0.025),
+                      // CustomTextField(
+                      //   controller: emailController,
+                      //   hintText: 'Email',
+                      //   icon: Icons.email,
+                      //   keyboardType: TextInputType.emailAddress,
+                      //   onChanged: (value) {
+                      //     emailController.text = value;
+                      //     registerProvider.setEmail(value);
+                      //   },
+                      //   validator: (value) {
+                      //     if (value == null || value.isEmpty) {
+                      //       return "Enter the Email first...";
+                      //     }
+                      //     if (!emailRegex.hasMatch(value)) {
+                      //       return "Enter valid Email address";
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
+                      // SizedBox(height: screenHeight * 0.025),
 
                       // Password field
                       CustomTextField(

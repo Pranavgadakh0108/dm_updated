@@ -3,89 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:dmboss/model/game_rate_model.dart';
 
 class GameRateProvider extends ChangeNotifier {
-  GameRateModel? _gameRates;
+  GameRatesModel? _gameRates;
   bool _isLoading = false;
   String? _errorMessage;
   final GameRateService _gameRateService = GameRateService();
 
-  GameRateModel? get gameRates => _gameRates;
+  GameRatesModel? get gameRates => _gameRates;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
-
-  // Convenience getters for common rates
-  String get singleRate => _gameRates?.rates.single ?? '0';
-  String get jodiRate => _gameRates?.rates.jodi ?? '0';
-  String get singlePattiRate => _gameRates?.rates.singlepatti ?? '0';
-  String get doublePattiRate => _gameRates?.rates.doublepatti ?? '0';
-  String get triplePattiRate => _gameRates?.rates.triplepatti ?? '0';
-  String get halfSangamRate => _gameRates?.rates.halfsangam ?? '0';
-  String get fullSangamRate => _gameRates?.rates.fullsangam ?? '0';
-  String get spRate => _gameRates?.rates.sp ?? '0';
-  String get dpRate => _gameRates?.rates.dp ?? '0';
-
-  // Get rate by key
-  String getRateByKey(String key) {
-    if (_gameRates == null) return '0';
-
-    switch (key) {
-      case 'single':
-        return _gameRates!.rates.single;
-      case 'jodi':
-        return _gameRates!.rates.jodi;
-      case 'singlepatti':
-        return _gameRates!.rates.singlepatti;
-      case 'doublepatti':
-        return _gameRates!.rates.doublepatti;
-      case 'triplepatti':
-        return _gameRates!.rates.triplepatti;
-      case 'halfsangam':
-        return _gameRates!.rates.halfsangam;
-      case 'fullsangam':
-        return _gameRates!.rates.fullsangam;
-      case 'sp':
-        return _gameRates!.rates.sp;
-      case 'dp':
-        return _gameRates!.rates.dp;
-      case 'round':
-        return _gameRates!.rates.round;
-      case 'centerpanna':
-        return _gameRates!.rates.centerpanna;
-      case 'aki':
-        return _gameRates!.rates.aki;
-      case 'beki':
-        return _gameRates!.rates.beki;
-      case 'chart50':
-        return _gameRates!.rates.chart50;
-      case 'chart60':
-        return _gameRates!.rates.chart60;
-      case 'chart70':
-        return _gameRates!.rates.chart70;
-      case 'akibekicut30':
-        return _gameRates!.rates.akibekicut30;
-      case 'abr30Pana':
-        return _gameRates!.rates.abr30Pana;
-      case 'startend':
-        return _gameRates!.rates.startend;
-      case 'cyclepana':
-        return _gameRates!.rates.cyclepana;
-      case 'groupjodi':
-        return _gameRates!.rates.groupjodi;
-      case 'panelgroup':
-        return _gameRates!.rates.panelgroup;
-      case 'bulkjodi':
-        return _gameRates!.rates.bulkjodi;
-      case 'bulksp':
-        return _gameRates!.rates.bulksp;
-      case 'bulkdp':
-        return _gameRates!.rates.bulkdp;
-      case 'familypannel':
-        return _gameRates!.rates.familypannel;
-      case 'familyjodi':
-        return _gameRates!.rates.familyjodi;
-      default:
-        return '0';
-    }
-  }
 
   Future<void> fetchGameRates() async {
     _isLoading = true;
@@ -93,26 +18,26 @@ class GameRateProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final rates = await _gameRateService.getGameRates();
+      final numeric = await _gameRateService.getGameRates();
 
-      if (rates != null && rates.success) {
-        _gameRates = rates;
+      if (numeric != null && numeric.success) {
+        _gameRates = numeric;
         _errorMessage = null;
 
         if (kDebugMode) {
-          print('Game rates fetched successfully');
-          print('Single rate: ${rates.rates.single}');
-          print('Jodi rate: ${rates.rates.jodi}');
-          print('Single Patti rate: ${rates.rates.singlepatti}');
+          print('Game numeric fetched successfully');
+          print('Single rate: ${numeric.numeric.singleAnk}');
+          print('Jodi rate: ${numeric.numeric.jodi}');
+          print('Single Patti rate: ${numeric.numeric.singlePatti}');
         }
       } else {
-        _errorMessage = rates?.message ?? 'Failed to fetch game rates';
+        _errorMessage = numeric?.message ?? 'Failed to fetch game numeric';
         if (kDebugMode) {
-          print('Failed to fetch game rates: $_errorMessage');
+          print('Failed to fetch game numeric: $_errorMessage');
         }
       }
     } catch (e) {
-      _errorMessage = 'An error occurred while fetching game rates: $e';
+      _errorMessage = 'An error occurred while fetching game numeric: $e';
       if (kDebugMode) {
         print('Exception in fetchGameRates: $e');
       }
@@ -126,45 +51,45 @@ class GameRateProvider extends ChangeNotifier {
     await fetchGameRates();
   }
 
-  // Check if rates are available
+  // Check if numeric are available
   bool get hasRates => _gameRates != null && _gameRates!.success;
 
-  // Get all rates as a map
+  // Get all numeric as a map
   Map<String, String> getAllRatesMap() {
     if (_gameRates == null) return {};
 
     return {
-      'single': _gameRates!.rates.single,
-      'jodi': _gameRates!.rates.jodi,
-      'singlepatti': _gameRates!.rates.singlepatti,
-      'doublepatti': _gameRates!.rates.doublepatti,
-      'triplepatti': _gameRates!.rates.triplepatti,
-      'halfsangam': _gameRates!.rates.halfsangam,
-      'fullsangam': _gameRates!.rates.fullsangam,
-      'sp': _gameRates!.rates.sp,
-      'dp': _gameRates!.rates.dp,
-      'round': _gameRates!.rates.round,
-      'centerpanna': _gameRates!.rates.centerpanna,
-      'aki': _gameRates!.rates.aki,
-      'beki': _gameRates!.rates.beki,
-      'chart50': _gameRates!.rates.chart50,
-      'chart60': _gameRates!.rates.chart60,
-      'chart70': _gameRates!.rates.chart70,
-      'akibekicut30': _gameRates!.rates.akibekicut30,
-      'abr30Pana': _gameRates!.rates.abr30Pana,
-      'startend': _gameRates!.rates.startend,
-      'cyclepana': _gameRates!.rates.cyclepana,
-      'groupjodi': _gameRates!.rates.groupjodi,
-      'panelgroup': _gameRates!.rates.panelgroup,
-      'bulkjodi': _gameRates!.rates.bulkjodi,
-      'bulksp': _gameRates!.rates.bulksp,
-      'bulkdp': _gameRates!.rates.bulkdp,
-      'familypannel': _gameRates!.rates.familypannel,
-      'familyjodi': _gameRates!.rates.familyjodi,
+      'single': _gameRates!.numeric.singleAnk.toString(),
+      'jodi': _gameRates!.numeric.jodi.toString(),
+      'singlepatti': _gameRates!.numeric.singlePatti.toString(),
+      'doublepatti': _gameRates!.numeric.doublePatti.toString(),
+      'triplepatti': _gameRates!.numeric.triplePatti.toString(),
+      'halfsangam': _gameRates!.numeric.halfSangam.toString(),
+      'fullsangam': _gameRates!.numeric.fullSangam.toString(),
+      'sp': _gameRates!.numeric.sp.toString(),
+      'dp': _gameRates!.numeric.dp.toString(),
+      'round': _gameRates!.numeric.round.toString(),
+      'centerpanna': _gameRates!.numeric.centerpanna.toString(),
+      'aki': _gameRates!.numeric.aki.toString(),
+      'beki': _gameRates!.numeric.beki.toString(),
+      'chart50': _gameRates!.numeric.chart50.toString(),
+      'chart60': _gameRates!.numeric.chart60.toString(),
+      'chart70': _gameRates!.numeric.chart70.toString(),
+      'akibekicut30': _gameRates!.numeric.akibekicut30.toString(),
+      'abr30Pana': _gameRates!.numeric.abr30Pana.toString(),
+      'startend': _gameRates!.numeric.startend.toString(),
+      'cyclepana': _gameRates!.numeric.cyclepana.toString(),
+      'groupjodi': _gameRates!.numeric.groupJodi.toString(),
+      'panelgroup': _gameRates!.numeric.panelGroup.toString(),
+      'bulkjodi': _gameRates!.numeric.bulkJodi.toString(),
+      'bulksp': _gameRates!.numeric.bulkSp.toString(),
+      'bulkdp': _gameRates!.numeric.bulkDp.toString(),
+      'familypannel': _gameRates!.numeric.familypannel.toString(),
+      'familyjodi': _gameRates!.numeric.familyjodi.toString(),
     };
   }
 
-  // Clear rates data
+  // Clear numeric data
   void clearRates() {
     _gameRates = null;
     _errorMessage = null;

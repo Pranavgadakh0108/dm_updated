@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.black,
       body: Center(
         child: Image.asset(
-          'assets/images/dmbossBlackLogo.jpg',
+          'assets/images/dmboss.png',
           height: 300,
           width: 300,
           fit: BoxFit.contain,

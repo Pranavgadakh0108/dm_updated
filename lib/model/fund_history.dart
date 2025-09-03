@@ -50,6 +50,7 @@ class Deposit {
   dynamic gatewayRaw;
   Norapay norapay;
   int v;
+  String? rejectionNote;
 
   Deposit({
     required this.id,
@@ -68,6 +69,7 @@ class Deposit {
     required this.gatewayRaw,
     required this.norapay,
     required this.v,
+    required this.rejectionNote,
   });
 
   factory Deposit.fromJson(Map<String, dynamic> json) => Deposit(
@@ -91,6 +93,7 @@ class Deposit {
     gatewayRaw: json["gateway_raw"],
     norapay: Norapay.fromJson(json["norapay"] ?? {}),
     v: json["__v"] ?? 0,
+    rejectionNote: json["rejection_note"] ?? '',
   );
 
   Map<String, dynamic> toJson() => {
@@ -110,6 +113,7 @@ class Deposit {
     "gateway_raw": gatewayRaw,
     "norapay": norapay.toJson(),
     "__v": v,
+    'rejection_note': rejectionNote,
   };
 }
 

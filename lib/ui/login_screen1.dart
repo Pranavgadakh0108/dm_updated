@@ -108,7 +108,7 @@ class _LoginScreen1State extends State<LoginScreen1> {
                           child: Image.asset('assets/images/dmbossLogo.png'),
                         ),
                       ),
-                      SizedBox(height: screenHeight * 0.1),
+                      SizedBox(height: screenHeight * 0.05),
 
                       CustomPhoneField(
                         controller: mobileController,
@@ -117,7 +117,7 @@ class _LoginScreen1State extends State<LoginScreen1> {
                             mobileController.text = value;
                           });
                         },
-                        validator:  (value) {
+                        validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Enter the Mobile Number first...";
                           }
@@ -127,26 +127,6 @@ class _LoginScreen1State extends State<LoginScreen1> {
                           return null;
                         },
                       ),
-
-                      // CustomTextField(
-                      //   hintText: "+91",
-                      //   keyboardType: TextInputType.number,
-                      //   controller: mobileController,
-                      //   onChanged: (value) {
-                      //     setState(() {
-                      //       mobileController.text = value;
-                      //     });
-                      //   },
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty) {
-                      //       return "Enter the Mobile Number first...";
-                      //     }
-                      //     if (value.length < 10 || value.length > 10) {
-                      //       return "Enter valid Mobile number";
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
                       SizedBox(height: screenHeight * 0.025),
 
                       if (mobileCheckProvider.errorMessage != null)
@@ -226,7 +206,7 @@ class _LoginScreen1State extends State<LoginScreen1> {
               child: Column(
                 children: [
                   Icon(
-                    FontAwesomeIcons.squareWhatsapp,
+                    FontAwesomeIcons.whatsapp,
                     color: Colors.green,
                     size: isSmallScreen ? 30 : 40,
                   ),
@@ -246,11 +226,11 @@ class _LoginScreen1State extends State<LoginScreen1> {
               child: Column(
                 children: [
                   Icon(
-                    FontAwesomeIcons.whatsapp,
-                    color: Colors.black,
-                    size: isSmallScreen ? 30 : 40,
+                    FontAwesomeIcons.phone,
+                    color: Colors.blue,
+                    size: isSmallScreen ? 21 : 31,
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 12),
                   Text(
                     '+919888395353',
                     style: TextStyle(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final String? hintText;
   final IconData? icon;
   final bool obscureText;
@@ -25,18 +25,47 @@ class CustomTextField extends StatelessWidget {
   });
 
   @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  bool _isObscured = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _isObscured = widget.obscureText;
+  }
+
+  void _toggleObscureText() {
+    setState(() {
+      _isObscured = !_isObscured;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      enabled: enabled,
+      controller: widget.controller,
+      obscureText: _isObscured,
+      enabled: widget.enabled,
       cursorColor: Colors.pink,
-      keyboardType: keyboardType,
+      keyboardType: widget.keyboardType,
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: widget.hintText,
         hintStyle: TextStyle(fontSize: 14, color: Colors.black),
-        prefixText: prefixText,
-        suffixIcon: Icon(icon),
+        prefixText: widget.prefixText,
+        suffixIcon: widget.obscureText
+            ? IconButton(
+                icon: Icon(
+                  _isObscured ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.black,
+                ),
+                onPressed: _toggleObscureText,
+              )
+            : widget.icon != null
+            ? Icon(widget.icon)
+            : null,
         suffixIconColor: Colors.black,
         contentPadding: EdgeInsets.symmetric(
           horizontal: MediaQuery.of(context).size.width * 0.04,
@@ -49,8 +78,8 @@ class CustomTextField extends StatelessWidget {
           borderSide: BorderSide.none,
         ),
       ),
-      onChanged: onChanged,
-      validator: validator,
+      onChanged: widget.onChanged,
+      validator: widget.validator,
     );
   }
 }

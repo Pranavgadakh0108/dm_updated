@@ -1234,8 +1234,6 @@ class _JodiState extends State<Jodi> {
                           // Date and Game Name
                           Row(
                             children: [
-                              Expanded(child: DateContainer()),
-                              const SizedBox(width: 10),
                               Expanded(
                                 child: Container(
                                   padding: const EdgeInsets.all(12),
@@ -1249,6 +1247,28 @@ class _JodiState extends State<Jodi> {
                                   child: Center(
                                     child: Text(
                                       widget.gameName,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.orange,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "OPEN",
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,

@@ -16,6 +16,9 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
   final GlobalKey<FormState> _globalKey = GlobalKey();
   final TextEditingController holderNameController = TextEditingController();
   final TextEditingController accountNumController = TextEditingController();
+  final TextEditingController confirmAccountNumController =
+      TextEditingController();
+  final TextEditingController bankNameController = TextEditingController();
   final TextEditingController ifscController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -85,6 +88,22 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
                     ),
                     SizedBox(height: 20),
                     CustomProfileTextFormField(
+                      controller: confirmAccountNumController,
+                      hintText: "Confirm A/C Number",
+                      onChanged: (value) {
+                        setState(() {
+                          confirmAccountNumController.text;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "⚠️ Enter the Valid A/C Number";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    CustomProfileTextFormField(
                       controller: ifscController,
                       hintText: "IFSC",
                       onChanged: (value) {
@@ -100,6 +119,22 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
                       },
                     ),
                     SizedBox(height: 20),
+                    CustomProfileTextFormField(
+                      controller: bankNameController,
+                      hintText: "Bank Name",
+                      onChanged: (value) {
+                        setState(() {
+                          bankNameController.text = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "⚠️ Enter the valid Bank Name";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 20),
                     OrangeButton(
                       text: "Submit",
                       onPressed: () {
@@ -107,7 +142,10 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
                           final addbankDetails = AddBankDetails(
                             accountHolderName: holderNameController.text,
                             accountNumber: accountNumController.text,
+                            confirmAccountNumber:
+                                confirmAccountNumController.text,
                             ifscCode: ifscController.text,
+                            bankName: bankNameController.text,
                           );
                           provider.addBankDetails(context, addbankDetails);
                         }

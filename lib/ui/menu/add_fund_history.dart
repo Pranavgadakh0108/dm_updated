@@ -56,7 +56,7 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
         backgroundColor: Colors.orange,
         elevation: 3,
         title: const Text(
-          "Add Fund History",
+          "Fund History",
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
         ),
         leading: IconButton(
@@ -67,7 +67,7 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.001),
         child: Consumer<GetFundHistoryProvider>(
           builder: (context, provider, _) {
             // Show loading state
@@ -260,7 +260,6 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
                 ),
                 const SizedBox(height: 8),
 
-                // Payment method
                 Text(
                   "Method: ${deposit.method}",
                   style: const TextStyle(
@@ -270,29 +269,40 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
                 ),
                 const SizedBox(height: 8),
 
-                // Status message
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _getStatusColor(deposit.status).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(
-                      color: _getStatusColor(deposit.status),
-                      width: 0.5,
-                    ),
-                  ),
-                  child: Text(
-                    _getStatusMessage(deposit.status),
-                    style: TextStyle(
-                      color: _getStatusColor(deposit.status),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10.3,
-                    ),
+                Text(
+                  _getStatusMessage(deposit.status ?? 0),
+                  style: TextStyle(
+                    color: _getStatusColor(deposit.status ?? 0),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10.3,
                   ),
                 ),
+                deposit.rejectionNote != ""
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(
+                            deposit.status,
+                          ).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: _getStatusColor(deposit.status ?? 0),
+                            width: 0.5,
+                          ),
+                        ),
+                        child: Text(
+                          deposit.rejectionNote ?? "",
+                          style: TextStyle(
+                            color: _getStatusColor(deposit.status ?? 0),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10.3,
+                          ),
+                        ),
+                      )
+                    : SizedBox.shrink(),
               ],
             ),
           );

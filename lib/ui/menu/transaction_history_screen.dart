@@ -32,7 +32,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    _loadTransactionHistory();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadTransactionHistory();
+    });
   }
 
   Future<void> _loadTransactionHistory() async {

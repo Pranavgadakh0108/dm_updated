@@ -18,7 +18,9 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
   @override
   void initState() {
     super.initState();
-    _loadWithdrawHistory();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadWithdrawHistory();
+    });
   }
 
   Future<void> _loadWithdrawHistory() async {
@@ -256,10 +258,10 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
               margin: const EdgeInsets.symmetric(vertical: 6),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
-                side: BorderSide(
-                  color: statusColor.withOpacity(0.3),
-                  width: 1.5,
-                ),
+                // side: BorderSide(
+                //   color: statusColor.withOpacity(0.3),
+                //   width: 1.5,
+                // ),
               ),
               child: Padding(
                 padding: EdgeInsets.all(
@@ -276,10 +278,10 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
                           DateFormat(
                             'yyyy-MM-dd • HH:mm',
                           ).format(withdrawal.createdAt ?? DateTime.now()),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey,
+                            color: Colors.grey[600],
                           ),
                         ),
                         Container(
@@ -308,7 +310,7 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 5),
 
                     // Amount and Details
                     Row(
@@ -318,12 +320,12 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "AMOUNT",
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.grey,
+                                color: Colors.grey[600],
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -342,12 +344,12 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const Text(
+                            Text(
                               "PAYMENT METHOD",
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.grey,
+                                color: Colors.grey[600],
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -362,10 +364,8 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 5),
 
-                    // Status Description
-                    const SizedBox(height: 8),
                     Text(
                       _getStatusDescription(withdrawal.status ?? 0),
                       style: TextStyle(

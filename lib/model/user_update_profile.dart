@@ -7,7 +7,7 @@ String updateProfileToJson(UpdateProfile data) => json.encode(data.toJson());
 
 class UpdateProfile {
   String name;
-  String email;
+  //  String email;
   String mobile;
   int wallet;
   String paytm;
@@ -16,7 +16,6 @@ class UpdateProfile {
 
   UpdateProfile({
     required this.name,
-    required this.email,
     required this.mobile,
     required this.wallet,
     required this.paytm,
@@ -26,7 +25,7 @@ class UpdateProfile {
 
   factory UpdateProfile.fromJson(Map<String, dynamic> json) => UpdateProfile(
     name: json["name"],
-    email: json["email"],
+    //  email: json["email"],
     mobile: json["mobile"],
     wallet: json["wallet"],
     paytm: json["paytm"],
@@ -36,7 +35,7 @@ class UpdateProfile {
 
   Map<String, dynamic> toJson() => {
     "name": name,
-    "email": email,
+    //  "email": email,
     "mobile": mobile,
     "wallet": wallet,
     "paytm": paytm,

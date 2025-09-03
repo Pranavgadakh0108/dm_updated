@@ -19,29 +19,31 @@ class AuthService {
   Future<RegisterUserModel?> registerUser({
     required String mobile,
     required String name,
-    required String email,
-    required String password, 
+    // required String email,
+    required String password,
     required String confirmPassword,
   }) async {
     try {
       final dio = await getDioInstance();
       print('Sending request to: $baseUrl/auth/register');
-      print('Registration data: mobile=$mobile, name=$name, email=$email, password=$password');
+      print(
+        'Registration data: mobile=$mobile, name=$name, password=$password',
+      );
 
       final response = await dio.post(
         '/auth/register',
         data: {
           'mobile': mobile,
           'name': name,
-          'email': email,
+          // 'email': email,
           'password': password,
-          'confirmPassword':confirmPassword
+          'confirmPassword': confirmPassword,
         },
       );
-      
+
       print('Response status: ${response.statusCode}');
       print('Response data: ${response.data}');
-      
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (response.data == null) {
           print('Response data is null!');

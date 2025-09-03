@@ -1,4 +1,3 @@
-
 // ignore_for_file: deprecated_member_use
 
 import 'package:dmboss/ui/home_screen.dart';
@@ -24,7 +23,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
     const BidHistoryScreen(),
     const TransactionHistoryScreen(),
     const HomeScreen(),
-    const MyWalletScreen(walletBalance: '',),
+    const MyWalletScreen(walletBalance: ''),
   ];
 
   void onTapSelectItem(int index) {
@@ -33,7 +32,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
       openWhatsApp(supportPhoneNumber);
       return;
     }
-    
+
     setState(() {
       selectedIndex = index;
     });
@@ -52,8 +51,8 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.white,
           currentIndex: selectedIndex,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.grey,
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.black,
           elevation: 2,
           onTap: onTapSelectItem,
           items: const [

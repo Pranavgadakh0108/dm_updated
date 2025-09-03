@@ -1195,6 +1195,7 @@ class _SinglePattiState extends State<SinglePatti> {
 
   @override
   Widget build(BuildContext context) {
+    final gameStatus = getGameStatus(widget.openTime);
     return ChangeNotifierProvider(
       create: (context) => SingleAnkBetProvider(),
       child: Consumer<SingleAnkBetProvider>(
@@ -1245,8 +1246,6 @@ class _SinglePattiState extends State<SinglePatti> {
                           // Date and Game Name
                           Row(
                             children: [
-                              Expanded(child: DateContainer()),
-                              const SizedBox(width: 10),
                               Expanded(
                                 child: Container(
                                   padding: const EdgeInsets.all(12),
@@ -1260,6 +1259,28 @@ class _SinglePattiState extends State<SinglePatti> {
                                   child: Center(
                                     child: Text(
                                       widget.gameName,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.orange,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      gameStatus,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,

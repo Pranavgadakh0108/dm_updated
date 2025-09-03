@@ -109,8 +109,8 @@ class Transaction {
     status: statusValues.map[json?["status"]] ?? Status.LOSER,
     date: json?["date"],
     time: json?["time"],
-    narration: json?["narration"] ?? "", // Provide default value
-    createdAt: DateTime?.parse(
+    narration: json?["narration"] ?? "",
+    createdAt: DateTime.parse(
       json?["createdAt"] ?? DateTime?.now().toIso8601String(),
     ), // Handle null
     mode: json?["mode"],

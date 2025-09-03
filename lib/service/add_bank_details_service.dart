@@ -41,7 +41,7 @@ class AddBankDetailsService {
       if (e.response != null && e.response?.data != null) {
         if (e.response!.data is Map<String, dynamic>) {
           errorMessage =
-              e.response!.data['msg'] ??
+              e.response!.data['message'] ??
               e.response!.data['error'] ??
               errorMessage;
         } else if (e.response!.data is String) {
