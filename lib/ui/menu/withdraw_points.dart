@@ -26,39 +26,80 @@ class _WithdrawPointsState extends State<WithdrawPoints> {
   TextEditingController withdrawCoinsController = TextEditingController();
   String? userId;
   bool _isLoading = true;
+  String? _errorMessage;
+  bool _showTermsPopup = true;
 
   Future<void> getUserId() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      userId = sharedPreferences.getString('user_id');
-      _isLoading = false;
-      print('User ID: $userId');
-    });
+    try {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      setState(() {
+        userId = sharedPreferences.getString('user_id');
+        print('User ID: $userId');
+      });
+    } catch (error) {
+      setState(() {
+        _errorMessage = 'Failed to load user data';
+      });
+    }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getUserId().then((_) {
-      // After user ID is loaded, fetch bank details
+  Future<void> _loadInitialData() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      await getUserId();
+
       if (userId != null) {
         final bankDetailsProvider = Provider.of<GetBankDetailsProvider>(
           context,
           listen: false,
         );
-        bankDetailsProvider.getBankDetails(context, userId!);
-      }
-    });
+        await bankDetailsProvider.getBankDetails(context, userId!);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final getGamesSettings = Provider.of<GamesSettingsProvider>(
-        context,
-        listen: false,
-      );
-      getGamesSettings.getGameSettings(context);
-      Future.delayed(Duration.zero, () {
-        showTermsPopup(context, getGamesSettings);
+        final getGamesSettings = Provider.of<GamesSettingsProvider>(
+          context,
+          listen: false,
+        );
+        await getGamesSettings.getGameSettings(context);
+
+        // Show terms popup only once
+        if (_showTermsPopup) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            showTermsPopup(context, getGamesSettings);
+            setState(() {
+              _showTermsPopup = false;
+            });
+          });
+        }
+      } else {
+        setState(() {
+          _errorMessage = 'User not logged in. Please login again.';
+        });
+      }
+    } catch (error) {
+      setState(() {
+        _errorMessage = 'Failed to load data. Please try again.';
       });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _retryLoading() {
+    _loadInitialData();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadInitialData();
     });
   }
 
@@ -80,163 +121,407 @@ class _WithdrawPointsState extends State<WithdrawPoints> {
           },
         ),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-                child: Consumer<GetBankDetailsProvider>(
-                  builder: (context, provider, _) {
-                    // Show loading if bank details are still being fetched
-                    if (provider.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
+      body: _buildBody(),
+    );
+  }
 
-                    // Show error if bank details fetch failed
-                    if (provider.errorMessage != null) {
-                      return Center(
-                        child: Text(
-                          provider.errorMessage!,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      );
-                    }
+  Widget _buildBody() {
+    if (_isLoading) {
+      return _buildLoadingState();
+    }
 
-                    // Show message if no bank details found
-                    if (provider.gamesList?.banks == null ||
-                        provider.gamesList!.banks.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          'No bank details found. Please add your bank account first.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      );
-                    }
+    if (_errorMessage != null) {
+      return _buildErrorState(_errorMessage!);
+    }
 
-                    return Column(
-                      children: [
-                        const SizedBox(height: 60),
-                        const Text(
-                          'Bank A/C Details',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        CustomProfileTextFormField(
-                          controller: TextEditingController(
-                            text:
-                                provider.gamesList!.banks[0].accountHolderName,
-                          ),
-                          hintText: "A/C Holder Name",
-                          readOnly: true,
-                        ),
-                        const SizedBox(height: 20),
-                        CustomProfileTextFormField(
-                          controller: TextEditingController(
-                            text: provider.gamesList!.banks[0].accountNumber,
-                          ),
-                          hintText: "A/C Number",
-                          readOnly: true,
-                        ),
-                        const SizedBox(height: 20),
-                        CustomProfileTextFormField(
-                          controller: TextEditingController(
-                            text: provider.gamesList!.banks[0].ifscCode,
-                          ),
-                          hintText: "IFSC",
-                          readOnly: true,
-                        ),
-                        const SizedBox(height: 40),
-                        GestureDetector(
-                          onTap: () => openWhatsApp("+919888195353"),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.squareWhatsapp,
-                                color: Colors.green,
-                                size: 35,
-                              ),
-                              const SizedBox(width: 10),
-                              Text(
-                                '9888195353',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'Withdraw Fund Request Below',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Form(
-                          key: _globalKey,
-                          child: Column(
-                            children: [
-                              CustomProfileTextFormField(
-                                controller: withdrawCoinsController,
-                                hintText: "Enter Points",
-                                icon: FontAwesomeIcons.circleDollarToSlot,
+    if (userId == null) {
+      return _buildAuthErrorState();
+    }
 
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "⚠️ Enter valid Coins";
-                                  }
-                                  if (int.tryParse(value) == null) {
-                                    return "⚠️ Enter valid number";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              OrangeButton(
-                                text: "Withdraw",
-                                onPressed: () {
-                                  if (_globalKey.currentState!.validate()) {
-                                    final withDrawCoinsModel =
-                                        WithdrawCoinsModel(
-                                          amount: int.parse(
-                                            withdrawCoinsController.text,
-                                          ),
-                                        );
-                                    setState(() {
-                                      final provider =
-                                          Provider.of<WithdrawCoinsProvider>(
-                                            context,
-                                            listen: false,
-                                          );
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Consumer<GetBankDetailsProvider>(
+          builder: (context, provider, _) {
+            // Show loading for bank details
+            if (provider.isLoading) {
+              return _buildBankDetailsLoadingState();
+            }
 
-                                      provider.addWithdrawCoins(
-                                        context,
-                                        withDrawCoinsModel,
-                                      );
-                                    });
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+            // Show error for bank details
+            if (provider.errorMessage != null) {
+              return _buildBankDetailsErrorState(provider.errorMessage!);
+            }
+
+            // Show empty state for no bank details
+            if (provider.gamesList?.banks == null ||
+                provider.gamesList!.banks.isEmpty) {
+              return _buildNoBankDetailsState();
+            }
+
+            // Show main content with bank details
+            return _buildMainContent(provider);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Loading withdrawal information...',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(String errorMessage) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 64, color: Colors.red),
+          const SizedBox(height: 16),
+          Text(
+            errorMessage,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.red,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _retryLoading,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAuthErrorState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.person_off_outlined, size: 64, color: Colors.orange),
+          const SizedBox(height: 16),
+          const Text(
+            'Authentication required',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Please login again to access withdrawal features',
+            style: TextStyle(fontSize: 14, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _retryLoading,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Try Again'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBankDetailsLoadingState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Loading bank details...',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBankDetailsErrorState(String errorMessage) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.account_balance_outlined,
+            size: 64,
+            color: Colors.red,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            errorMessage,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.red,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _retryLoading,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoBankDetailsState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.account_balance_wallet_outlined,
+            size: 64,
+            color: Colors.grey,
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'No bank account found',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Please add your bank account details first to withdraw funds',
+            style: TextStyle(fontSize: 14, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _retryLoading,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Refresh'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMainContent(GetBankDetailsProvider provider) {
+    return Column(
+      children: [
+        const SizedBox(height: 40),
+        const Text(
+          'Bank A/C Details',
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+        ),
+        const SizedBox(height: 30),
+        _buildBankDetailCard(
+          'A/C Holder Name',
+          provider.gamesList?.banks[0].accountHolderName ?? "N/A",
+        ),
+        const SizedBox(height: 20),
+        _buildBankDetailCard(
+          'A/C Number',
+          provider.gamesList?.banks[0].accountNumber ?? "N/A",
+        ),
+        const SizedBox(height: 20),
+        _buildBankDetailCard(
+          'IFSC Code',
+          provider.gamesList!.banks[0].ifscCode,
+        ),
+        const SizedBox(height: 40),
+        _buildWhatsAppContact(),
+        const SizedBox(height: 30),
+        const Text(
+          'Withdraw Fund Request',
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+        ),
+        const SizedBox(height: 20),
+        _buildWithdrawForm(),
+      ],
+    );
+  }
+
+  Widget _buildBankDetailCard(String title, String value) {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWhatsAppContact() {
+    return GestureDetector(
+      onTap: () => openWhatsApp("+919888195353"),
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                FontAwesomeIcons.squareWhatsapp,
+                color: Colors.green,
+                size: 32,
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Contact Support: ',
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+              ),
+              Text(
+                '9888195353',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: Colors.blue[800],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWithdrawForm() {
+    return Consumer<WithdrawCoinsProvider>(
+      builder: (context, withdrawProvider, _) {
+        return Form(
+          key: _globalKey,
+          child: Column(
+            children: [
+              CustomProfileTextFormField(
+                controller: withdrawCoinsController,
+                hintText: "Enter Points",
+                icon: FontAwesomeIcons.circleDollarToSlot,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "⚠️ Please enter points to withdraw";
+                  }
+                  if (int.tryParse(value) == null) {
+                    return "⚠️ Please enter a valid number";
+                  }
+                  if (int.parse(value) <= 0) {
+                    return "⚠️ Points must be greater than zero";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 25),
+              withdrawProvider.isLoading
+                  ? const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                    )
+                  : OrangeButton(
+                      text: "Withdraw Points",
+                      onPressed: () {
+                        if (_globalKey.currentState!.validate()) {
+                          final withDrawCoinsModel = WithdrawCoinsModel(
+                            amount: int.parse(withdrawCoinsController.text),
+                          );
+                          final provider = Provider.of<WithdrawCoinsProvider>(
+                            context,
+                            listen: false,
+                          );
+                          provider.addWithdrawCoins(
+                            context,
+                            withDrawCoinsModel,
+                          );
+                        }
+                      },
+                    ),
+              if (withdrawProvider.errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text(
+                    withdrawProvider.errorMessage!,
+                    style: const TextStyle(color: Colors.red, fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

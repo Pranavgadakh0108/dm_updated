@@ -687,7 +687,6 @@ class GameListScreen extends StatelessWidget {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                // Pass the marketId to all game screens
                 if (filteredGames[index]['id'] == 7) {
                   Navigator.push(
                     context,
@@ -695,7 +694,7 @@ class GameListScreen extends StatelessWidget {
                       builder: (context) => FullSangam(
                         title: filteredGames[index]['title'],
                         gameName: title,
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                       ),
                     ),
                   );
@@ -705,7 +704,7 @@ class GameListScreen extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => BulkDp(
                         title: filteredGames[index]['title'],
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                       ),
                     ),
                   );
@@ -716,7 +715,7 @@ class GameListScreen extends StatelessWidget {
                       builder: (context) => SingleAnk(
                         title: filteredGames[index]['title'],
                         gameName: title,
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                         openTime: openTime,
                       ),
                     ),
@@ -728,7 +727,7 @@ class GameListScreen extends StatelessWidget {
                       builder: (context) => Jodi(
                         title: filteredGames[index]['title'],
                         gameName: title,
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                       ),
                     ),
                   );

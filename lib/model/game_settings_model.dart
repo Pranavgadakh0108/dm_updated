@@ -1,17 +1,17 @@
 // To parse this JSON data, do
 //
-//     final gameSettings = gameSettingsFromJson(jsonString);
+//     final gameSettings = gameSettingsFromJson(jsonString?);
 
 import 'dart:convert';
 
-GameSettings gameSettingsFromJson(String str) =>
-    GameSettings.fromJson(json.decode(str));
+GameSettings gameSettingsFromJson(String? str) =>
+    GameSettings.fromJson(json.decode(str ?? ""));
 
-String gameSettingsToJson(GameSettings data) => json.encode(data.toJson());
+String? gameSettingsToJson(GameSettings data) => json.encode(data.toJson());
 
 class GameSettings {
-  bool success;
-  String message;
+  bool? success;
+  String? message;
   Data data;
 
   GameSettings({
@@ -20,13 +20,13 @@ class GameSettings {
     required this.data,
   });
 
-  factory GameSettings.fromJson(Map<String, dynamic> json) => GameSettings(
+  factory GameSettings.fromJson(Map<String?, dynamic> json) => GameSettings(
     success: json["success"],
     message: json["message"],
     data: Data.fromJson(json["data"]),
   );
 
-  Map<String, dynamic> toJson() => {
+  Map<String?, dynamic> toJson() => {
     "success": success,
     "message": message,
     "data": data.toJson(),
@@ -34,36 +34,36 @@ class GameSettings {
 }
 
 class Data {
-  String historyDeleteDays;
-  String signupReward;
-  String minBalanceAfterWithdraw;
-  String minDeposit;
-  String minWithdraw;
-  String maxWithdraw;
-  String withdrawTimesPerDay;
-  String upi;
-  String merchant;
-  String upi2;
-  String merchant2;
-  String upi3;
-  String merchant3;
-  String whatsappActive;
-  String whatsapp;
-  String whatsappSupport;
-  String withdrawOpenTime;
-  String withdrawCloseTime;
-  String verifyUpiPayment;
-  String whatsappReset;
-  String gpay;
-  String phonepe;
-  String paytm;
-  String razorpay;
-  String otpVerification;
-  String chatSupport;
-  String welcomeMsg;
-  String howToDeposite;
-  String howToWithdraw;
-  String howToPlay;
+  String? historyDeleteDays;
+  String? signupReward;
+  String? minBalanceAfterWithdraw;
+  String? minDeposit;
+  String? minWithdraw;
+  String? maxWithdraw;
+  String? withdrawTimesPerDay;
+  String? upi;
+  String? merchant;
+  String? upi2;
+  String? merchant2;
+  String? upi3;
+  String? merchant3;
+  String? whatsappActive;
+  String? whatsapp;
+  String? whatsappSupport;
+  String? withdrawOpenTime;
+  String? withdrawCloseTime;
+  String? verifyUpiPayment;
+  String? whatsappReset;
+  String? gpay;
+  String? phonepe;
+  String? paytm;
+  String? razorpay;
+  String? otpVerification;
+  String? chatSupport;
+  String? welcomeMsg;
+  String? howToDeposite;
+  String? howToWithdraw;
+  String? howToPlay;
 
   Data({
     required this.historyDeleteDays,
@@ -98,7 +98,7 @@ class Data {
     required this.howToPlay,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory Data.fromJson(Map<String?, dynamic> json) => Data(
     historyDeleteDays: json["history_delete_days"],
     signupReward: json["signup_reward"],
     minBalanceAfterWithdraw: json["minBalanceAfterWithdraw"],
@@ -131,7 +131,7 @@ class Data {
     howToPlay: json["how_to_play"],
   );
 
-  Map<String, dynamic> toJson() => {
+  Map<String?, dynamic> toJson() => {
     "history_delete_days": historyDeleteDays,
     "signup_reward": signupReward,
     "minBalanceAfterWithdraw": minBalanceAfterWithdraw,

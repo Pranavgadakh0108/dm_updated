@@ -12,7 +12,10 @@ void showTermsPopup(
     context: context,
     barrierDismissible: false, // Force user to click OK
     builder: (context) {
-      gameSettingsProviders.getGameSettings(context);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        gameSettingsProviders.getGameSettings(context);
+      });
+
       return WillPopScope(
         onWillPop: () async {
           return false;

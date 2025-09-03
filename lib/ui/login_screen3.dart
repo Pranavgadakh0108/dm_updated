@@ -1,6 +1,7 @@
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/provider/register_user_provider.dart';
 import 'package:dmboss/ui/login_screen1.dart';
+import 'package:dmboss/ui/login_screen2.dart';
 import 'package:dmboss/widgets/always_phone_prefix.dart';
 import 'package:dmboss/widgets/custom_text_field.dart';
 import 'package:dmboss/widgets/navigation_bar.dart';
@@ -43,7 +44,10 @@ class _LoginScreen3State extends State<LoginScreen3> {
       if (success) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const AppNavigationBar()),
+          MaterialPageRoute(
+            builder: (context) =>
+                LoginScreen2(mobileNumber: widget.mobileNumber),
+          ),
         );
       }
     }

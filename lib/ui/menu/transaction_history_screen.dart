@@ -26,15 +26,38 @@ class TransactionHistoryScreen extends StatefulWidget {
 }
 
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
+  bool _isLoading = true;
+  String? _errorMessage;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    _loadTransactionHistory();
+  }
+
+  Future<void> _loadTransactionHistory() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
       final getTransactionHistoryProvider =
           Provider.of<GetTransactionHistoryProvider>(context, listen: false);
+      await getTransactionHistoryProvider.getTransactionHistoryFunc(context);
+    } catch (error) {
+      setState(() {
+        _errorMessage = 'Failed to load transaction history. Please try again.';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
-      getTransactionHistoryProvider.getTransactionHistoryFunc(context);
-    });
+  void _retryLoading() {
+    _loadTransactionHistory();
   }
 
   @override
@@ -57,136 +80,313 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             );
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _retryLoading,
+            tooltip: 'Refresh',
+          ),
+        ],
       ),
-      body: Consumer<GetTransactionHistoryProvider>(
-        builder: (context, provider, _) {
-          return Padding(
-            // padding: const EdgeInsets.all(10.0),
-            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-            child: ListView.builder(
-              // padding: const EdgeInsets.all(6),
-              padding: EdgeInsets.all(
-                MediaQuery.of(context).size.width * 0.015,
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    if (_isLoading) {
+      return _buildLoadingState();
+    }
+
+    if (_errorMessage != null) {
+      return _buildErrorState(_errorMessage!);
+    }
+
+    return Consumer<GetTransactionHistoryProvider>(
+      builder: (context, provider, _) {
+        // Show empty state if no transactions
+        if (provider.transactionHistoryModel == null ||
+            provider.transactionHistoryModel!.transactions.isEmpty) {
+          return _buildEmptyState();
+        }
+
+        // Show data state
+        return _buildDataState(provider);
+      },
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Loading transaction history...',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(String errorMessage) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 64, color: Colors.red),
+          const SizedBox(height: 16),
+          Text(
+            errorMessage,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.red,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _retryLoading,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
-              itemCount: provider.transactionHistoryModel?.transactions.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  color: Colors.white,
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 6),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: BorderSide(color: Colors.grey, width: 0.2),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(
-                      MediaQuery.of(context).size.width * 0.03,
-                    ), // responsive padding
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey),
+          const SizedBox(height: 16),
+          const Text(
+            'No transactions found',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Your transaction history will appear here',
+            style: TextStyle(fontSize: 14, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _retryLoading,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Refresh'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDataState(GetTransactionHistoryProvider provider) {
+    return RefreshIndicator(
+      onRefresh: _loadTransactionHistory,
+      color: Colors.orange,
+      child: Padding(
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+        child: ListView.builder(
+          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.015),
+          itemCount: provider.transactionHistoryModel!.transactions.length,
+          itemBuilder: (context, index) {
+            final transaction =
+                provider.transactionHistoryModel!.transactions[index];
+            final isDebit = transaction.amount < 0;
+            final amountColor = isDebit ? Colors.red : Colors.green;
+            final amountPrefix = isDebit ? '-' : '+';
+
+            return Card(
+              color: Colors.white,
+              elevation: 4,
+              margin: const EdgeInsets.symmetric(vertical: 6),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: const BorderSide(color: Colors.grey, width: 0.2),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(
+                  MediaQuery.of(context).size.width * 0.03,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Date and Time
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Date
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              DateFormat('yyyy-MM-dd').format(
-                                provider
-                                        .transactionHistoryModel
-                                        ?.transactions[index]
-                                        .createdAt ??
-                                    DateTime.now(),
-                              ),
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.height * 0.008,
-                            ),
-                            Text(
-                              provider
-                                      .transactionHistoryModel
-                                      ?.transactions[index]
-                                      .time ??
-                                  "",
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          DateFormat(
+                            'yyyy-MM-dd',
+                          ).format(transaction.createdAt ?? DateTime.now()),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
                         ),
-                        const SizedBox(height: 8),
-                        // Amount + Narration
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Amount",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                Text(
-                                  provider
-                                          .transactionHistoryModel
-                                          ?.transactions[index]
-                                          .amount
-                                          .toString() ??
-                                      "",
-                                  style: const TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 20),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  const Text(
-                                    "Narration",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    provider
-                                            .transactionHistoryModel
-                                            ?.transactions[index]
-                                            .narration ??
-                                        "",
-                                    // textAlign: TextAlign.justify,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                        Text(
+                          transaction.time ?? "",
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                );
-              },
-            ),
-          );
-        },
+                    const SizedBox(height: 12),
+
+                    // Amount and Narration
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Amount Section
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Amount",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '$amountPrefix₹${transaction.amount.abs().toString()}',
+                              style: TextStyle(
+                                color: amountColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(width: 24),
+
+                        // Narration Section
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Description",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                transaction.narration ?? "No description",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Transaction Type Badge
+                    if (transaction.narration != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _getTransactionTypeColor(
+                              transaction.narration!,
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            _getTransactionType(transaction.narration!),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
+  }
+
+  Color _getTransactionTypeColor(String narration) {
+    if (narration.toLowerCase().contains('win') ||
+        narration.toLowerCase().contains('add')) {
+      return Colors.green;
+    } else if (narration.toLowerCase().contains('withdraw') ||
+        narration.toLowerCase().contains('deduct')) {
+      return Colors.red;
+    } else if (narration.toLowerCase().contains('referral') ||
+        narration.toLowerCase().contains('bonus')) {
+      return Colors.blue;
+    }
+    return Colors.grey;
+  }
+
+  String _getTransactionType(String narration) {
+    if (narration.toLowerCase().contains('win')) {
+      return 'WINNING';
+    } else if (narration.toLowerCase().contains('add')) {
+      return 'DEPOSIT';
+    } else if (narration.toLowerCase().contains('withdraw')) {
+      return 'WITHDRAWAL';
+    } else if (narration.toLowerCase().contains('referral')) {
+      return 'REFERRAL';
+    } else if (narration.toLowerCase().contains('bonus')) {
+      return 'BONUS';
+    } else if (narration.toLowerCase().contains('deduct')) {
+      return 'DEDUCTION';
+    }
+    return 'TRANSACTION';
   }
 }
