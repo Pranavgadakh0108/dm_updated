@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/games_model/single_ank_model.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -59,9 +60,16 @@ class SingleAnkBetService {
         errorMessage = e.toString();
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
+      // ScaffoldMessenger.of(
+      //   context,
+      // ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
+
+      showCustomSnackBar(
+          context: context,
+          message: errorMessage,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 2
+        );
 
       return null;
     }

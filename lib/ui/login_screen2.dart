@@ -79,7 +79,6 @@ class _LoginScreen2State extends State<LoginScreen2> {
                         children: [
                           SizedBox(height: screenHeight * 0.05),
 
-                          // App logo
                           Container(
                             height: screenHeight * 0.2,
                             width: screenHeight * 0.2,
@@ -98,7 +97,6 @@ class _LoginScreen2State extends State<LoginScreen2> {
                           ),
                           SizedBox(height: screenHeight * 0.05),
 
-                          // Mobile field (read-only)
                           CustomPhoneField(
                             controller: TextEditingController(
                               text: widget.mobileNumber,
@@ -108,7 +106,6 @@ class _LoginScreen2State extends State<LoginScreen2> {
                           ),
                           SizedBox(height: screenHeight * 0.025),
 
-                          // Password field
                           CustomTextField(
                             controller: passwordController,
                             hintText: 'Password',
@@ -125,8 +122,8 @@ class _LoginScreen2State extends State<LoginScreen2> {
                               // if (!passwordRegExp.hasMatch(value)) {
                               //   return "Enter valid Password";
                               // }
-                              if (value.length < 6) {
-                                return "Password required minimum 6";
+                              if (value.length < 4 || value.length > 4) {
+                                return "Password required 4 digits";
                               }
                               return null;
                             },

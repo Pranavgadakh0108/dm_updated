@@ -168,8 +168,8 @@ class _LoginScreen3State extends State<LoginScreen3> {
                           // if (!passwordRegExp.hasMatch(value)) {
                           //   return "Enter valid Password";
                           // }
-                          if (value.length < 6) {
-                            return "Password required minimum 6";
+                          if (value.length < 4 || value.length > 4) {
+                            return "Password required 4 digits";
                           }
                           return null;
                         },
@@ -195,8 +195,8 @@ class _LoginScreen3State extends State<LoginScreen3> {
                           // if (!passwordRegExp.hasMatch(value)) {
                           //   return "Enter valid Password";
                           // }
-                          if (value.length < 6) {
-                            return "Password required minimum 6";
+                          if (value.length < 4 || value.length > 4) {
+                            return "Password required 4 digits";
                           }
                           return null;
                         },

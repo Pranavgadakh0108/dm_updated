@@ -137,7 +137,9 @@
 
 import 'package:dmboss/model/login_user_model.dart';
 import 'package:dmboss/service/login_user.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
+
 
 class LoginUserProvider extends ChangeNotifier {
   bool _isLoading = false;
@@ -198,12 +200,13 @@ class LoginUserProvider extends ChangeNotifier {
       await authService.storeLoginData(response);
 
       // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message),
+      showCustomSnackBar(
+          context: context,
+          message: response.message,
           backgroundColor: Colors.green,
-        ),
-      );
+          durationSeconds: 2
+        );
+     
       return true;
     } else {
       _errorMessage =
@@ -211,9 +214,13 @@ class LoginUserProvider extends ChangeNotifier {
       notifyListeners();
 
       // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_errorMessage!), backgroundColor: Colors.red),
-      );
+      showCustomSnackBar(
+          context: context,
+          message: _errorMessage!,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 2
+        );
+     
       return false;
     }
   }
@@ -246,20 +253,29 @@ class LoginUserProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Login successful!"),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text("Login successful!"),
+      //     backgroundColor: Colors.green,
+      //   ),
+      // );
+      showCustomSnackBar(
+          context: context,
+          message: "Login successful!",
           backgroundColor: Colors.green,
-        ),
-      );
+          durationSeconds: 2
+        );
       return true;
     } else {
       _errorMessage = "Login failed. Please check your credentials.";
       notifyListeners();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_errorMessage!), backgroundColor: Colors.red),
-      );
+      showCustomSnackBar(
+          context: context,
+          message: _errorMessage!,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 2
+        );
       return false;
     }
   }

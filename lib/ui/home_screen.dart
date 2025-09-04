@@ -5,10 +5,12 @@ import 'package:dmboss/model/get_image_sliders.dart';
 import 'package:dmboss/provider/game_market_provider.dart';
 import 'package:dmboss/provider/games_settings_provider.dart';
 import 'package:dmboss/provider/get_image_sliders.dart';
+import 'package:dmboss/provider/get_notifications_provider.dart';
 import 'package:dmboss/provider/pending_withdraw_count.dart';
 import 'package:dmboss/provider/user_profile_provider.dart';
 import 'package:dmboss/ui/game/game_list_screen.dart';
 import 'package:dmboss/ui/my_wallet_screen.dart';
+import 'package:dmboss/ui/notifications_screen.dart';
 import 'package:dmboss/util/get_market_status.dart';
 import 'package:dmboss/util/get_time_in_12_hours.dart';
 import 'package:dmboss/widgets/blinking_container.dart';
@@ -30,7 +32,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController();
-
+  bool _isLoading = true;
+  String? _errorMessage;
   int _currentPage = 0;
   Timer? _timer;
 
@@ -38,6 +41,17 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadTransactionHistory();
+    });
+  }
+
+  Future<void> _loadTransactionHistory() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
       final userProfileProvider = Provider.of<UserProfileProvider>(
         context,
         listen: false,
@@ -67,8 +81,26 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       getImageSliders.getImageSLiders(context);
 
+      final getNotificationsCount = Provider.of<GetNotificationsProvider>(
+        context,
+        listen: false,
+      );
+      getNotificationsCount.getNotificationsProvider(context);
+
       _startAutoScroll();
-    });
+    } catch (error) {
+      setState(() {
+        _errorMessage = 'Failed to load Games. Please try again.';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _retryLoading() {
+    _loadTransactionHistory();
   }
 
   @override
@@ -134,35 +166,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          // Consumer<GetPendingWithdrawCountProvider>(
-          //   builder: (context, provider, _) {
-          //     return IconButton(
-          //       onPressed: () {
-          //         Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //             builder: (context) => WithdrawPendingRequests(),
-          //           ),
-          //         );
-          //       },
-          //       icon: Icon(Icons.access_time, color: Colors.pink),
-          //     );
-          //   },
-          // ),
-          // Consumer<GetPendingWithdrawCountProvider>(
-          //   builder: (context, provider, _) {
-          //     return Text(
-          //       provider.pendingWithdrawCountModel?.data.pendingCount
-          //               .toString() ??
-          //           "0",
-          //       style: const TextStyle(
-          //         fontWeight: FontWeight.bold,
-          //         fontSize: 16,
-          //         color: Colors.pink,
-          //       ),
-          //     );
-          //   },
-          // ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _retryLoading,
+            tooltip: 'Refresh',
+          ),
+
           Consumer<UserProfileProvider>(
             builder: (context, provider, child) {
               return GestureDetector(
@@ -195,9 +204,53 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.notifications_active, color: Colors.black),
+          Stack(
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NotificationsScreen(),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.notifications_active, color: Colors.black),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Consumer<GetNotificationsProvider>(
+                  builder: (context, notificationsProvider, _) {
+                    return Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 20,
+                        minHeight: 20,
+                      ),
+                      child: Text(
+                        notificationsProvider.notificationModel?.count == 0
+                            ? "0"
+                            : notificationsProvider.notificationModel?.count
+                                      .toString() ??
+                                  "",
+
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -332,26 +385,141 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
 
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: provider.gamesList?.length ?? 0,
-                  itemBuilder: (context, index) {
-                    final game = provider.gamesList?[index];
+                provider.gamesList?.isNotEmpty ?? true
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: provider.gamesList?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          final game = provider.gamesList?[index];
 
-                    if (game == null) {
-                      Center(
+                          if (game == null) {
+                            Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.history_toggle_off,
+                                    size: 64,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  const Text(
+                                    'No winning history found',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const Text(
+                                    'Your winning transactions will appear here',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+
+                          return GestureDetector(
+                            onTap: () {
+                              if (getMarketStatus(
+                                        game?.open ?? "",
+                                        game?.close ?? "",
+                                        game?.days ?? "",
+                                      ) ==
+                                      "Closed For Today" ||
+                                  getMarketStatus(
+                                        game?.open ?? "",
+                                        game?.close ?? "",
+                                        game?.days ?? "",
+                                      ) ==
+                                      "Holiday" ||
+                                  game?.result.status == "completed") {
+                                showMarketCloseDialog(context);
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => GameListScreen(
+                                      title: game?.bazar ?? "",
+                                      openTime: game?.open ?? "",
+                                      closeTime: game?.close ?? "",
+                                      marketId: game?.id ?? "",
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: GameCard(
+                              title: game?.bazar ?? "",
+                              numbers:
+                                  "${game?.result.openPanna.isEmpty ?? false ? '***' : game?.result.openPanna}_"
+                                  "${game?.result.open.isEmpty ?? false ? '*' : game?.result.open}"
+                                  "${game?.result.close.isEmpty ?? false ? '*' : game?.result.close}_"
+                                  "${game?.result.closePanna.isEmpty ?? false ? '***' : game?.result.closePanna}",
+                              statusText: game?.result.status != "completed"
+                                  ? getMarketStatus(
+                                      game?.open ?? "",
+                                      game?.close ?? "",
+                                      game?.days ?? "",
+                                    )
+                                  : "Closed for Today",
+                              statusColor: game?.result.status != "completed"
+                                  ? getMarketStatusColor(
+                                      getMarketStatus(
+                                        game?.open ?? "",
+                                        game?.close ?? "",
+                                        game?.days ?? "",
+                                      ),
+                                    )
+                                  : Colors.red,
+                              buttonText: game?.result.status != "completed"
+                                  ? getMarketStatusMessage(
+                                      getMarketStatus(
+                                        game?.open ?? "",
+                                        game?.close ?? "",
+                                        game?.days ?? "",
+                                      ),
+                                    )
+                                  : "Colosed Now",
+                              buttonColor: game?.result.status != "completed"
+                                  ? getMarketButtonColor(
+                                      getMarketStatus(
+                                        game?.open ?? "",
+                                        game?.close ?? "",
+                                        game?.days ?? "",
+                                      ),
+                                    )
+                                  : Colors.red,
+                              openTime: convertTimeStringTo12HourFormat(
+                                game?.open ?? "",
+                              ),
+                              closeTime: convertTimeStringTo12HourFormat(
+                                game?.close ?? "",
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(
-                              Icons.history_toggle_off,
+                              Icons.gamepad,
                               size: 64,
                               color: Colors.grey,
                             ),
                             const SizedBox(height: 16),
                             const Text(
-                              'No winning history found',
+                              'No Games found',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -360,94 +528,54 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const SizedBox(height: 8),
                             const Text(
-                              'Your winning transactions will appear here',
+                              'Your Games will appear here',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
                               ),
                               textAlign: TextAlign.center,
                             ),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: _retryLoading,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text('Refresh'),
+                            ),
                           ],
                         ),
-                      );
-                    }
-
-                    return GestureDetector(
-                      onTap: () {
-                        if (getMarketStatus(
-                                  game?.open ?? "",
-                                  game?.close ?? "",
-                                  game?.days ?? "",
-                                ) ==
-                                "Closed For Today" ||
-                            getMarketStatus(
-                                  game?.open ?? "",
-                                  game?.close ?? "",
-                                  game?.days ?? "",
-                                ) ==
-                                "Holiday") {
-                          showMarketCloseDialog(context);
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => GameListScreen(
-                                title: game?.bazar ?? "",
-                                openTime: game?.open ?? "",
-                                closeTime: game?.close ?? "",
-                                marketId: game?.id ?? "",
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                      child: GameCard(
-                        title: game?.bazar ?? "",
-                        numbers:
-                            "${game?.result.openPanna.isEmpty ?? false ? '***' : game?.result.openPanna}_"
-                            "${game?.result.open.isEmpty ?? false ? '*' : game?.result.open}"
-                            "${game?.result.close.isEmpty ?? false ? '*' : game?.result.close}_"
-                            "${game?.result.closePanna.isEmpty ?? false ? '***' : game?.result.closePanna}",
-                        statusText: getMarketStatus(
-                          game?.open ?? "",
-                          game?.close ?? "",
-                          game?.days ?? "",
-                        ),
-                        statusColor: getMarketStatusColor(
-                          getMarketStatus(
-                            game?.open ?? "",
-                            game?.close ?? "",
-                            game?.days ?? "",
-                          ),
-                        ),
-                        buttonText: getMarketStatusMessage(
-                          getMarketStatus(
-                            game?.open ?? "",
-                            game?.close ?? "",
-                            game?.days ?? "",
-                          ),
-                        ),
-                        buttonColor: getMarketButtonColor(
-                          getMarketStatus(
-                            game?.open ?? "",
-                            game?.close ?? "",
-                            game?.days ?? "",
-                          ),
-                        ),
-                        openTime: convertTimeStringTo12HourFormat(
-                          game?.open ?? "",
-                        ),
-                        closeTime: convertTimeStringTo12HourFormat(
-                          game?.close ?? "",
-                        ),
                       ),
-                    );
-                  },
-                ),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Loading Games...',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+            ),
+          ),
+        ],
       ),
     );
   }

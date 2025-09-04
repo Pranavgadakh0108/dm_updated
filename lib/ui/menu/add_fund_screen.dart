@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:dmboss/provider/add_deposite_manual_provider.dart';
+import 'package:dmboss/provider/get_payment_mode_provider.dart';
 import 'package:dmboss/provider/payment_gateway_provider.dart';
 import 'package:dmboss/provider/user_profile_provider.dart';
 import 'package:dmboss/service/post_payment_gateway.dart';
@@ -35,6 +36,11 @@ class _AddFundScreenState extends State<AddFundScreen> {
         listen: false,
       );
       userProvider.fetchUserProfile();
+      final paymentModeProvider = Provider.of<GetPaymentModeProvider>(
+        context,
+        listen: false,
+      );
+      paymentModeProvider.getPaymentMode(context);
     });
   }
 
@@ -100,83 +106,108 @@ class _AddFundScreenState extends State<AddFundScreen> {
                       },
                     ),
                     SizedBox(height: 20),
-                    ElevatedButton(
-                      // onPressed: _validateAmount,
-                      onPressed: () {
-                        if (_globalKey.currentState!.validate()) {
-                          setState(() {
-                            final provider =
-                                Provider.of<AddDepositePointsManualProvider>(
-                                  context,
-                                  listen: false,
-                                );
-                            provider.setAmount(_amountController.text);
-                          });
-                        }
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddFundScreenWithQR(),
+                    Consumer<GetPaymentModeProvider>(
+                      builder: (context, paymentProvider, _) {
+                        return ElevatedButton(
+                          onPressed: () {
+                            if (_globalKey.currentState!.validate()) {
+                              paymentProvider.gamesList?.data.active == "MANUAL"
+                                  ? setState(() {
+                                      final provider =
+                                          Provider.of<
+                                            AddDepositePointsManualProvider
+                                          >(context, listen: false);
+                                      provider.setAmount(
+                                        _amountController.text,
+                                      );
+                                    })
+                                  : setState(() {
+                                      final provider =
+                                          Provider.of<PaymentGatewayProvider>(
+                                            context,
+                                            listen: false,
+                                          );
+                                      provider.setAmount(
+                                        _amountController.text,
+                                      );
+                                    });
+                            }
+                            paymentProvider.gamesList?.data.active == "MANUAL"
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AddFundScreenWithQR(),
+                                    ),
+                                  )
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          PaymentGatewayScreen(),
+                                    ),
+                                  );
+                            ;
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            minimumSize: Size(double.infinity, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            "ADD PAYMENT",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         );
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        minimumSize: Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        "ADD MANUAL PAYMENT",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
                     ),
-                    SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_globalKey.currentState!.validate()) {
-                          setState(() {
-                            final provider =
-                                Provider.of<PaymentGatewayProvider>(
-                                  context,
-                                  listen: false,
-                                );
-                            provider.setAmount(_amountController.text);
-                          });
-                        }
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PaymentGatewayScreen(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(
-                          196,
-                          25,
-                          127,
-                          211,
-                        ),
-                        minimumSize: Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        "PAYMENT GATEWAY",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    // SizedBox(height: 12),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     if (_globalKey.currentState!.validate()) {
+                    //       setState(() {
+                    //         final provider =
+                    //             Provider.of<PaymentGatewayProvider>(
+                    //               context,
+                    //               listen: false,
+                    //             );
+                    //         provider.setAmount(_amountController.text);
+                    //       });
+                    //     }
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => PaymentGatewayScreen(),
+                    //       ),
+                    //     );
+                    //   },
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: const Color.fromARGB(
+                    //       196,
+                    //       25,
+                    //       127,
+                    //       211,
+                    //     ),
+                    //     minimumSize: Size(double.infinity, 50),
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(8),
+                    //     ),
+                    //   ),
+                    //   child: Text(
+                    //     "PAYMENT GATEWAY",
+                    //     style: TextStyle(
+                    //       fontSize: 14,
+                    //       fontWeight: FontWeight.w600,
+                    //       color: Colors.white,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 );
               },

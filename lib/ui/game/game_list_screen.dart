@@ -171,7 +171,7 @@ class GameListScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BulkDp(
+                      builder: (context) => Bulk_Dp(
                         title: filteredGames[index]['title'],
                         gameName: title,
                         openTime: openTime,

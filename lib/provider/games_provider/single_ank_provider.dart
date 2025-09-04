@@ -1,5 +1,6 @@
 import 'package:dmboss/model/games_model/single_ank_model.dart';
 import 'package:dmboss/service/games_service/single_ank_service.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 
 
@@ -39,19 +40,31 @@ class SingleAnkBetProvider extends ChangeNotifier {
 
     if (response != null) {
       _betResponse = response;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Bet placed successfully!"),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text("Bet placed successfully!"),
+      //     backgroundColor: Colors.green,
+      //   ),
+      // );
+      showCustomSnackBar(
+          context: context,
+          message: "Bet placed successfully!",
           backgroundColor: Colors.green,
-        ),
-      );
+          durationSeconds: 2
+        );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Failed to place bet"),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text("Failed to place bet"),
+      //     backgroundColor: Colors.redAccent,
+      //   ),
+      // );
+      showCustomSnackBar(
+          context: context,
+          message: "Failed to place bet",
           backgroundColor: Colors.redAccent,
-        ),
-      );
+          durationSeconds: 2
+        );
     }
 
     notifyListeners();

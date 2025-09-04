@@ -812,21 +812,21 @@
 //   }
 // }
 
-import 'package:dmboss/model/games_model/bulk_sp_model.dart';
+import 'package:dmboss/model/games_model/bulk_dp_model.dart';
+
 import 'package:dmboss/provider/games_provider/bulk_dp_provider.dart';
-import 'package:dmboss/widgets/current_date.dart';
 import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:dmboss/widgets/game_status.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dmboss/provider/games_provider/bulk_sp_provider.dart';
 
-class BulkDp extends StatefulWidget {
+
+class Bulk_Dp extends StatefulWidget {
   final String title;
   final String marketId;
   final String gameName;
   final String openTime;
-  const BulkDp({
+  const Bulk_Dp({
     super.key,
     required this.title,
     required this.marketId,
@@ -835,10 +835,10 @@ class BulkDp extends StatefulWidget {
   });
 
   @override
-  State<BulkDp> createState() => _BulkDpState();
+  State<Bulk_Dp> createState() => _BulkDpState();
 }
 
-class _BulkDpState extends State<BulkDp> {
+class _BulkDpState extends State<Bulk_Dp> {
   final List<int> pointsList = [5, 10, 20, 50, 100, 200, 500, 1000];
   int? selectedPoint;
 
@@ -860,8 +860,8 @@ class _BulkDpState extends State<BulkDp> {
       selectedDigits.clear();
     });
     // Also reset the provider's data
-    final provider = Provider.of<BulkSpBetProvider>(context, listen: false);
-    provider.clearBulkSpItems();
+    final provider = Provider.of<BulkDpBetProvider>(context, listen: false);
+    provider.clearBulkDpItems();
   }
 
   void selectPoint(int point) {
@@ -881,21 +881,21 @@ class _BulkDpState extends State<BulkDp> {
     final provider = Provider.of<BulkDpBetProvider>(context, listen: false);
 
     // Check if this digit already exists in the provider's list
-    final existingIndex = provider.bulkSpModel.bulkSp.indexWhere(
+    final existingIndex = provider.bulkDpModel.bulkDp.indexWhere(
       (item) => item.number == digit.toString(),
     );
 
     if (existingIndex != -1) {
       // Update existing item
-      final newItem = BulkSp(
+      final newItem = BulkDp(
         number: digit.toString(),
         amount: selectedDigits[digit]!,
       );
-      provider.updateBulkSpItem(existingIndex, newItem);
+      provider.updateBulkDpItem(existingIndex, newItem);
     } else {
       // Add new item
-      final newItem = BulkSp(number: digit.toString(), amount: selectedPoint!);
-      provider.addBulkSpItem(newItem);
+      final newItem = BulkDp(number: digit.toString(), amount: selectedPoint!);
+      provider.addBulkDpItem(newItem);
     }
   }
 
@@ -910,6 +910,9 @@ class _BulkDpState extends State<BulkDp> {
       return;
     }
 
+    print("--------------");
+    print(selectedDigits);
+
     final provider = Provider.of<BulkDpBetProvider>(context, listen: false);
 
     // Set game ID and type (you might want to get these from somewhere)
@@ -917,7 +920,7 @@ class _BulkDpState extends State<BulkDp> {
     provider.setGameType("BULK_DP"); // Changed to bulk_dp for this screen
 
     // Place the bet
-    provider.placeBulkSpBet(context, provider.bulkSpModel);
+    provider.placeBulkDpBet(context, provider.bulkDpModel);
 
     resetBid();
   }

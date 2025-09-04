@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 WithdrawHistoryModel withdrawHistoryModelFromJson(String? str) =>
-    WithdrawHistoryModel.fromJson(json.decode(str ?? ""));
+    WithdrawHistoryModel.fromJson(json.decode(str ?? "{}"));
 
 String? withdrawHistoryModelToJson(WithdrawHistoryModel data) =>
     json.encode(data.toJson());
@@ -17,12 +17,18 @@ class WithdrawHistoryModel {
     required this.data,
   });
 
-  factory WithdrawHistoryModel.fromJson(Map<String?, dynamic>? json) =>
-      WithdrawHistoryModel(
-        success: json?["success"],
-        msg: json?["msg"],
-        data: List<Datum>.from(json?["data"].map((x) => Datum.fromJson(x))),
-      );
+  factory WithdrawHistoryModel.fromJson(Map<String?, dynamic>? json) {
+    // Handle null json
+    json ??= {};
+
+    return WithdrawHistoryModel(
+      success: json["success"] ?? 0,
+      msg: json["msg"],
+      data: List<Datum>.from(
+        (json["data"] as List?)?.map((x) => Datum.fromJson(x)) ?? [],
+      ),
+    );
+  }
 
   Map<String?, dynamic>? toJson() => {
     "success": success,
@@ -56,18 +62,27 @@ class Datum {
     required this.v,
   });
 
-  factory Datum.fromJson(Map<String?, dynamic>? json) => Datum(
-    id: json?["_id"],
-    userMobile: json?["userMobile"],
-    amount: json?["amount"],
-    mode: json?["mode"],
-    note: json?["note"],
-    details: Details.fromJson(json?["details"]),
-    status: json?["status"],
-    createdAt: DateTime.parse(json?["createdAt"]),
-    updatedAt: DateTime.parse(json?["updatedAt"]),
-    v: json?["__v"],
-  );
+  factory Datum.fromJson(Map<String?, dynamic>? json) {
+    // Handle null json
+    json ??= {};
+
+    return Datum(
+      id: json["_id"],
+      userMobile: json["userMobile"],
+      amount: json["amount"] ?? 0,
+      mode: json["mode"],
+      note: json["note"],
+      details: Details.fromJson(json["details"]),
+      status: json["status"] ?? 0,
+      createdAt: json["createdAt"] != null
+          ? DateTime.tryParse(json["createdAt"].toString())
+          : null,
+      updatedAt: json["updatedAt"] != null
+          ? DateTime.tryParse(json["updatedAt"].toString())
+          : null,
+      v: json["__v"] ?? 0,
+    );
+  }
 
   Map<String?, dynamic>? toJson() => {
     "_id": id,
@@ -104,16 +119,25 @@ class Details {
     required this.v,
   });
 
-  factory Details.fromJson(Map<String?, dynamic>? json) => Details(
-    id: json?["_id"],
-    userMobile: json?["userMobile"],
-    acno: json?["acno"],
-    name: json?["name"],
-    ifsc: json?["ifsc"],
-    createdAt: DateTime.parse(json?["createdAt"]),
-    updatedAt: DateTime.parse(json?["updatedAt"]),
-    v: json?["__v"],
-  );
+  factory Details.fromJson(Map<String?, dynamic>? json) {
+    // Handle null json
+    json ??= {};
+
+    return Details(
+      id: json["_id"],
+      userMobile: json["userMobile"],
+      acno: json["acno"],
+      name: json["name"],
+      ifsc: json["ifsc"],
+      createdAt: json["createdAt"] != null
+          ? DateTime.tryParse(json["createdAt"].toString())
+          : null,
+      updatedAt: json["updatedAt"] != null
+          ? DateTime.tryParse(json["updatedAt"].toString())
+          : null,
+      v: json["__v"] ?? 0,
+    );
+  }
 
   Map<String?, dynamic>? toJson() => {
     "_id": id,

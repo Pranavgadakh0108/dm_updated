@@ -93,18 +93,17 @@ class AddBankDetailsProvider extends ChangeNotifier {
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Bank details added successfully'),
+            content: Text('Failed Adding Bank Details'),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
         );
       } else {
-        _errorMessage = 'Failed to add bank details';
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(_errorMessage!),
-            backgroundColor: Colors.redAccent,
-            duration: const Duration(seconds: 3),
+          const SnackBar(
+            content: Text('Bank details added successfully'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
           ),
         );
       }

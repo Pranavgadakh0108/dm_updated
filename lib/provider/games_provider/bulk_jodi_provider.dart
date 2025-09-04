@@ -181,7 +181,7 @@
 //       final response = await bulkJodiBetService.placeBulkJodiBet(bulkJodiModel);
 
 //       _betResponse = response;
-      
+
 //       if (response != null && response['success'] == true) {
 //         // Success is handled by the service via global key
 //       } else {
@@ -327,6 +327,7 @@
 
 import 'package:dmboss/model/games_model/bulk_jodi_model.dart';
 import 'package:dmboss/service/games_service/bulk_jodi_service.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 
 class BulkJodiBetProvider extends ChangeNotifier {
@@ -366,18 +367,18 @@ class BulkJodiBetProvider extends ChangeNotifier {
 
     if (response != null) {
       _betResponse = response;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Bulk Jodi bet placed successfully!"),
-          backgroundColor: Colors.green,
-        ),
+      showCustomSnackBar(
+        context: context,
+        message: "Bet placed successfully!",
+        backgroundColor: Colors.green,
+        durationSeconds: 2,
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Failed to place bulk Jodi bet"),
-          backgroundColor: Colors.redAccent,
-        ),
+      showCustomSnackBar(
+        context: context,
+        message: "Failed to place bet",
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 2,
       );
     }
 

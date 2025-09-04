@@ -22,6 +22,7 @@ class UserProfileProvider extends ChangeNotifier {
 
       if (profile != null && profile.success) {
         _userProfile = profile;
+        notifyListeners();
         _errorMessage = null;
 
         if (kDebugMode) {
@@ -48,11 +49,7 @@ class UserProfileProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateUserProfile({
-    String? name,
-    // String? email,
-    String? paytm,
-  }) async {
+  Future<bool> updateUserProfile({String? name, String? paytm}) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -60,7 +57,7 @@ class UserProfileProvider extends ChangeNotifier {
     try {
       final updatedProfile = await _userProfileService.updateUserProfile(
         name: name,
-        // email: email,
+
         paytm: paytm,
       );
 

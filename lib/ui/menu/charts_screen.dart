@@ -1,7 +1,8 @@
-import 'package:dmboss/data/appdata.dart';
+import 'package:dmboss/provider/game_market_provider.dart';
 import 'package:dmboss/widgets/jodi_table.dart';
 import 'package:dmboss/widgets/panel_table.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChartsScreen extends StatelessWidget {
   const ChartsScreen({super.key});
@@ -24,94 +25,104 @@ class ChartsScreen extends StatelessWidget {
           },
         ),
       ),
-      body: ListView.builder(
-        // padding: EdgeInsets.all(8),
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-        itemCount: charts.length,
-        itemBuilder: (context, index) {
-          return Card(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            margin: EdgeInsets.symmetric(vertical: 6),
-            child: Padding(
-              //padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.03,
-                vertical: MediaQuery.of(context).size.height * 0.012,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      charts[index],
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+      body: Consumer<GameMarketProvider>(
+        builder: (context, market, _) {
+          return ListView.builder(
+            // padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+            itemCount: market.gamesList?.length,
+            itemBuilder: (context, index) {
+              return Card(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                margin: EdgeInsets.symmetric(vertical: 6),
+                child: Padding(
+                  //padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.01,
+                    vertical: MediaQuery.of(context).size.height * 0.012,
                   ),
-                  Row(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  JodiTable(data: charts[index]),
-                            ),
-                          );
-                        },
+                      Expanded(
                         child: Text(
-                          "JODI",
+                          market.gamesList?[index].bazar ?? "",
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      SizedBox(width: 10),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  PanelTable(data: charts[index]),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
                             ),
-                          );
-                        },
-                        child: Text(
-                          "PANEL",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => JodiTable(
+                                    data: market.gamesList?[index].id ?? "",
+                                    marketName:
+                                        market.gamesList?[index].bazar ?? "",
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "JODI",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
-                        ),
+                          SizedBox(width: 10),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PanelTable(
+                                    data: market.gamesList?[index].id ?? "",
+                                    marketName:
+                                        market.gamesList?[index].bazar ?? "",
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "PANEL",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           );
         },
       ),

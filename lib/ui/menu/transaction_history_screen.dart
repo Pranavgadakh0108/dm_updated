@@ -1,4 +1,3 @@
-import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/provider/transaction_history_provider.dart';
 import 'package:dmboss/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -297,7 +296,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
                         const SizedBox(width: 24),
 
-                        // Narration Section
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

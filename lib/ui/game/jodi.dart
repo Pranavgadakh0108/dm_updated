@@ -950,11 +950,12 @@ import 'package:dmboss/model/games_model/single_ank_model.dart';
 import 'package:dmboss/provider/games_provider/jodi_provider.dart';
 
 import 'package:dmboss/widgets/add_button.dart';
+import 'package:dmboss/widgets/bet_summarry_dialogue.dart';
 import 'package:dmboss/widgets/custom_textfield_screen1.dart';
-import 'package:dmboss/widgets/date_container.dart';
 import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:dmboss/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Jodi extends StatefulWidget {
@@ -1162,13 +1163,32 @@ class _JodiState extends State<Jodi> {
     });
   }
 
-  void _submitAllBids(BuildContext context) {
-    final provider = Provider.of<JodiProvider>(context, listen: false);
+  // void _submitAllBids(BuildContext context) {
+  //   final provider = Provider.of<JodiProvider>(context, listen: false);
+
+  //   for (var bid in bids) {
+  //     final singleAnkModel = SingleAnkModel(
+  //       gameId: widget.marketId,
+  //       gameType: "JODI", // Changed to JODI
+  //       number: bid['digit']!,
+  //       amount: int.parse(bid['points']!),
+  //     );
+
+  //     provider.placeSingleAnkBet(context, singleAnkModel);
+  //   }
+
+  //   // Clear bids after submission
+  //   setState(() {
+  //     bids.clear();
+  //   });
+  // }
+  void _submitAllBids(BuildContext context, JodiProvider provider) {
+    FocusScope.of(context).unfocus();
 
     for (var bid in bids) {
       final singleAnkModel = SingleAnkModel(
         gameId: widget.marketId,
-        gameType: "JODI", // Changed to JODI
+        gameType: "JODI",
         number: bid['digit']!,
         amount: int.parse(bid['points']!),
       );
@@ -1176,10 +1196,32 @@ class _JodiState extends State<Jodi> {
       provider.placeSingleAnkBet(context, singleAnkModel);
     }
 
-    // Clear bids after submission
     setState(() {
       bids.clear();
     });
+  }
+
+  void _showConfirmationDialog(BuildContext context, JodiProvider provider) {
+    final totalBids = bids.length;
+    final totalBidAmount = bids.fold<int>(
+      0,
+      (sum, bid) => sum + int.parse(bid['points']!),
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => BetSummaryDialog(
+        title: widget.title,
+        date: DateFormat('dd/MM/yyyy').format(DateTime.now()),
+        bids: bids,
+        totalBids: totalBids,
+        totalBidAmount: totalBidAmount,
+        onConfirm: () {
+          Navigator.pop(context);
+          _submitAllBids(context, provider);
+        },
+      ),
+    );
   }
 
   @override
@@ -1383,22 +1425,18 @@ class _JodiState extends State<Jodi> {
                           Container(
                             constraints: BoxConstraints(
                               maxHeight:
-                                  MediaQuery.of(context).size.height * 0.4,
+                                  MediaQuery.of(context).size.height *
+                                  0.4, // Reduced height
                             ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.orange,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+
                             child: Column(
                               children: [
+                                // Table header
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 10,
-                                  ),
+                                  // padding: const EdgeInsets.symmetric(
+                                  //   vertical: 8,
+                                  //   horizontal: 10,
+                                  // ),
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 8),
                                     child: Row(
@@ -1409,18 +1447,40 @@ class _JodiState extends State<Jodi> {
                                           child: Text(
                                             "Digit",
                                             textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                         Expanded(
                                           child: Text(
                                             "Amount",
                                             textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                         Expanded(
                                           child: Text(
-                                            "Game type",
+                                            "Type",
                                             textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            "Delete",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -1436,67 +1496,74 @@ class _JodiState extends State<Jodi> {
                                     color: Colors.black,
                                   ),
                                 ),
+                                // Bid list
                                 Expanded(
                                   child: ListView.builder(
                                     itemCount: bids.length,
                                     itemBuilder: (context, index) {
                                       return Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 4,
+                                          horizontal: 8,
+                                        ),
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            color: Colors.white,
+                                            color: Colors
+                                                .grey[100], // Lighter background
                                             borderRadius: BorderRadius.circular(
-                                              10,
+                                              8,
                                             ),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey,
-                                                blurRadius: 0.5,
-                                                spreadRadius: 1,
-                                                offset: Offset(0, 1),
-                                              ),
-                                            ],
                                           ),
                                           child: ListTile(
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                  horizontal: 8,
+                                                ),
+                                            minVerticalPadding: 0,
+                                            dense:
+                                                true, // Makes the list tile more compact
                                             title: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Expanded(
                                                   child: Text(
                                                     bids[index]['digit']!,
                                                     textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                    ),
                                                   ),
                                                 ),
-                                                Text('|'),
                                                 Expanded(
                                                   child: Text(
                                                     bids[index]['points']!,
                                                     textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                    ),
                                                   ),
                                                 ),
-                                                Text('|'),
                                                 Expanded(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      SizedBox(width: 5),
-                                                      Text(
-                                                        bids[index]['type']!,
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                      const SizedBox(width: 8),
-                                                      GestureDetector(
-                                                        onTap: () =>
-                                                            _deleteBid(index),
-                                                        child: const Icon(
-                                                          Icons.delete,
-                                                          color: Colors.red,
-                                                          size: 20,
-                                                        ),
-                                                      ),
-                                                    ],
+                                                  child: Text(
+                                                    bids[index]['type']!,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: GestureDetector(
+                                                    onTap: () =>
+                                                        _deleteBid(index),
+                                                    child: const Icon(
+                                                      Icons.delete,
+                                                      color: Colors.red,
+                                                      size:
+                                                          18, // Smaller delete icon
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -1522,7 +1589,10 @@ class _JodiState extends State<Jodi> {
                                       data: "Submit",
                                       onPressed: () {
                                         if (bids.isNotEmpty) {
-                                          _submitAllBids(context);
+                                          _showConfirmationDialog(
+                                            context,
+                                            provider,
+                                          );
                                         } else {
                                           ScaffoldMessenger.of(
                                             context,

@@ -707,12 +707,12 @@ import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/games_model/single_ank_model.dart';
 import 'package:dmboss/provider/games_provider/full_sangam_provider.dart';
 import 'package:dmboss/widgets/add_button.dart';
+import 'package:dmboss/widgets/bet_summarry_dialogue.dart';
 import 'package:dmboss/widgets/custom_textfield_screen1.dart';
-import 'package:dmboss/widgets/date_container.dart';
 import 'package:dmboss/widgets/game_app_bar.dart';
-import 'package:dmboss/widgets/game_status.dart';
 import 'package:dmboss/widgets/submit_button.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class FullSangam extends StatefulWidget {
@@ -1065,8 +1065,10 @@ class _FullSangamState extends State<FullSangam> {
     });
   }
 
-  void _submitAllBids(BuildContext context) {
-    final provider = Provider.of<FullSangamProvider>(context, listen: false);
+  void _submitAllBids(BuildContext context, FullSangamProvider provider) {
+    //final provider = Provider.of<FullSangamProvider>(context, listen: false);
+
+    FocusScope.of(context).unfocus();
 
     for (var bid in bids) {
       final singleAnkModel = SingleAnkModel(
@@ -1083,6 +1085,32 @@ class _FullSangamState extends State<FullSangam> {
     setState(() {
       bids.clear();
     });
+  }
+
+  void _showConfirmationDialog(
+    BuildContext context,
+    FullSangamProvider provider,
+  ) {
+    final totalBids = bids.length;
+    final totalBidAmount = bids.fold<int>(
+      0,
+      (sum, bid) => sum + int.parse(bid['points']!),
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => BetSummaryDialog(
+        title: widget.title,
+        date: DateFormat('dd/MM/yyyy').format(DateTime.now()),
+        bids: bids,
+        totalBids: totalBids,
+        totalBidAmount: totalBidAmount,
+        onConfirm: () {
+          Navigator.pop(context);
+          _submitAllBids(context, provider);
+        },
+      ),
+    );
   }
 
   @override
@@ -1128,52 +1156,52 @@ class _FullSangamState extends State<FullSangam> {
                   children: [
                     // Date and Game Name
                     Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.orange,
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      widget.gameName,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.orange,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: Text(
+                                widget.gameName,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
                                 ),
                               ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.orange,
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "OPEN",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.orange,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "OPEN",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 15),
 
                     Expanded(
@@ -1350,127 +1378,148 @@ class _FullSangamState extends State<FullSangam> {
                               Container(
                                 constraints: BoxConstraints(
                                   maxHeight:
-                                      MediaQuery.of(context).size.height * 0.4,
+                                      MediaQuery.of(context).size.height *
+                                      0.4, // Reduced height
                                 ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.orange,
-                                    width: 2,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+
                                 child: Column(
                                   children: [
+                                    // Table header
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 8,
-                                        horizontal: 10,
-                                      ),
-                                      child: const Padding(
-                                        padding: EdgeInsets.only(top: 8),
+                                      // padding: const EdgeInsets.symmetric(
+                                      //   vertical: 8,
+                                      //   horizontal: 10,
+                                      // ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 8),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
-                                          children: [
+                                          children: const [
                                             Expanded(
                                               child: Text(
-                                                "Pana",
+                                                "Digit",
                                                 textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                             Expanded(
                                               child: Text(
                                                 "Amount",
                                                 textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                             Expanded(
                                               child: Text(
-                                                "Game type",
+                                                "Type",
                                                 textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                "Delete",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
                                     ),
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Divider(
+                                    Padding(
+                                      padding: EdgeInsets.all(
+                                        MediaQuery.of(context).size.width *
+                                            0.02,
+                                      ),
+                                      child: const Divider(
                                         height: 1,
                                         color: Colors.black,
                                       ),
                                     ),
+                                    // Bid list
                                     Expanded(
                                       child: ListView.builder(
-                                        shrinkWrap: true,
-                                        physics: const ClampingScrollPhysics(),
                                         itemCount: bids.length,
                                         itemBuilder: (context, index) {
                                           return Padding(
-                                            padding: const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 4,
+                                              horizontal: 8,
+                                            ),
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                color: Colors.white,
+                                                color: Colors
+                                                    .grey[100], // Lighter background
                                                 borderRadius:
-                                                    BorderRadius.circular(10),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey,
-                                                    blurRadius: 0.5,
-                                                    spreadRadius: 1,
-                                                    offset: const Offset(0, 1),
-                                                  ),
-                                                ],
+                                                    BorderRadius.circular(8),
                                               ),
                                               child: ListTile(
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                    ),
+                                                minVerticalPadding: 0,
+                                                dense:
+                                                    true, // Makes the list tile more compact
                                                 title: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     Expanded(
                                                       child: Text(
                                                         bids[index]['displayDigit']!,
                                                         textAlign:
                                                             TextAlign.center,
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                        ),
                                                       ),
                                                     ),
-                                                    const Text('|'),
                                                     Expanded(
                                                       child: Text(
                                                         bids[index]['points']!,
                                                         textAlign:
                                                             TextAlign.center,
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                        ),
                                                       ),
                                                     ),
-                                                    const Text('|'),
                                                     Expanded(
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          const SizedBox(
-                                                            width: 5,
-                                                          ),
-                                                          Text(
-                                                            bids[index]['type']!,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 8,
-                                                          ),
-                                                          GestureDetector(
-                                                            onTap: () =>
-                                                                _deleteBid(
-                                                                  index,
-                                                                ),
-                                                            child: const Icon(
-                                                              Icons.delete,
-                                                              color: Colors.red,
-                                                              size: 20,
-                                                            ),
-                                                          ),
-                                                        ],
+                                                      child: Text(
+                                                        bids[index]['type']!,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: GestureDetector(
+                                                        onTap: () =>
+                                                            _deleteBid(index),
+                                                        child: const Icon(
+                                                          Icons.delete,
+                                                          color: Colors.red,
+                                                          size:
+                                                              18, // Smaller delete icon
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
@@ -1496,7 +1545,10 @@ class _FullSangamState extends State<FullSangam> {
                                           data: "Submit",
                                           onPressed: () {
                                             if (bids.isNotEmpty) {
-                                              _submitAllBids(context);
+                                              _showConfirmationDialog(
+                                                context,
+                                                provider,
+                                              );
                                             } else {
                                               ScaffoldMessenger.of(
                                                 context,

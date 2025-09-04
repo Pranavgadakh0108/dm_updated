@@ -13,7 +13,10 @@ import 'package:dmboss/provider/get_bank_details_provider.dart';
 import 'package:dmboss/provider/get_bet_history_provider.dart';
 import 'package:dmboss/provider/get_daily_result_provider.dart';
 import 'package:dmboss/provider/get_fund_history_provider.dart';
+import 'package:dmboss/provider/get_games_chart_provider.dart';
 import 'package:dmboss/provider/get_image_sliders.dart';
+import 'package:dmboss/provider/get_notifications_provider.dart';
+import 'package:dmboss/provider/get_payment_mode_provider.dart';
 import 'package:dmboss/provider/get_pending_request_count.dart';
 import 'package:dmboss/provider/get_qr_code_provider.dart';
 import 'package:dmboss/provider/how_to_play_provider.dart';
@@ -28,9 +31,12 @@ import 'package:dmboss/provider/user_profile_provider.dart';
 import 'package:dmboss/provider/winning_history_provider.dart';
 import 'package:dmboss/provider/withdraw_coins_provider.dart';
 import 'package:dmboss/provider/withdraw_history_provider.dart';
+import 'package:dmboss/service/notification_polling_service.dart';
+import 'package:dmboss/service/notification_send_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +46,16 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  // Initialize Workmanager with the callback dispatcher from NotificationPollingService
+  Workmanager().initialize(
+    NotificationPollingService.callbackDispatcher,
+    isInDebugMode: true,
+  );
+
+  // Initialize notifications
+  await NotificationService.initialize();
+  await NotificationPollingService.initialize();
+
   runApp(
     MultiProvider(
       providers: [
@@ -47,7 +63,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => RegisterUserProvider()),
         ChangeNotifierProvider(create: (_) => LoginUserProvider()),
         ChangeNotifierProvider(create: (_) => UserProfileProvider()),
-        ChangeNotifierProvider(create: (_) => GameRateProvider()),
+        ChangeNotifierProvider(create: (_) => GetGameRatesProvider()),
         ChangeNotifierProvider(create: (_) => ProfileUpdateProvider()),
         ChangeNotifierProvider(create: (_) => GameMarketProvider()),
         ChangeNotifierProvider(create: (_) => HowToPlayProvider()),
@@ -81,6 +97,9 @@ void main() async {
           create: (_) => GetPendingDepositeCountProvider(),
         ),
         ChangeNotifierProvider(create: (_) => GetImageSlidersProvider()),
+        ChangeNotifierProvider(create: (_) => GetPaymentModeProvider()),
+        ChangeNotifierProvider(create: (_) => GetNotificationsProvider()),
+        ChangeNotifierProvider(create: (_) => GetGamesChartProvider()),
       ],
       child: const MyApp(),
     ),

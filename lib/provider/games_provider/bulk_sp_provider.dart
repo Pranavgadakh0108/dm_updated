@@ -1,15 +1,11 @@
-
 import 'package:dmboss/model/games_model/bulk_sp_model.dart';
 import 'package:dmboss/service/games_service/bulk_sp_service.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 
 class BulkSpBetProvider extends ChangeNotifier {
   bool _isLoading = false;
-  BulkSpModel _bulkSpModel = BulkSpModel(
-    gameId: "",
-    gameType: "",
-    bulkSp: [],
-  );
+  BulkSpModel _bulkSpModel = BulkSpModel(gameId: "", gameType: "", bulkSp: []);
   Map<String, dynamic>? _betResponse;
 
   bool get isLoading => _isLoading;
@@ -38,18 +34,18 @@ class BulkSpBetProvider extends ChangeNotifier {
 
     if (response != null) {
       _betResponse = response;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Bulk SP bet placed successfully!"),
-          backgroundColor: Colors.green,
-        ),
+      showCustomSnackBar(
+        context: context,
+        message: "Bet placed successfully!",
+        backgroundColor: Colors.green,
+        durationSeconds: 2,
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Failed to place bulk SP bet"),
-          backgroundColor: Colors.redAccent,
-        ),
+      showCustomSnackBar(
+        context: context,
+        message: "Failed to place bet",
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 2,
       );
     }
 
@@ -57,11 +53,7 @@ class BulkSpBetProvider extends ChangeNotifier {
   }
 
   void resetBulkSpModel() {
-    _bulkSpModel = BulkSpModel(
-      gameId: "",
-      gameType: "",
-      bulkSp: [],
-    );
+    _bulkSpModel = BulkSpModel(gameId: "", gameType: "", bulkSp: []);
     notifyListeners();
   }
 

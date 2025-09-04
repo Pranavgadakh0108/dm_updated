@@ -77,12 +77,15 @@ class _GameRateScreenState extends State<GameRateScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch game rates when screen loads
-    Future.microtask(() {
-      final gameRateProvider = Provider.of<GameRateProvider>(context, listen: false);
-      if (!gameRateProvider.hasRates && !gameRateProvider.isLoading) {
-        gameRateProvider.fetchGameRates();
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.microtask(() {
+        final gameRateProvider = Provider.of<GetGameRatesProvider>(
+          context,
+          listen: false,
+        );
+
+        gameRateProvider.getGameRates(context);
+      });
     });
   }
 
@@ -93,10 +96,13 @@ class _GameRateScreenState extends State<GameRateScreen> {
 
   // Helper method to convert snake_case to Title Case
   String _formatGameTitle(String key) {
-    return key.split('_').map((word) {
-      if (word.isEmpty) return word;
-      return word[0].toUpperCase() + word.substring(1);
-    }).join(' ');
+    return key
+        .split('_')
+        .map((word) {
+          if (word.isEmpty) return word;
+          return word[0].toUpperCase() + word.substring(1);
+        })
+        .join(' ');
   }
 
   @override
@@ -117,11 +123,18 @@ class _GameRateScreenState extends State<GameRateScreen> {
           },
         ),
       ),
-      body: Consumer<GameRateProvider>(
+      body: Consumer<GetGameRatesProvider>(
         builder: (context, gameRateProvider, child) {
           if (gameRateProvider.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (gameRateProvider.gameRatesModel?.list.isEmpty ?? true) {
+            return Center(
+              child: Text(
+                'No Game Rate Available',
+                style: TextStyle(color: Colors.grey[600]),
+              ),
             );
           }
 
@@ -134,20 +147,6 @@ class _GameRateScreenState extends State<GameRateScreen> {
             );
           }
 
-          if (!gameRateProvider.hasRates) {
-            return const Center(
-              child: Text('No game rates available'),
-            );
-          }
-
-          // Get all rates from the server
-          final allRates = gameRateProvider.getAllRatesMap();
-          
-          // Filter out empty or zero rates and create formatted list
-          final List<MapEntry<String, String>> validRates = allRates.entries
-              .where((entry) => entry.value.isNotEmpty && entry.value != '0' && entry.value != '0/0')
-              .toList();
-
           return ListView.builder(
             padding: EdgeInsets.only(
               top: MediaQuery.of(context).size.height * 0.02,
@@ -155,11 +154,13 @@ class _GameRateScreenState extends State<GameRateScreen> {
               right: MediaQuery.of(context).size.width * 0.075,
               bottom: MediaQuery.of(context).size.height * 0.075,
             ),
-            itemCount: validRates.length,
+            itemCount: gameRateProvider.gameRatesModel?.list.length,
             itemBuilder: (context, index) {
-              final entry = validRates[index];
-              final gameTitle = _formatGameTitle(entry.key);
-              final formattedRate = _formatRateValue(entry.value);
+              final entry = gameRateProvider.gameRatesModel?.list[index];
+              final gameTitle = _formatGameTitle(entry?.key ?? "");
+              final formattedRate = _formatRateValue(
+                entry?.value.toString() ?? "0",
+              );
 
               return Container(
                 margin: EdgeInsets.symmetric(vertical: 6),
@@ -180,7 +181,10 @@ class _GameRateScreenState extends State<GameRateScreen> {
                   child: Center(
                     child: Text(
                       '$gameTitle - $formattedRate',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),

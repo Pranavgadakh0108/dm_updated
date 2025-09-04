@@ -27,7 +27,7 @@ class GetImageSliders {
     required this.items,
   });
 
-  factory GetImageSliders.fromJson(Map<String?, dynamic> json) =>
+  factory GetImageSliders.fromJson(Map<String?, dynamic>? json) =>
       GetImageSliders(
         success: json?["success"],
         message: json?["message"],

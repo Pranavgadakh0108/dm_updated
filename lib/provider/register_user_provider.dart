@@ -1,5 +1,6 @@
 import 'package:dmboss/model/register_user_model.dart';
 import 'package:dmboss/service/register_user.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 
 class RegisterUserProvider extends ChangeNotifier {
@@ -64,11 +65,11 @@ class RegisterUserProvider extends ChangeNotifier {
       notifyListeners();
 
       // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message),
-          backgroundColor: Colors.green,
-        ),
+      showCustomSnackBar(
+        context: context,
+        message: response.message,
+        backgroundColor: Colors.green,
+        durationSeconds: 2,
       );
       return true;
     } else {
@@ -76,63 +77,13 @@ class RegisterUserProvider extends ChangeNotifier {
       notifyListeners();
 
       // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_errorMessage!), backgroundColor: Colors.red),
+      showCustomSnackBar(
+        context: context,
+        message: _errorMessage!,
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 2,
       );
       return false;
     }
   }
-
-  // Simple registration without full response
-  // Future<bool> registerUserSimple({
-  //   required String mobile,
-  //   required String name,
-  //   required String email,
-  //   required String password, // Added password parameter
-  //   required BuildContext context,
-  // }) async {
-  //   if (name.isEmpty || email.isEmpty || password.isEmpty) {
-  //     _errorMessage = "All fields are required";
-  //     notifyListeners();
-  //     return false;
-  //   }
-
-  //   _isLoading = true;
-  //   _errorMessage = null;
-  //   notifyListeners();
-
-  //   final authService = AuthService();
-  //   final response = await authService.registerUserSimple(
-  //     mobile: mobile,
-  //     name: name,
-  //     email: email,
-  //     password: password, // Pass password to service
-  //   );
-
-  //   _isLoading = false;
-
-  //   if (response == true) {
-  //     _errorMessage = null;
-  //     notifyListeners();
-
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text("Registration successful!"),
-  //         backgroundColor: Colors.green,
-  //       ),
-  //     );
-  //     return true;
-  //   } else {
-  //     _errorMessage = "Registration failed";
-  //     notifyListeners();
-
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text(_errorMessage!),
-  //         backgroundColor: Colors.red,
-  //       ),
-  //     );
-  //     return false;
-  //   }
-  // }
 }

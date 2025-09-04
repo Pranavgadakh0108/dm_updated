@@ -99,6 +99,7 @@ class Result {
   String? pendingClose;
   String? pendingClosePanna;
   String? pendingSession;
+  String? status;
 
   Result({
     required this.open,
@@ -110,6 +111,7 @@ class Result {
     this.pendingClose,
     this.pendingClosePanna,
     this.pendingSession,
+    this.status,
   });
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
@@ -122,6 +124,7 @@ class Result {
     pendingClose: json["pending_close"],
     pendingClosePanna: json["pending_close_panna"],
     pendingSession: json["pending_session"],
+    status: json["status"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -134,5 +137,6 @@ class Result {
     "pending_close": pendingClose,
     "pending_close_panna": pendingClosePanna,
     "pending_session": pendingSession,
+    "status": status,
   };
 }
