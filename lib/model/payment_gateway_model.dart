@@ -12,29 +12,11 @@ String? paymentGatewayIntegrationToJson(PaymentGatewayIntegration data) =>
 
 class PaymentGatewayIntegration {
   int? amount;
-  String? name;
-  String? phone;
-  String? redirectUrl;
 
-  PaymentGatewayIntegration({
-    required this.amount,
-    required this.name,
-    required this.phone,
-    required this.redirectUrl,
-  });
+  PaymentGatewayIntegration({required this.amount});
 
   factory PaymentGatewayIntegration.fromJson(Map<String?, dynamic>? json) =>
-      PaymentGatewayIntegration(
-        amount: json?["amount"],
-        name: json?["name"],
-        phone: json?["phone"],
-        redirectUrl: json?["redirect_url"],
-      );
+      PaymentGatewayIntegration(amount: json?["amount"]);
 
-  Map<String?, dynamic>? toJson() => {
-    "amount": amount,
-    "name": name,
-    "phone": phone,
-    "redirect_url": redirectUrl,
-  };
+  Map<String?, dynamic>? toJson() => {"amount": amount};
 }

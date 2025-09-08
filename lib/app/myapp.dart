@@ -2,6 +2,7 @@ import 'package:dmboss/service/notification_polling_service.dart';
 import 'package:dmboss/ui/splash_screen.dart';
 import 'package:flutter/material.dart';
 
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -19,7 +20,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    NotificationPollingService.stopPolling();
     super.dispose();
   }
 
@@ -27,16 +27,20 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
+    // Update app state in notification service
     switch (state) {
       case AppLifecycleState.resumed:
-        // App is in foreground - start polling
+        NotificationPollingService.setAppState(true);
         NotificationPollingService.startPolling();
         break;
+      case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
-        // App is going to background
+      case AppLifecycleState.detached:
+        NotificationPollingService.setAppState(false);
+        NotificationPollingService.stopPolling();
         break;
-      default:
-        // Handle other states (inactive, detached)
+      case AppLifecycleState.hidden:
+        // Handle if needed
         break;
     }
   }
@@ -44,6 +48,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
       navigatorKey: GlobalKey<NavigatorState>(),
       theme: ThemeData(fontFamily: 'Poppins'),

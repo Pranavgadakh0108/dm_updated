@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/get_payment_mode_model.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,9 +33,12 @@ class GetPaymentModeService {
       if (result.statusCode == 200) {
         return GetPaymentMode.fromJson(result.data);
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Failed to Fetch payment Mode")));
+        showCustomSnackBar(
+          context: context,
+          message: "Failed to Fetch Payment Mode",
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 2,
+        );
       }
     } catch (e) {
       String errorMessage = "Something went wrong";
@@ -49,9 +53,12 @@ class GetPaymentModeService {
         errorMessage = e.toString();
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
+      showCustomSnackBar(
+        context: context,
+        message: errorMessage,
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 2,
+      );
 
       return null;
     }

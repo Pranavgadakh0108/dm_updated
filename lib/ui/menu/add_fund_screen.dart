@@ -1,14 +1,17 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:dmboss/provider/add_deposite_manual_provider.dart';
+import 'package:dmboss/provider/games_settings_provider.dart';
 import 'package:dmboss/provider/get_payment_mode_provider.dart';
 import 'package:dmboss/provider/payment_gateway_provider.dart';
 import 'package:dmboss/provider/user_profile_provider.dart';
-import 'package:dmboss/service/post_payment_gateway.dart';
 import 'package:dmboss/ui/menu/add_funds_with_qr_or_transactionid.dart';
 import 'package:dmboss/ui/payment_gateway_screen.dart';
+import 'package:dmboss/util/make_whatsapp_chat.dart';
 import 'package:dmboss/widgets/custom_text_field.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class AddFundScreen extends StatefulWidget {
@@ -46,6 +49,8 @@ class _AddFundScreenState extends State<AddFundScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -61,6 +66,20 @@ class _AddFundScreenState extends State<AddFundScreen> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          Container(
+            margin: EdgeInsets.all(screenWidth * 0.02),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.03,
+              vertical: screenHeight * 0.006,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(screenWidth * 0.1),
+            ),
+            child: Wallet(),
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
@@ -105,7 +124,53 @@ class _AddFundScreenState extends State<AddFundScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 15),
+
+                    Text(
+                      "For Fund Query's please Contact",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+
+                    Consumer<GamesSettingsProvider>(
+                      builder: (context, settingsProvider, _) {
+                        return GestureDetector(
+                          onTap: () => openWhatsApp(
+                            settingsProvider.gameSettings?.data.whatsapp == ""
+                                ? "9888195353"
+                                : settingsProvider
+                                          .gameSettings
+                                          ?.data
+                                          .whatsapp ??
+                                      "",
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.whatsapp,
+                                size: 25,
+                                color: Colors.green,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "9888195353",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+
+                    SizedBox(height: 15),
+
                     Consumer<GetPaymentModeProvider>(
                       builder: (context, paymentProvider, _) {
                         return ElevatedButton(
@@ -144,10 +209,14 @@ class _AddFundScreenState extends State<AddFundScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          PaymentGatewayScreen(),
+                                          PaymentGatewayScreen(
+                                            mode: paymentProvider
+                                                .gamesList
+                                                ?.data
+                                                .active,
+                                          ),
                                     ),
                                   );
-                            ;
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange,
@@ -167,47 +236,6 @@ class _AddFundScreenState extends State<AddFundScreen> {
                         );
                       },
                     ),
-                    // SizedBox(height: 12),
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     if (_globalKey.currentState!.validate()) {
-                    //       setState(() {
-                    //         final provider =
-                    //             Provider.of<PaymentGatewayProvider>(
-                    //               context,
-                    //               listen: false,
-                    //             );
-                    //         provider.setAmount(_amountController.text);
-                    //       });
-                    //     }
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => PaymentGatewayScreen(),
-                    //       ),
-                    //     );
-                    //   },
-                    //   style: ElevatedButton.styleFrom(
-                    //     backgroundColor: const Color.fromARGB(
-                    //       196,
-                    //       25,
-                    //       127,
-                    //       211,
-                    //     ),
-                    //     minimumSize: Size(double.infinity, 50),
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(8),
-                    //     ),
-                    //   ),
-                    //   child: Text(
-                    //     "PAYMENT GATEWAY",
-                    //     style: TextStyle(
-                    //       fontSize: 14,
-                    //       fontWeight: FontWeight.w600,
-                    //       color: Colors.white,
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 );
               },
@@ -215,6 +243,32 @@ class _AddFundScreenState extends State<AddFundScreen> {
           ),
         ),
       ),
+      // floatingActionButton: Container(
+      //   margin: EdgeInsets.only(
+      //     bottom: 20,
+      //   ), // Adjust this value to lift it up more
+      //   child: Consumer<GamesSettingsProvider>(
+      //     builder: (context, settingsProvider, _) {
+      //       return FloatingActionButton(
+      //         onPressed: () {
+      //           print(settingsProvider.gameSettings?.data.whatsapp ?? "");
+      //           openWhatsApp(
+      //             settingsProvider.gameSettings?.data.whatsapp == ""
+      //                 ? "9888195353"
+      //                 : settingsProvider.gameSettings?.data.whatsapp ?? "",
+      //           );
+      //         },
+      //         backgroundColor: Colors.green,
+      //         child: Icon(
+      //           FontAwesomeIcons.whatsapp,
+      //           color: Colors.white,
+      //           size: 40,
+      //         ),
+      //       );
+      //     },
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

@@ -86,11 +86,13 @@ class _AddFundScreenWithQRState extends State<AddFundScreenWithQR> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(height: 20),
 
                     qrProvider.gamesList?.qrCodes[0].qrImage != null
                         ? Image.network(
                             '$baseUrl${qrProvider.gamesList?.qrCodes[0].qrImage}',
+                            height: 200,
+                            width: 500,
                           )
                         : CircularProgressIndicator(color: Colors.orange),
 
@@ -113,7 +115,9 @@ class _AddFundScreenWithQRState extends State<AddFundScreenWithQR> {
                         });
                       },
 
-                      validator: (value) {},
+                      validator: (value) {
+                        return null;
+                      },
                     ),
                     SizedBox(height: 20),
                     CustomTextField(

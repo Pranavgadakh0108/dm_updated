@@ -1,4 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:dmboss/data/appdata.dart';
+import 'package:dmboss/provider/games_settings_provider.dart';
 import 'package:dmboss/provider/mobile_exist_provider.dart';
 import 'package:dmboss/ui/login_screen2.dart';
 import 'package:dmboss/ui/login_screen3.dart';
@@ -21,6 +24,8 @@ class _LoginScreen1State extends State<LoginScreen1> {
   final TextEditingController mobileController = TextEditingController();
   final GlobalKey<FormState> _globalKey = GlobalKey();
   bool _isNavigating = false; // Add this flag to prevent multiple navigations
+  bool _isLoading = true;
+  String? _errorMessage;
 
   void handleContinue() {
     if (_globalKey.currentState!.validate()) {
@@ -31,6 +36,35 @@ class _LoginScreen1State extends State<LoginScreen1> {
 
       mobileCheckProvider.setMobileNumber(mobileController.text);
       mobileCheckProvider.checkMobileExists(context, mobileController.text);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTransactionHistory();
+  }
+
+  Future<void> _loadTransactionHistory() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final getGameSettings = Provider.of<GamesSettingsProvider>(
+        context,
+        listen: false,
+      );
+      await getGameSettings.getGameSettings(context);
+    } catch (error) {
+      setState(() {
+        _errorMessage = 'Failed to load Games. Please try again.';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -180,70 +214,90 @@ class _LoginScreen1State extends State<LoginScreen1> {
   }
 
   Widget _buildCommonSection(bool isSmallScreen) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return Consumer<GamesSettingsProvider>(
+      builder: (context, gameSettings, _) {
+        return Column(
           children: [
-            GestureDetector(
-              onTap: () => openWhatsApp("+919888195353"),
-              child: Text(
-                'Forgot Password?',
-                style: TextStyle(
-                  fontSize: isSmallScreen ? 12 : 14,
-                  fontWeight: FontWeight.w600,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () => openWhatsApp(
+                    gameSettings.gameSettings?.data.whatsapp == ""
+                        ? "9888195353"
+                        : gameSettings.gameSettings?.data.whatsapp ?? "",
+                  ),
+                  child: Text(
+                    'Forgot Password?',
+                    style: TextStyle(
+                      fontSize: isSmallScreen ? 12 : 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
-              ),
+              ],
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () => openWhatsApp(
+                    gameSettings.gameSettings?.data.whatsapp == ""
+                        ? "9888195353"
+                        : gameSettings.gameSettings?.data.whatsapp ?? "",
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.whatsapp,
+                        color: Colors.green,
+                        size: isSmallScreen ? 30 : 40,
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        gameSettings.gameSettings?.data.whatsapp == ""
+                            ? "9888195353"
+                            : gameSettings.gameSettings?.data.whatsapp ?? "",
+                        style: TextStyle(
+                          fontSize: isSmallScreen ? 12 : 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => makePhoneCall(
+                    gameSettings.gameSettings?.data.whatsapp == ""
+                        ? "9888195353"
+                        : gameSettings.gameSettings?.data.whatsapp ?? "",
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.phone,
+                        color: Colors.black,
+                        size: isSmallScreen ? 22 : 33,
+                      ),
+                      const SizedBox(height: 9),
+                      Text(
+                        gameSettings.gameSettings?.data.whatsapp == ""
+                            ? "9888195353"
+                            : gameSettings.gameSettings?.data.whatsapp ?? "",
+                        style: TextStyle(
+                          fontSize: isSmallScreen ? 12 : 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GestureDetector(
-              onTap: () => openWhatsApp("+919888195353"),
-              child: Column(
-                children: [
-                  Icon(
-                    FontAwesomeIcons.whatsapp,
-                    color: Colors.green,
-                    size: isSmallScreen ? 30 : 40,
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    '+919888195353',
-                    style: TextStyle(
-                      fontSize: isSmallScreen ? 12 : 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () => makePhoneCall("+919888395353"),
-              child: Column(
-                children: [
-                  Icon(
-                    FontAwesomeIcons.phone,
-                    color: Colors.blue,
-                    size: isSmallScreen ? 21 : 31,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    '+919888395353',
-                    style: TextStyle(
-                      fontSize: isSmallScreen ? 12 : 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
+        );
+      },
     );
   }
 

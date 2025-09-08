@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/get_charts_data_model.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,9 +37,12 @@ class GetChartDataService {
       if (result.statusCode == 200) {
         return GetChartDataModel.fromJson(result.data);
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Failed to Fetch chart data")));
+        showCustomSnackBar(
+          context: context,
+          message: "Failed to Fetch Chart Data",
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 3,
+        );
       }
     } catch (e) {
       String errorMessage = "Something went wrong";

@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/how_to_play_model.dart'; // Adjust import path as needed
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,8 +34,11 @@ class HowToPlayService {
         // Parse the response as HowToPlayModel
         return HowToPlayModel.fromJson(result.data);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to fetch help information")),
+        showCustomSnackBar(
+          context: context,
+          message: "Failed to Fetch Halp Information",
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 2,
         );
         return null;
       }
@@ -49,9 +55,12 @@ class HowToPlayService {
         errorMessage = e.toString();
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
+      showCustomSnackBar(
+        context: context,
+        message: errorMessage,
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 2,
+      );
 
       return null;
     }

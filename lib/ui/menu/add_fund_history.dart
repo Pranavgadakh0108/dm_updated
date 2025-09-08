@@ -1,4 +1,5 @@
 import 'package:dmboss/provider/get_fund_history_provider.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,6 +51,8 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -65,6 +68,20 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          Container(
+            margin: EdgeInsets.all(screenWidth * 0.02),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.03,
+              vertical: screenHeight * 0.006,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(screenWidth * 0.1),
+            ),
+            child: Wallet(),
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.001),

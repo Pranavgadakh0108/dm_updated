@@ -3,7 +3,7 @@
 import 'package:dmboss/model/payment_gateway_model.dart';
 import 'package:dmboss/model/payment_gateway_response.dart';
 import 'package:dmboss/service/post_payment_gateway.dart';
-import 'package:dmboss/ui/menu/add_fund_screen.dart';
+import 'package:dmboss/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class PaymentGatewayProvider extends ChangeNotifier {
@@ -78,6 +78,7 @@ class PaymentGatewayProvider extends ChangeNotifier {
   Future<void> postPaymentGateway(
     BuildContext context,
     PaymentGatewayIntegration paymentGateWayIntegration,
+    String method,
   ) async {
     _isLoading = true;
     _errorMessage = null;
@@ -88,11 +89,11 @@ class PaymentGatewayProvider extends ChangeNotifier {
       final service = PostPaymentGateway();
 
       final result = await service
-          .postPaymentGateway(context, paymentGateWayIntegration)
+          .postPaymentGateway(context, paymentGateWayIntegration, method)
           .then((_) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => AddFundScreen()),
+              MaterialPageRoute(builder: (context) => AppNavigationBar()),
             );
           });
 

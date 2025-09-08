@@ -1,3 +1,534 @@
+// import 'package:dmboss/provider/get_games_chart_provider.dart';
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+// import '../model/get_charts_data_model.dart';
+
+// class JodiTable extends StatefulWidget {
+//   final String data;
+//   final String marketName;
+//   const JodiTable({super.key, required this.data, required this.marketName});
+
+//   @override
+//   State<JodiTable> createState() => _JodiTableState();
+
+//   static TableRow _buildRow(
+//     String date,
+//     List<String> values,
+//     List<int> redIndexes,
+//   ) {
+//     return TableRow(
+//       decoration: BoxDecoration(
+//         color: Colors.grey[50], // Light background for better readability
+//       ),
+//       children: [
+//         TableCell(
+//           child: Container(
+//             padding: const EdgeInsets.all(6),
+//             color: Colors
+//                 .grey[100], // Slightly different background for date column
+//             child: Center(
+//               child: Text(
+//                 date,
+//                 style: const TextStyle(
+//                   fontSize: 10,
+//                   fontWeight: FontWeight.w600,
+//                 ),
+//                 textAlign: TextAlign.center,
+//               ),
+//             ),
+//           ),
+//         ),
+//         for (int i = 0; i < values.length; i++)
+//           TableCell(
+//             child: Container(
+//               padding: const EdgeInsets.all(6),
+//               child: Center(
+//                 child: Text(
+//                   values[i].isEmpty
+//                       ? '-'
+//                       : values[i], // Show dash for empty values
+//                   style: TextStyle(
+//                     fontSize: 12,
+//                     color: redIndexes.contains(i) ? Colors.red : Colors.black,
+//                     fontWeight: redIndexes.contains(i)
+//                         ? FontWeight.bold
+//                         : FontWeight.normal,
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ),
+//       ],
+//     );
+//   }
+// }
+
+// class _JodiTableState extends State<JodiTable> {
+//   bool _isLoading = true;
+//   String? _errorMessage;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       _loadChartData();
+//     });
+//   }
+
+//   Future<void> _loadChartData() async {
+//     setState(() {
+//       _isLoading = true;
+//       _errorMessage = null;
+//     });
+
+//     try {
+//       final provider = Provider.of<GetGamesChartProvider>(
+//         context,
+//         listen: false,
+//       );
+
+//       provider.resetData();
+//       await provider.getChartDataProvider(context, widget.data);
+//     } catch (error) {
+//       setState(() {
+//         _errorMessage = 'Failed to load Chart. Please try again.';
+//       });
+//     } finally {
+//       setState(() {
+//         _isLoading = false;
+//       });
+//     }
+//   }
+
+//   void _retryLoading() {
+//     _loadChartData();
+//   }
+
+//   // Helper method to parse date from "dd/MM/yyyy" format
+//   DateTime? _parseDate(String dateString) {
+//     try {
+//       // Handle different date formats
+//       if (dateString.contains('/')) {
+//         // Format: "dd/MM/yyyy"
+//         List<String> parts = dateString.split('/');
+//         if (parts.length == 3) {
+//           int day = int.parse(parts[0]);
+//           int month = int.parse(parts[1]);
+//           int year = int.parse(parts[2]);
+//           return DateTime(year, month, day);
+//         }
+//       } else if (dateString.contains('-')) {
+//         // Format: "yyyy-MM-dd" (ISO format)
+//         return DateTime.parse(dateString);
+//       }
+
+//       // If format is not recognized, try parsing directly
+//       return DateTime.parse(dateString);
+//     } catch (e) {
+//       print('Error parsing date: $dateString - $e');
+//       return null;
+//     }
+//   }
+
+//   // Helper method to group data by week and ensure correct day matching
+//   List<Map<String, dynamic>> _groupDataByWeek(List<Datum> data) {
+//     if (data.isEmpty) return [];
+
+//     // Sort data by date in ascending order
+//     data.sort((a, b) {
+//       DateTime? dateA = _parseDate(a.date);
+//       DateTime? dateB = _parseDate(b.date);
+
+//       if (dateA == null && dateB == null) return 0;
+//       if (dateA == null) return -1;
+//       if (dateB == null) return 1;
+
+//       return dateA.compareTo(dateB);
+//     });
+
+//     List<Map<String, dynamic>> weeklyData = [];
+//     Map<DateTime, List<Datum>> weekMap = {};
+
+//     // Group data by week
+//     for (var item in data) {
+//       try {
+//         DateTime? itemDate = _parseDate(item.date);
+//         if (itemDate == null) continue;
+
+//         // Get Monday of the week for this date
+//         DateTime weekStart = _getMonday(itemDate);
+
+//         if (!weekMap.containsKey(weekStart)) {
+//           weekMap[weekStart] = [];
+//         }
+//         weekMap[weekStart]!.add(item);
+//       } catch (e) {
+//         print('Error processing date: ${item.date}');
+//       }
+//     }
+
+//     // Convert to list and sort by week start date
+//     weeklyData = weekMap.entries.map((entry) {
+//       DateTime weekStart = entry.key;
+//       DateTime weekEnd = weekStart.add(const Duration(days: 6));
+//       return {'startDate': weekStart, 'endDate': weekEnd, 'data': entry.value};
+//     }).toList();
+
+//     // Sort by week start date
+//     weeklyData.sort(
+//       (a, b) =>
+//           (a['startDate'] as DateTime).compareTo(b['startDate'] as DateTime),
+//     );
+
+//     return weeklyData;
+//   }
+
+//   // Get Monday of the week for a given date
+//   DateTime _getMonday(DateTime date) {
+//     return date.subtract(Duration(days: date.weekday - 1));
+//   }
+
+//   // Format date for display
+//   String _formatDateRange(DateTime start, DateTime end) {
+//     return '${start.day.toString().padLeft(2, '0')}/${start.month.toString().padLeft(2, '0')}/${start.year}\nto\n${end.day.toString().padLeft(2, '0')}/${end.month.toString().padLeft(2, '0')}/${end.year}';
+//   }
+
+//   // Get jodi values for a week, ordered by day of week (Monday to Sunday)
+//   List<String> _getWeeklyJodiValues(List<Datum> weekData) {
+//     List<String> jodiValues = List.filled(7, ''); // Monday to Sunday
+
+//     for (var item in weekData) {
+//       try {
+//         DateTime? itemDate = _parseDate(item.date);
+//         if (itemDate == null) continue;
+
+//         int dayOfWeek = itemDate.weekday - 1; // Monday = 0, Sunday = 6
+
+//         if (dayOfWeek >= 0 && dayOfWeek < 7) {
+//           jodiValues[dayOfWeek] = item.jodi;
+//         }
+//       } catch (e) {
+//         print('Error processing date: ${item.date}');
+//       }
+//     }
+
+//     return jodiValues;
+//   }
+
+//   // Find red indexes (empty or problematic values)
+//   List<int> _findRedIndexes(List<String> values) {
+//     List<int> redIndexes = [];
+//     for (int i = 0; i < values.length; i++) {
+//       if (values[i].isEmpty || values[i] == 'null' || values[i] == 'N/A') {
+//         redIndexes.add(i);
+//       }
+//     }
+//     return redIndexes;
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final screenWidth = MediaQuery.of(context).size.width;
+
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       appBar: AppBar(
+//         backgroundColor: Colors.orange,
+//         elevation: 3,
+//         title: const Text(
+//           "Charts",
+//           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+//         ),
+//         leading: IconButton(
+//           icon: const Icon(Icons.arrow_back_ios),
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//         ),
+//       ),
+//       body: Consumer<GetGamesChartProvider>(
+//         builder: (context, chartProvider, child) {
+//           if (_isLoading) {
+//             return const Center(child: CircularProgressIndicator());
+//           }
+
+//           if (_errorMessage != null) {
+//             return Center(
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   Text(_errorMessage!),
+//                   const SizedBox(height: 16),
+//                   ElevatedButton(
+//                     onPressed: _retryLoading,
+//                     child: const Text('Retry'),
+//                   ),
+//                 ],
+//               ),
+//             );
+//           }
+
+//           if (chartProvider.getChartDataModel == null) {
+//             return const Center(child: Text('No chart data available'));
+//           }
+
+//           final chartData = chartProvider.getChartDataModel;
+//           final weeklyData = _groupDataByWeek(chartData?.data ?? []);
+
+//           return SingleChildScrollView(
+//             scrollDirection: Axis.vertical,
+//             child: Padding(
+//               padding: const EdgeInsets.all(8.0),
+//               child: Column(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   // Header section
+//                   Container(
+//                     width: double.infinity,
+//                     decoration: BoxDecoration(
+//                       borderRadius: BorderRadius.circular(8),
+//                       color: Colors.blue[900],
+//                     ),
+//                     padding: const EdgeInsets.all(16),
+//                     child: Text(
+//                       "${widget.marketName.toUpperCase()} MATKA JODI RECORD",
+//                       style: const TextStyle(
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white,
+//                         fontSize: 16,
+//                       ),
+//                       textAlign: TextAlign.center,
+//                     ),
+//                   ),
+//                   const SizedBox(height: 8),
+//                   chartProvider.getChartDataModel?.data.isEmpty ?? true
+//                       ? Text("No Data Available for this Market")
+//                       : Container(
+//                           width: double.infinity,
+//                           padding: const EdgeInsets.all(12),
+//                           decoration: BoxDecoration(
+//                             color: Colors.white,
+//                             border: Border.all(color: Colors.grey[300]!),
+//                             borderRadius: BorderRadius.circular(8),
+//                           ),
+//                           child: Text(
+//                             widget.marketName.toUpperCase(),
+//                             style: const TextStyle(
+//                               fontWeight: FontWeight.bold,
+//                               color: Colors.black,
+//                               fontSize: 14,
+//                             ),
+//                             textAlign: TextAlign.center,
+//                           ),
+//                         ),
+//                   const SizedBox(height: 16),
+
+//                   // Table with full width
+//                   SingleChildScrollView(
+//                     scrollDirection: Axis.horizontal,
+//                     child: Container(
+//                       width: screenWidth, // Full width
+//                       padding: const EdgeInsets.all(8),
+//                       decoration: BoxDecoration(
+//                         border: Border.all(color: Colors.grey[400]!),
+//                         borderRadius: BorderRadius.circular(8),
+//                       ),
+//                       child: Table(
+//                         border: TableBorder.all(
+//                           color: Colors.grey[400]!,
+//                           width: 1,
+//                           borderRadius: BorderRadius.circular(4),
+//                         ),
+//                         defaultVerticalAlignment:
+//                             TableCellVerticalAlignment.middle,
+//                         columnWidths: {
+//                           0: FixedColumnWidth(
+//                             screenWidth * 0.20,
+//                           ), // Date column - 20% of screen
+//                           1: FixedColumnWidth(
+//                             screenWidth * 0.11,
+//                           ), // Mon - ~11% each
+//                           2: FixedColumnWidth(screenWidth * 0.11), // Tue
+//                           3: FixedColumnWidth(screenWidth * 0.11), // Wed
+//                           4: FixedColumnWidth(screenWidth * 0.11), // Thu
+//                           5: FixedColumnWidth(screenWidth * 0.11), // Fri
+//                           6: FixedColumnWidth(screenWidth * 0.11), // Sat
+//                           7: FixedColumnWidth(screenWidth * 0.11), // Sun
+//                         },
+//                         children: [
+//                           // Header Row
+//                           TableRow(
+//                             decoration: BoxDecoration(
+//                               color: Colors.yellow[700],
+//                             ),
+//                             children: const [
+//                               TableCell(
+//                                 child: Padding(
+//                                   padding: EdgeInsets.all(8),
+//                                   child: Center(
+//                                     child: Text(
+//                                       "DATE RANGE",
+//                                       style: TextStyle(
+//                                         fontWeight: FontWeight.bold,
+//                                         fontSize: 11,
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                               TableCell(
+//                                 child: Padding(
+//                                   padding: EdgeInsets.all(8),
+//                                   child: Center(
+//                                     child: Text(
+//                                       "MON",
+//                                       style: TextStyle(
+//                                         fontWeight: FontWeight.bold,
+//                                         fontSize: 11,
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                               TableCell(
+//                                 child: Padding(
+//                                   padding: EdgeInsets.all(8),
+//                                   child: Center(
+//                                     child: Text(
+//                                       "TUE",
+//                                       style: TextStyle(
+//                                         fontWeight: FontWeight.bold,
+//                                         fontSize: 11,
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                               TableCell(
+//                                 child: Padding(
+//                                   padding: EdgeInsets.all(8),
+//                                   child: Center(
+//                                     child: Text(
+//                                       "WED",
+//                                       style: TextStyle(
+//                                         fontWeight: FontWeight.bold,
+//                                         fontSize: 11,
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                               TableCell(
+//                                 child: Padding(
+//                                   padding: EdgeInsets.all(8),
+//                                   child: Center(
+//                                     child: Text(
+//                                       "THU",
+//                                       style: TextStyle(
+//                                         fontWeight: FontWeight.bold,
+//                                         fontSize: 11,
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                               TableCell(
+//                                 child: Padding(
+//                                   padding: EdgeInsets.all(8),
+//                                   child: Center(
+//                                     child: Text(
+//                                       "FRI",
+//                                       style: TextStyle(
+//                                         fontWeight: FontWeight.bold,
+//                                         fontSize: 11,
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                               TableCell(
+//                                 child: Padding(
+//                                   padding: EdgeInsets.all(8),
+//                                   child: Center(
+//                                     child: Text(
+//                                       "SAT",
+//                                       style: TextStyle(
+//                                         fontWeight: FontWeight.bold,
+//                                         fontSize: 11,
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                               TableCell(
+//                                 child: Padding(
+//                                   padding: EdgeInsets.all(8),
+//                                   child: Center(
+//                                     child: Text(
+//                                       "SUN",
+//                                       style: TextStyle(
+//                                         fontWeight: FontWeight.bold,
+//                                         fontSize: 11,
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                           // Data Rows
+//                           if (weeklyData.isEmpty)
+//                             TableRow(
+//                               children: [
+//                                 const TableCell(
+//                                   child: Padding(
+//                                     padding: EdgeInsets.all(16),
+//                                     child: Center(
+//                                       child: Text(
+//                                         "No data available",
+//                                         style: TextStyle(
+//                                           fontStyle: FontStyle.italic,
+//                                           color: Colors.grey,
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                                 for (int i = 0; i < 7; i++)
+//                                   const TableCell(child: SizedBox.shrink()),
+//                               ],
+//                             )
+//                           else
+//                             for (var week in weeklyData)
+//                               JodiTable._buildRow(
+//                                 _formatDateRange(
+//                                   week['startDate'] as DateTime,
+//                                   week['endDate'] as DateTime,
+//                                 ),
+//                                 _getWeeklyJodiValues(
+//                                   week['data'] as List<Datum>,
+//                                 ),
+//                                 _findRedIndexes(
+//                                   _getWeeklyJodiValues(
+//                                     week['data'] as List<Datum>,
+//                                   ),
+//                                 ),
+//                               ),
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+//                   const SizedBox(height: 40),
+//                 ],
+//               ),
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+
 import 'package:dmboss/provider/get_games_chart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,22 +546,23 @@ class JodiTable extends StatefulWidget {
     String date,
     List<String> values,
     List<int> redIndexes,
+    bool isSmallScreen,
+    bool isVerySmallScreen,
   ) {
     return TableRow(
       decoration: BoxDecoration(
-        color: Colors.grey[50], // Light background for better readability
+        color: Colors.grey[50],
       ),
       children: [
         TableCell(
           child: Container(
-            padding: const EdgeInsets.all(6),
-            color: Colors
-                .grey[100], // Slightly different background for date column
+            padding: EdgeInsets.all(isSmallScreen ? 4 : 6),
+            color: Colors.grey[100],
             child: Center(
               child: Text(
                 date,
-                style: const TextStyle(
-                  fontSize: 10,
+                style: TextStyle(
+                  fontSize: isVerySmallScreen ? 8 : isSmallScreen ? 8 : 9,
                   fontWeight: FontWeight.w600,
                 ),
                 textAlign: TextAlign.center,
@@ -41,14 +573,12 @@ class JodiTable extends StatefulWidget {
         for (int i = 0; i < values.length; i++)
           TableCell(
             child: Container(
-              padding: const EdgeInsets.all(6),
+              padding: EdgeInsets.all(isSmallScreen ? 4 : 6),
               child: Center(
                 child: Text(
-                  values[i].isEmpty
-                      ? '-'
-                      : values[i], // Show dash for empty values
+                  values[i].isEmpty ? '-' : values[i],
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: isVerySmallScreen ? 10 : isSmallScreen ? 11 : 12,
                     color: redIndexes.contains(i) ? Colors.red : Colors.black,
                     fontWeight: redIndexes.contains(i)
                         ? FontWeight.bold
@@ -107,9 +637,7 @@ class _JodiTableState extends State<JodiTable> {
   // Helper method to parse date from "dd/MM/yyyy" format
   DateTime? _parseDate(String dateString) {
     try {
-      // Handle different date formats
       if (dateString.contains('/')) {
-        // Format: "dd/MM/yyyy"
         List<String> parts = dateString.split('/');
         if (parts.length == 3) {
           int day = int.parse(parts[0]);
@@ -118,11 +646,8 @@ class _JodiTableState extends State<JodiTable> {
           return DateTime(year, month, day);
         }
       } else if (dateString.contains('-')) {
-        // Format: "yyyy-MM-dd" (ISO format)
         return DateTime.parse(dateString);
       }
-
-      // If format is not recognized, try parsing directly
       return DateTime.parse(dateString);
     } catch (e) {
       print('Error parsing date: $dateString - $e');
@@ -134,7 +659,6 @@ class _JodiTableState extends State<JodiTable> {
   List<Map<String, dynamic>> _groupDataByWeek(List<Datum> data) {
     if (data.isEmpty) return [];
 
-    // Sort data by date in ascending order
     data.sort((a, b) {
       DateTime? dateA = _parseDate(a.date);
       DateTime? dateB = _parseDate(b.date);
@@ -149,13 +673,11 @@ class _JodiTableState extends State<JodiTable> {
     List<Map<String, dynamic>> weeklyData = [];
     Map<DateTime, List<Datum>> weekMap = {};
 
-    // Group data by week
     for (var item in data) {
       try {
         DateTime? itemDate = _parseDate(item.date);
         if (itemDate == null) continue;
 
-        // Get Monday of the week for this date
         DateTime weekStart = _getMonday(itemDate);
 
         if (!weekMap.containsKey(weekStart)) {
@@ -167,14 +689,12 @@ class _JodiTableState extends State<JodiTable> {
       }
     }
 
-    // Convert to list and sort by week start date
     weeklyData = weekMap.entries.map((entry) {
       DateTime weekStart = entry.key;
       DateTime weekEnd = weekStart.add(const Duration(days: 6));
       return {'startDate': weekStart, 'endDate': weekEnd, 'data': entry.value};
     }).toList();
 
-    // Sort by week start date
     weeklyData.sort(
       (a, b) =>
           (a['startDate'] as DateTime).compareTo(b['startDate'] as DateTime),
@@ -190,20 +710,19 @@ class _JodiTableState extends State<JodiTable> {
 
   // Format date for display
   String _formatDateRange(DateTime start, DateTime end) {
-    return '${start.day.toString().padLeft(2, '0')}/${start.month.toString().padLeft(2, '0')}/${start.year}\nto\n${end.day.toString().padLeft(2, '0')}/${end.month.toString().padLeft(2, '0')}/${end.year}';
+    return '${start.day}/${start.month}/${start.year}\nto\n${end.day}/${end.month}/${end.year}';
   }
 
   // Get jodi values for a week, ordered by day of week (Monday to Sunday)
   List<String> _getWeeklyJodiValues(List<Datum> weekData) {
-    List<String> jodiValues = List.filled(7, ''); // Monday to Sunday
+    List<String> jodiValues = List.filled(7, '');
 
     for (var item in weekData) {
       try {
         DateTime? itemDate = _parseDate(item.date);
         if (itemDate == null) continue;
 
-        int dayOfWeek = itemDate.weekday - 1; // Monday = 0, Sunday = 6
-
+        int dayOfWeek = itemDate.weekday - 1;
         if (dayOfWeek >= 0 && dayOfWeek < 7) {
           jodiValues[dayOfWeek] = item.jodi;
         }
@@ -229,18 +748,26 @@ class _JodiTableState extends State<JodiTable> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 380;
+    final isVerySmallScreen = screenWidth < 340;
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.orange,
         elevation: 3,
-        title: const Text(
+        title: Text(
           "Charts",
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: isSmallScreen ? 16 : 18,
+          ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: isSmallScreen ? 18 : 24,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -257,11 +784,18 @@ class _JodiTableState extends State<JodiTable> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(_errorMessage!),
+                  Text(
+                    _errorMessage!,
+                    style: TextStyle(fontSize: isSmallScreen ? 14 : 16),
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _retryLoading,
-                    child: const Text('Retry'),
+                    child: Text(
+                      'Retry',
+                      style: TextStyle(fontSize: isSmallScreen ? 14 : 16),
+                    ),
                   ),
                 ],
               ),
@@ -269,7 +803,12 @@ class _JodiTableState extends State<JodiTable> {
           }
 
           if (chartProvider.getChartDataModel == null) {
-            return const Center(child: Text('No chart data available'));
+            return Center(
+              child: Text(
+                'No chart data available',
+                style: TextStyle(fontSize: isSmallScreen ? 14 : 16),
+              ),
+            );
           }
 
           final chartData = chartProvider.getChartDataModel;
@@ -278,247 +817,244 @@ class _JodiTableState extends State<JodiTable> {
           return SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(isSmallScreen ? 6 : 8),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Header section
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(6),
                       color: Colors.blue[900],
                     ),
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(isSmallScreen ? 10 : 12),
                     child: Text(
                       "${widget.marketName.toUpperCase()} MATKA JODI RECORD",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: isSmallScreen ? 12 : 14,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   chartProvider.getChartDataModel?.data.isEmpty ?? true
-                      ? Text("No Data Available for this Market")
+                      ? Text(
+                          "No Data Available for this Market",
+                          style: TextStyle(fontSize: isSmallScreen ? 12 : 14),
+                        )
                       : Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(12),
+                          padding: EdgeInsets.all(isSmallScreen ? 8 : 10),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(color: Colors.grey[300]!),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             widget.marketName.toUpperCase(),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
-                              fontSize: 14,
+                              fontSize: isSmallScreen ? 11 : 13,
                             ),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
 
-                  // Table with full width
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Container(
-                      width: screenWidth, // Full width
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey[400]!),
-                        borderRadius: BorderRadius.circular(8),
+                  // Responsive table
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(isSmallScreen ? 4 : 6),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey[400]!),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Table(
+                      border: TableBorder.all(
+                        color: Colors.grey[400]!,
+                        width: 1,
+                        borderRadius: BorderRadius.circular(4),
                       ),
-                      child: Table(
-                        border: TableBorder.all(
-                          color: Colors.grey[400]!,
-                          width: 1,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
-                        columnWidths: {
-                          0: FixedColumnWidth(
-                            screenWidth * 0.20,
-                          ), // Date column - 20% of screen
-                          1: FixedColumnWidth(
-                            screenWidth * 0.11,
-                          ), // Mon - ~11% each
-                          2: FixedColumnWidth(screenWidth * 0.11), // Tue
-                          3: FixedColumnWidth(screenWidth * 0.11), // Wed
-                          4: FixedColumnWidth(screenWidth * 0.11), // Thu
-                          5: FixedColumnWidth(screenWidth * 0.11), // Fri
-                          6: FixedColumnWidth(screenWidth * 0.11), // Sat
-                          7: FixedColumnWidth(screenWidth * 0.11), // Sun
-                        },
-                        children: [
-                          // Header Row
-                          TableRow(
-                            decoration: BoxDecoration(
-                              color: Colors.yellow[700],
-                            ),
-                            children: const [
-                              TableCell(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Center(
-                                    child: Text(
-                                      "DATE RANGE",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Center(
-                                    child: Text(
-                                      "MON",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Center(
-                                    child: Text(
-                                      "TUE",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Center(
-                                    child: Text(
-                                      "WED",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Center(
-                                    child: Text(
-                                      "THU",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Center(
-                                    child: Text(
-                                      "FRI",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Center(
-                                    child: Text(
-                                      "SAT",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Center(
-                                    child: Text(
-                                      "SUN",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                      columnWidths: {
+                        0: FixedColumnWidth(isVerySmallScreen ? 50 : isSmallScreen ? 55 : 60),
+                        1: FixedColumnWidth(isVerySmallScreen ? 30 : isSmallScreen ? 32 : 35),
+                        2: FixedColumnWidth(isVerySmallScreen ? 30 : isSmallScreen ? 32 : 35),
+                        3: FixedColumnWidth(isVerySmallScreen ? 30 : isSmallScreen ? 32 : 35),
+                        4: FixedColumnWidth(isVerySmallScreen ? 30 : isSmallScreen ? 32 : 35),
+                        5: FixedColumnWidth(isVerySmallScreen ? 30 : isSmallScreen ? 32 : 35),
+                        6: FixedColumnWidth(isVerySmallScreen ? 30 : isSmallScreen ? 32 : 35),
+                        7: FixedColumnWidth(isVerySmallScreen ? 30 : isSmallScreen ? 32 : 35),
+                      },
+                      children: [
+                        // Header Row
+                        TableRow(
+                          decoration: BoxDecoration(
+                            color: Colors.yellow[700],
                           ),
-                          // Data Rows
-                          if (weeklyData.isEmpty)
-                            TableRow(
-                              children: [
-                                const TableCell(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Center(
-                                      child: Text(
-                                        "No data available",
-                                        style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                          color: Colors.grey,
-                                        ),
+                          children: [
+                            TableCell(
+                              child: Padding(
+                                padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+                                child: Center(
+                                  child: Text(
+                                    "DATE",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Padding(
+                                padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+                                child: Center(
+                                  child: Text(
+                                    "MON",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Padding(
+                                padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+                                child: Center(
+                                  child: Text(
+                                    "TUE",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Padding(
+                                padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+                                child: Center(
+                                  child: Text(
+                                    "WED",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Padding(
+                                padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+                                child: Center(
+                                  child: Text(
+                                    "THU",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Padding(
+                                padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+                                child: Center(
+                                  child: Text(
+                                    "FRI",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Padding(
+                                padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+                                child: Center(
+                                  child: Text(
+                                    "SAT",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Padding(
+                                padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+                                child: Center(
+                                  child: Text(
+                                    "SUN",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        // Data Rows
+                        if (weeklyData.isEmpty)
+                          TableRow(
+                            children: [
+                              TableCell(
+                                child: Padding(
+                                  padding: EdgeInsets.all(isSmallScreen ? 8 : 12),
+                                  child: Center(
+                                    child: Text(
+                                      "No data",
+                                      style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.grey,
+                                        fontSize: isSmallScreen ? 10 : 12,
                                       ),
                                     ),
                                   ),
                                 ),
-                                for (int i = 0; i < 7; i++)
-                                  const TableCell(child: SizedBox.shrink()),
-                              ],
-                            )
-                          else
-                            for (var week in weeklyData)
-                              JodiTable._buildRow(
-                                _formatDateRange(
-                                  week['startDate'] as DateTime,
-                                  week['endDate'] as DateTime,
-                                ),
+                              ),
+                              for (int i = 0; i < 7; i++)
+                                const TableCell(child: SizedBox.shrink()),
+                            ],
+                          )
+                        else
+                          for (var week in weeklyData)
+                            JodiTable._buildRow(
+                              _formatDateRange(
+                                week['startDate'] as DateTime,
+                                week['endDate'] as DateTime,
+                              ),
+                              _getWeeklyJodiValues(
+                                week['data'] as List<Datum>,
+                              ),
+                              _findRedIndexes(
                                 _getWeeklyJodiValues(
                                   week['data'] as List<Datum>,
                                 ),
-                                _findRedIndexes(
-                                  _getWeeklyJodiValues(
-                                    week['data'] as List<Datum>,
-                                  ),
-                                ),
                               ),
-                        ],
-                      ),
+                              isSmallScreen,
+                              isVerySmallScreen,
+                            ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

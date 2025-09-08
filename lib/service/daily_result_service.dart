@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/daily_result_model.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,9 +36,12 @@ class GetDailyResultService {
       if (result.statusCode == 200) {
         return DailyResultModel.fromJson(result.data);
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Failed to get Result")));
+        showCustomSnackBar(
+          context: context,
+          message: "Failed to get Result",
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 2,
+        );
       }
     } catch (e) {
       String errorMessage = "Something went wrong";
@@ -52,9 +56,12 @@ class GetDailyResultService {
         errorMessage = e.toString();
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
+      showCustomSnackBar(
+        context: context,
+        message: errorMessage,
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 3,
+      );
 
       return null;
     }

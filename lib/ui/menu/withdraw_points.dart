@@ -4,9 +4,10 @@ import 'package:dmboss/model/withdraw_coins_model.dart';
 import 'package:dmboss/provider/games_settings_provider.dart';
 import 'package:dmboss/provider/get_bank_details_provider.dart';
 import 'package:dmboss/provider/withdraw_coins_provider.dart';
-import 'package:dmboss/service/get_game_settings.dart';
 import 'package:dmboss/widgets/custom_profile_text_field.dart';
 import 'package:dmboss/util/make_whatsapp_chat.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
+import 'package:dmboss/widgets/navigation_bar.dart';
 import 'package:dmboss/widgets/orange_button.dart';
 import 'package:dmboss/widgets/term_condition_popup.dart';
 import 'package:flutter/material.dart';
@@ -105,6 +106,8 @@ class _WithdrawPointsState extends State<WithdrawPoints> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -120,6 +123,20 @@ class _WithdrawPointsState extends State<WithdrawPoints> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          Container(
+            margin: EdgeInsets.all(screenWidth * 0.02),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.03,
+              vertical: screenHeight * 0.006,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(screenWidth * 0.1),
+            ),
+            child: Wallet(),
+          ),
+        ],
       ),
       body: _isLoading
           ? _buildLoadingState()
@@ -259,6 +276,14 @@ class _WithdrawPointsState extends State<WithdrawPoints> {
                                         withdrawProvider.addWithdrawCoins(
                                           context,
                                           withDrawCoinsModel,
+                                        );
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AppNavigationBar(),
+                                          ),
                                         );
                                       }
                                     },

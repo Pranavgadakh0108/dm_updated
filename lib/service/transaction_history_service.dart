@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/transaction_history_model.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,8 +35,11 @@ class GetTransactionHistoryService {
       if (result.statusCode == 200) {
         return TransactionHistoryModel.fromJson(result.data);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to Fetch Transaction History")),
+        showCustomSnackBar(
+          context: context,
+          message: "Failed to Fetch Transaction History",
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 2,
         );
       }
     } catch (e) {
@@ -49,9 +55,12 @@ class GetTransactionHistoryService {
         errorMessage = e.toString();
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
+      showCustomSnackBar(
+        context: context,
+        message: errorMessage,
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 2,
+      );
 
       return null;
     }

@@ -1,5 +1,6 @@
 import 'package:dmboss/service/add_bank_details_service.dart';
-import 'package:dmboss/widgets/navigation_bar.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
+//import 'package:dmboss/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dmboss/model/add_bank_details_model.dart';
 
@@ -74,37 +75,34 @@ class AddBankDetailsProvider extends ChangeNotifier {
     try {
       final bankService = AddBankDetailsService();
 
-      final result = await bankService
-          .postBankDetails(context, addBankDetails)
-          .then((_) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => AppNavigationBar()),
-            );
-          });
+      final result = await bankService.postBankDetails(context, addBankDetails);
+      // .then((_) {
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => AppNavigationBar()),
+      //   );
+      // }
+      // );
 
       _isLoading = false;
 
       if (result != null) {
         _bankDetails = result;
-        _successMessage = 'Bank details added successfully';
+       // _successMessage = 'Bank details added successfully';
 
         clearFields();
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed Adding Bank Details'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: "Bank Details added Successfully..!!",
+          backgroundColor: Colors.green,
+          durationSeconds: 3,
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Bank details added successfully'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: "Failed Adding Bank Details",
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 3,
         );
       }
     } catch (e) {
@@ -112,12 +110,11 @@ class AddBankDetailsProvider extends ChangeNotifier {
       _errorMessage = e.toString();
       print('Add bank details error: $e');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
-          backgroundColor: Colors.redAccent,
-          duration: const Duration(seconds: 3),
-        ),
+      showCustomSnackBar(
+        context: context,
+        message: e.toString(),
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 2,
       );
     }
 

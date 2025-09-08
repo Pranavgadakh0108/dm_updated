@@ -12,6 +12,8 @@ class FullSangamProvider extends ChangeNotifier {
     amount: 0,
   );
   Map<String, dynamic>? _betResponse;
+  // Track if we've shown the success message for the current operation
+  bool _hasShownSuccess = false;
 
   bool get isLoading => _isLoading;
   SingleAnkModel get singleAnkModel => _singleAnkModel;
@@ -27,6 +29,7 @@ class FullSangamProvider extends ChangeNotifier {
     SingleAnkModel singleAnkModel,
   ) async {
     _isLoading = true;
+     _hasShownSuccess = false; // Reset for new operation
     notifyListeners();
 
     final singleAnkBetService = SingleAnkBetService();
@@ -39,12 +42,16 @@ class FullSangamProvider extends ChangeNotifier {
 
     if (response != null) {
       _betResponse = response;
-      showCustomSnackBar(
-        context: context,
-        message: "Bet placed successfully!",
-        backgroundColor: Colors.green,
-        durationSeconds: 2,
-      );
+        // Only show success if we haven't shown it already
+      if (!_hasShownSuccess) {
+        showCustomSnackBar(
+          context: context,
+          message: "Bet placed successfully!",
+          backgroundColor: Colors.green,
+          durationSeconds: 2,
+        );
+        _hasShownSuccess = true; // Mark as shown
+      }
     } else {
       showCustomSnackBar(
         context: context,
@@ -64,6 +71,7 @@ class FullSangamProvider extends ChangeNotifier {
       number: "",
       amount: 0,
     );
+     _hasShownSuccess = false; // Reset when model is reset
     notifyListeners();
   }
 

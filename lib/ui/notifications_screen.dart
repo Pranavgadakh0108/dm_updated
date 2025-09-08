@@ -1,7 +1,6 @@
-import 'package:dmboss/provider/get_notifications_provider.dart';
+import 'package:dmboss/provider/notification_admin_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dmboss/provider/game_rate_provider.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -16,12 +15,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     super.initState();
 
     Future.microtask(() {
-      final gameRateProvider = Provider.of<GetNotificationsProvider>(
+      final gameRateProvider = Provider.of<GetNotificationsAdminProvider>(
         context,
         listen: false,
       );
 
-      gameRateProvider.getNotificationsProvider(context);
+      gameRateProvider.getNotificationsFromAdmin(context);
     });
   }
 
@@ -43,7 +42,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           },
         ),
       ),
-      body: Consumer<GetNotificationsProvider>(
+      body: Consumer<GetNotificationsAdminProvider>(
         builder: (context, gameRateProvider, child) {
           if (gameRateProvider.isLoading) {
             return const Center(child: CircularProgressIndicator());

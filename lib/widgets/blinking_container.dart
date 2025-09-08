@@ -1,6 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 
 class BlinkingTextContainer extends StatefulWidget {
@@ -10,41 +9,60 @@ class BlinkingTextContainer extends StatefulWidget {
   _BlinkingTextContainerState createState() => _BlinkingTextContainerState();
 }
 
-class _BlinkingTextContainerState extends State<BlinkingTextContainer> {
-  bool _visible = true;
-  late Timer _timer;
+class _BlinkingTextContainerState extends State<BlinkingTextContainer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
-      setState(() {
-        _visible = !_visible;
-      });
-    });
+
+    _controller = AnimationController(
+      duration: const Duration(seconds: 10),
+      vsync: this,
+    )..repeat();
+
+    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      opacity: _visible ? 1.0 : 0.0,
-      duration: Duration(milliseconds: 300),
-      child: Container(
-        color: Colors.white,
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-        child: const Text(
-          "100% Trusted Application",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Colors.red,
-          ),
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
+      height: 30,
+      width: MediaQuery.of(context).size.width,
+      child: ClipRect(
+        child: AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(
+                -MediaQuery.of(context).size.width +
+                    (_animation.value *
+                        (MediaQuery.of(context).size.width + 400)),
+
+                0,
+              ),
+              child: const Text(
+                "100% Trusted Application",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.red,
+                ),
+                overflow: TextOverflow.visible,
+                softWrap: false,
+              ),
+            );
+          },
         ),
       ),
     );

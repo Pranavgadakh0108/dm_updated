@@ -1,4 +1,5 @@
 import 'package:dmboss/service/update_user.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:dmboss/model/update_profile_model.dart';
 
@@ -69,21 +70,19 @@ class ProfileUpdateProvider extends ChangeNotifier {
         _newPassword = null;
         _confirmPassword = null;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile updated successfully'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: "Profile updated Successfully..!!",
+          backgroundColor: Colors.green,
+          durationSeconds: 3,
         );
       } else {
         _errorMessage = 'Failed to update profile';
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(_errorMessage!),
-            backgroundColor: Colors.redAccent,
-            duration: const Duration(seconds: 3),
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: _errorMessage!,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 3,
         );
       }
     } catch (e) {
@@ -91,12 +90,11 @@ class ProfileUpdateProvider extends ChangeNotifier {
       _errorMessage = e.toString();
       print('Update error: $e');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
-          backgroundColor: Colors.redAccent,
-          duration: const Duration(seconds: 3),
-        ),
+      showCustomSnackBar(
+        context: context,
+        message: e.toString(),
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 3,
       );
     }
 

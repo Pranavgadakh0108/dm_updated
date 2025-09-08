@@ -1,7 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/provider/get_bet_history_provider.dart';
+import 'package:dmboss/util/utc_to_ist.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:dmboss/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +45,8 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
   }
 
   Future<void> _loadBetHistory() async {
+    if (!mounted) return; // Check if widget is still mounted
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -56,10 +59,12 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
       );
       await provider.getBetHistoryProvider(context);
     } catch (error) {
+      if (!mounted) return; // Check again before error handling
       setState(() {
         _errorMessage = 'Failed to load bid history. Please try again.';
       });
     } finally {
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
@@ -72,6 +77,8 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -90,11 +97,25 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
             );
           },
         ),
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.refresh),
+        //     onPressed: _retryLoading,
+        //     tooltip: 'Refresh',
+        //   ),
+        // ],
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _retryLoading,
-            tooltip: 'Refresh',
+          Container(
+            margin: EdgeInsets.all(screenWidth * 0.02),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.03,
+              vertical: screenHeight * 0.006,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(screenWidth * 0.1),
+            ),
+            child: Wallet(),
           ),
         ],
       ),
@@ -236,14 +257,6 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
               color: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
-                // side: BorderSide(
-                //   color: isWon
-                //       ? Colors.green.withOpacity(0.3)
-                //       : isLost
-                //       ? Colors.red.withOpacity(0.3)
-                //       : Colors.blue.withOpacity(0.3),
-                //   width: 1.2,
-                // ),
               ),
               elevation: 4,
               child: Padding(
@@ -255,34 +268,24 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                   children: [
                     // Header row with date and status
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           bid.date,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 11,
-                            color: Colors.grey[600],
+                            color: Colors.grey[800],
                           ),
                         ),
-                        // Container(
-                        //   padding: const EdgeInsets.symmetric(
-                        //     horizontal: 6,
-                        //     vertical: 3,
-                        //   ),
-                        //   decoration: BoxDecoration(
-                        //     color: _getStatusColor(bid.status),
-                        //     borderRadius: BorderRadius.circular(10),
-                        //   ),
-                        //   child: Text(
-                        //     _getStatusText(bid.status),
-                        //     style: const TextStyle(
-                        //       color: Colors.white,
-                        //       fontSize: 9,
-                        //       fontWeight: FontWeight.w500,
-                        //     ),
-                        //   ),
-                        // ),
+                        Text(
+                          formatToIST(bid.createdAt.toString()),
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey[800],
+                          ),
+                        ),
                       ],
                     ),
 
@@ -294,14 +297,14 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                         Expanded(
                           flex: 3,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start, // Centered
                             children: [
-                              _buildCompactDetail("Market", bid.market),
+                              _buildCompactDetail(bid.market),
                               const SizedBox(height: 2),
-                              _buildCompactDetail("Session", bid.session),
+                              _buildCompactDetail(bid.session),
                               const SizedBox(height: 2),
                               _buildCompactDetail(
-                                "Game Type",
                                 bid.gameType,
                                 isHighlighted: true,
                               ),
@@ -315,12 +318,13 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Number",
+                                "Digit",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 10,
                                   color: Colors.grey[600],
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 2),
                               Container(
@@ -329,7 +333,7 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.blue.withOpacity(0.1),
+                                  color: Colors.transparent,
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
@@ -337,8 +341,9 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
+                                    color: Colors.black,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ],
@@ -351,12 +356,13 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Coins",
+                                "Points",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 10,
                                   color: Colors.grey[600],
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 2),
                               Row(
@@ -368,11 +374,7 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                                       vertical: 4,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: isWon
-                                          ? Colors.green.withOpacity(0.1)
-                                          : isLost
-                                          ? Colors.red.withOpacity(0.1)
-                                          : Colors.orange.withOpacity(0.1),
+                                      color: Colors.transparent,
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(
@@ -380,12 +382,14 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
-                                        color: isWon
-                                            ? Colors.green
-                                            : isLost
-                                            ? Colors.red
-                                            : Colors.orange,
+                                        color: Colors.black
+                                        // color: isWon
+                                        //     ? Colors.green
+                                        //     : isLost
+                                        //     ? Colors.red
+                                        //     : Colors.orange,
                                       ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ],
@@ -398,36 +402,45 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
 
                     if (bid.status.isNotEmpty) ...[
                       const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getStatusColor(bid.status).withOpacity(0.08),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              _getStatusIcon(bid.status),
-                              size: 12,
-                              color: _getStatusColor(bid.status),
-                            ),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                bid.status,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: _getStatusColor(bid.status),
+                      Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _getStatusColor(
+                              bid.status,
+                            ).withOpacity(0.08),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // Icon(
+                                //   _getStatusIcon(bid.status),
+                                //   size: 12,
+                                //   color: _getStatusColor(bid.status),
+                                // ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    bid.status,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: _getStatusColor(bid.status),
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ],
@@ -435,8 +448,6 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                 ),
               ),
             );
-
-            // Helper method for compact detail rows
           },
         ),
       ),
@@ -451,30 +462,26 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
     } else if (status.contains("Pending") || status.contains("Processing")) {
       return Colors.blue;
     }
-    return Colors.grey[600]!;
+    return Colors.orange[600]!;
   }
 
-  Widget _buildCompactDetail(
-    String label,
-    String value, {
-    bool isHighlighted = false,
-  }) {
+  Widget _buildCompactDetail(String value, {bool isHighlighted = false}) {
     return RichText(
       text: TextSpan(
         children: [
-          TextSpan(
-            text: "$label: ",
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          // TextSpan(
+          //   text: "$label: ",
+          //   style: TextStyle(
+          //     fontSize: 12,
+          //     color: Colors.grey[600],
+          //     fontWeight: FontWeight.w500,
+          //   ),
+          // ),
           TextSpan(
             text: value,
             style: TextStyle(
               fontSize: 12,
-              color: isHighlighted ? Colors.blue : Colors.black,
+              color: Colors.black,
               fontWeight: isHighlighted ? FontWeight.bold : FontWeight.w500,
             ),
           ),

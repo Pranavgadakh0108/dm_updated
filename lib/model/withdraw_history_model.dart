@@ -48,6 +48,7 @@ class Datum {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
+  String? rejectionNote;
 
   Datum({
     required this.id,
@@ -60,6 +61,7 @@ class Datum {
     required this.createdAt,
     required this.updatedAt,
     required this.v,
+    required this.rejectionNote
   });
 
   factory Datum.fromJson(Map<String?, dynamic>? json) {
@@ -81,6 +83,7 @@ class Datum {
           ? DateTime.tryParse(json["updatedAt"].toString())
           : null,
       v: json["__v"] ?? 0,
+      rejectionNote: json["rejection_note"] ?? " "
     );
   }
 
@@ -95,6 +98,7 @@ class Datum {
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
+    "rejection_note":rejectionNote
   };
 }
 

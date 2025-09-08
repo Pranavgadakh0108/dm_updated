@@ -14,10 +14,10 @@ class AddButton extends StatelessWidget {
         backgroundColor: Colors.orange,
         // padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
         padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.07,
-          vertical: MediaQuery.of(context).size.height * 0.015,
+          horizontal: MediaQuery.of(context).size.width * 0.13,
+          vertical: MediaQuery.of(context).size.height * 0.013,
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
       child: Text(
         data,

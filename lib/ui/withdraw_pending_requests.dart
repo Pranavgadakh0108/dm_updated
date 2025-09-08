@@ -367,7 +367,7 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
                     const SizedBox(height: 5),
 
                     Text(
-                      _getStatusDescription(withdrawal.status ?? 0),
+                      _getStatusDescription(withdrawal.status ?? 0, withdrawal.rejectionNote ?? " "),
                       style: TextStyle(
                         fontSize: 11,
                         color: statusColor,
@@ -384,14 +384,14 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
     );
   }
 
-  String _getStatusDescription(int status) {
+  String _getStatusDescription(int status, String rejectionNote) {
     switch (status) {
       case 0:
         return "Your withdrawal request is being processed. Please wait for approval.";
       case 1:
         return "Your withdrawal has been approved successfully!";
       case 2:
-        return "Your withdrawal request has been rejected. Please contact support for details.";
+        return rejectionNote.isEmpty ? "Your withdrawal request has been rejected. Please contact support for details." : "Rejection Reason: $rejectionNote" ;
       default:
         return "Unknown status. Please contact support.";
     }

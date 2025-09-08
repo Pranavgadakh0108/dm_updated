@@ -13,6 +13,9 @@ class SinglePattiProvider extends ChangeNotifier {
   );
   Map<String, dynamic>? _betResponse;
 
+  // Track if we've shown the success message for the current operation
+  bool _hasShownSuccess = false;
+
   bool get isLoading => _isLoading;
   SingleAnkModel get singleAnkModel => _singleAnkModel;
   Map<String, dynamic>? get betResponse => _betResponse;
@@ -26,6 +29,7 @@ class SinglePattiProvider extends ChangeNotifier {
     BuildContext context,
     SingleAnkModel singleAnkModel,
   ) async {
+    _hasShownSuccess = false; // Reset for new operation
     _isLoading = true;
     notifyListeners();
 
@@ -39,12 +43,17 @@ class SinglePattiProvider extends ChangeNotifier {
 
     if (response != null) {
       _betResponse = response;
-      showCustomSnackBar(
-        context: context,
-        message: "Bet placed successfully!",
-        backgroundColor: Colors.green,
-        durationSeconds: 2,
-      );
+
+      // Only show success if we haven't shown it already
+      if (!_hasShownSuccess) {
+        showCustomSnackBar(
+          context: context,
+          message: "Bet placed successfully!",
+          backgroundColor: Colors.green,
+          durationSeconds: 2,
+        );
+        _hasShownSuccess = true; // Mark as shown
+      }
     } else {
       showCustomSnackBar(
         context: context,
@@ -64,6 +73,7 @@ class SinglePattiProvider extends ChangeNotifier {
       number: "",
       amount: 0,
     );
+    _hasShownSuccess = false; // Reset when model is reset
     notifyListeners();
   }
 

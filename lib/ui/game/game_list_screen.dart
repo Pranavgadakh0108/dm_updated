@@ -1,4 +1,3 @@
-
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/ui/game/bulk_jodi.dart';
 import 'package:dmboss/ui/game/bulk_sp.dart';
@@ -18,13 +17,14 @@ import 'package:dmboss/widgets/game_list_card.dart';
 import 'package:flutter/material.dart';
 
 class GameListScreen extends StatelessWidget {
-  final String title, openTime, closeTime, marketId;
+  final String title, openTime, closeTime, marketId, resultStatus;
   const GameListScreen({
     super.key,
     required this.title,
     required this.openTime,
     required this.closeTime,
     required this.marketId,
+    required this.resultStatus,
   });
 
   // Function to check if current time is before open time

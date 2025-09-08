@@ -1,14 +1,20 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:dmboss/model/payment_gateway_model.dart';
+import 'package:dmboss/model/payment_model.dart';
 import 'package:dmboss/provider/get_qr_code_provider.dart';
 import 'package:dmboss/provider/payment_gateway_provider.dart';
+import 'package:dmboss/provider/payment_provider.dart';
 import 'package:dmboss/provider/user_profile_provider.dart';
 import 'package:dmboss/widgets/custom_profile_text_field.dart';
 import 'package:dmboss/widgets/custom_text_field.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PaymentGatewayScreen extends StatefulWidget {
-  const PaymentGatewayScreen({super.key});
+  final String? mode;
+  const PaymentGatewayScreen({super.key, required this.mode});
 
   @override
   State<PaymentGatewayScreen> createState() => _PaymentGatewayScreenState();
@@ -51,6 +57,8 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -66,6 +74,20 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          Container(
+            margin: EdgeInsets.all(screenWidth * 0.02),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.03,
+              vertical: screenHeight * 0.006,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(screenWidth * 0.1),
+            ),
+            child: Wallet(),
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
@@ -76,7 +98,7 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
                 Consumer3<
                   UserProfileProvider,
                   GetQrCodeProvider,
-                  PaymentGatewayProvider
+                  PaymentProvider
                 >(
                   builder: (context, provider, qrProvider, paymentProvider, _) {
                     _nameController.text =
@@ -187,18 +209,21 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
                             onPressed: () {
                               if (_globalKey.currentState!.validate()) {
                                 final paymentGatewayModel =
-                                    PaymentGatewayIntegration(
-                                      name: _nameController.text,
-                                      phone: _mobileController.text,
+                                    PaymentModel(
                                       amount: int.parse(_amountController.text),
-                                      redirectUrl:
-                                          "https://api.dmbossbusiness.com/after-pay",
+                                      action: "combo",
+                                      method: widget.mode ?? ""
+                                      // redirectUrl:
+                                      //     "https://api.dmbossbusiness.com/after-pay",
                                     );
 
                                 paymentProvider.postPaymentGateway(
                                   context,
                                   paymentGatewayModel,
-                                );
+                                  widget.mode ?? "MANUAL",
+                                ).then((_){
+                                  
+                                });
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -221,29 +246,6 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
                         SizedBox(height: 12),
 
                         // Error message
-                        if (paymentProvider.errorMessage != null)
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8),
-                            child: Text(
-                              paymentProvider.errorMessage!,
-                              style: TextStyle(color: Colors.red, fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-
-                        // Success message
-                        if (paymentProvider.successMessage != null)
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8),
-                            child: Text(
-                              paymentProvider.successMessage!,
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
                       ],
                     );
                   },

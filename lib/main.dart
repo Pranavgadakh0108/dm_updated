@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:dmboss/app/myapp.dart';
 import 'package:dmboss/provider/add_bank_details_provider.dart';
 import 'package:dmboss/provider/add_deposite_manual_provider.dart';
@@ -22,7 +24,9 @@ import 'package:dmboss/provider/get_qr_code_provider.dart';
 import 'package:dmboss/provider/how_to_play_provider.dart';
 import 'package:dmboss/provider/login_user_provider.dart';
 import 'package:dmboss/provider/mobile_exist_provider.dart';
+import 'package:dmboss/provider/notification_admin_provider.dart';
 import 'package:dmboss/provider/payment_gateway_provider.dart';
+import 'package:dmboss/provider/payment_provider.dart';
 import 'package:dmboss/provider/pending_withdraw_count.dart';
 import 'package:dmboss/provider/register_user_provider.dart';
 import 'package:dmboss/provider/transaction_history_provider.dart';
@@ -96,10 +100,12 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => GetPendingDepositeCountProvider(),
         ),
-        ChangeNotifierProvider(create: (_) => GetImageSlidersProvider()),
+         ChangeNotifierProvider(create: (_) => GetImageSlidersProvider()),
         ChangeNotifierProvider(create: (_) => GetPaymentModeProvider()),
         ChangeNotifierProvider(create: (_) => GetNotificationsProvider()),
         ChangeNotifierProvider(create: (_) => GetGamesChartProvider()),
+        ChangeNotifierProvider(create: (_) => GetNotificationsAdminProvider()),
+        ChangeNotifierProvider(create: (_)=> PaymentProvider())
       ],
       child: const MyApp(),
     ),

@@ -50,20 +50,20 @@ class GameMarketProvider extends ChangeNotifier {
   // Helper method to get a specific game by ID
   Game? getGameById(String gameId) {
     if (_gamesModel?.games == null) return null;
-    return _gamesModel!.games.firstWhere(
+    return _gamesModel?.games.firstWhere(
       (game) => game.id == gameId,
       orElse: () => throw Exception('Game not found'),
     );
   }
 
   // Helper method to get a specific game by market name
-  Game? getGameByMarketName(String marketName) {
-    if (_gamesModel?.games == null) return null;
-    return _gamesModel!.games.firstWhere(
-      (game) =>
-          game.bazar.toLowerCase().contains(marketName.toLowerCase()) ||
-          marketName.toLowerCase().contains(game.bazar.toLowerCase()),
-      orElse: () => throw Exception('Game not found'),
-    );
-  }
+  // Game? getGameByMarketName(String marketName) {
+  //   if (_gamesModel?.games == null) return null;
+  //   return _gamesModel?.games.firstWhere(
+  //     (game) =>
+  //         game.bazar?.toLowerCase().contains(marketName.toLowerCase()) ||
+  //         marketName.toLowerCase().contains(game.bazar?.toLowerCase()),
+  //     orElse: () => throw Exception('Game not found'),
+  //   );
+  // }
 }

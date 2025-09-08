@@ -1,5 +1,6 @@
 import 'package:dmboss/model/withdraw_coins_model.dart';
 import 'package:dmboss/service/withdraw_points_service.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 
 class WithdrawCoinsProvider extends ChangeNotifier {
@@ -66,21 +67,19 @@ class WithdrawCoinsProvider extends ChangeNotifier {
 
         clearFields();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('WithDraw coins submitted successfully'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: "Withdraw Coins submitted Successfully",
+          backgroundColor: Colors.green,
+          durationSeconds: 3,
         );
       } else {
         _errorMessage = 'Failed to submit withdraw coins';
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(_errorMessage!),
-            backgroundColor: Colors.redAccent,
-            duration: const Duration(seconds: 3),
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: _errorMessage!,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 3,
         );
       }
     } catch (e) {
@@ -88,13 +87,12 @@ class WithdrawCoinsProvider extends ChangeNotifier {
       _errorMessage = e.toString();
       print('Add deposit points error: $e');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
+      showCustomSnackBar(
+          context: context,
+          message: e.toString(),
           backgroundColor: Colors.redAccent,
-          duration: const Duration(seconds: 3),
-        ),
-      );
+          durationSeconds: 3,
+        );
     }
 
     notifyListeners();

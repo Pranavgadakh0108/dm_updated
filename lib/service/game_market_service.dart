@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/games_model.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,10 +31,11 @@ class GameMarketService {
         // Parse the response using the GamesModel
         return GamesModel.fromJson(result.data);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Failed to Fetch Games: ${result.statusCode}"),
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: "Failed to fetch Game",
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 3,
         );
         return null;
       }
@@ -50,9 +52,12 @@ class GameMarketService {
         errorMessage = e.toString();
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
+      showCustomSnackBar(
+          context: context,
+          message: errorMessage,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 3,
+        );
 
       return null;
     }

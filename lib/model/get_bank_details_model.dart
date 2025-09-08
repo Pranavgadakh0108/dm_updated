@@ -52,6 +52,7 @@ class Bank {
   String accountHolderName;
   String accountNumber;
   String ifscCode;
+  String bankName;
   CreatedBy createdBy;
   DateTime createdAt;
   DateTime updatedAt;
@@ -63,6 +64,7 @@ class Bank {
     required this.accountHolderName,
     required this.accountNumber,
     required this.ifscCode,
+    required this.bankName,
     required this.createdBy,
     required this.createdAt,
     required this.updatedAt,
@@ -75,6 +77,7 @@ class Bank {
     accountHolderName: json["account_holder_name"],
     accountNumber: json["account_number"],
     ifscCode: json["ifsc_code"],
+    bankName: json["bank_name"],
     createdBy: CreatedBy.fromJson(json["created_by"]),
     createdAt: DateTime.parse(json["createdAt"]),
     updatedAt: DateTime.parse(json["updatedAt"]),
@@ -87,6 +90,7 @@ class Bank {
     "account_holder_name": accountHolderName,
     "account_number": accountNumber,
     "ifsc_code": ifscCode,
+    "bank_name":bankName,
     "created_by": createdBy.toJson(),
     "createdAt": createdAt.toIso8601String(),
     "updatedAt": updatedAt.toIso8601String(),

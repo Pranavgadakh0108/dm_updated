@@ -1,8 +1,10 @@
 // import 'package:dmboss/data/appdata.dart';
 // import 'package:dmboss/model/games_model/bulk_jodi_model.dart';
 // import 'package:dmboss/provider/games_provider/bulk_jodi_provider.dart';
+// import 'package:dmboss/widgets/bulk_summary_dialogue.dart';
 // import 'package:dmboss/widgets/game_app_bar.dart';
 // import 'package:flutter/material.dart';
+// import 'package:intl/intl.dart';
 // import 'package:provider/provider.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,6 +29,9 @@
 //   String? userId;
 
 //   bool _isLoading = true;
+
+//   // Create the bids list as requested
+//   List<Map<String, String>> bids = [];
 
 //   Future<void> getUserId() async {
 //     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -59,6 +64,7 @@
 //     provider.clearBulkJodiItems();
 //     setState(() {
 //       selectedPoint = null;
+//       bids.clear(); // Clear the bids list
 //     });
 //   }
 
@@ -81,30 +87,40 @@
 
 //     final provider = Provider.of<BulkJodiBetProvider>(context, listen: false);
 
-//     // Check if digit already exists in the list
-//     final existingIndex = provider.bulkJodiModel.bulkJodi.indexWhere(
-//       (item) => item.jodi == digit,
-//     );
+//     // Check if digit already exists in the bids list
+//     final existingIndex = bids.indexWhere((item) => item.containsKey(digit));
 
 //     if (existingIndex != -1) {
-//       // Update existing item
-//       final existingItem = provider.bulkJodiModel.bulkJodi[existingIndex];
-//       final updatedItem = BulkJodi(
-//         jodi: digit,
-//         amount: existingItem.amount + selectedPoint!,
+//       // Update existing item in bids list
+//       final currentAmount = int.parse(bids[existingIndex][digit]!);
+//       final newAmount = currentAmount + selectedPoint!;
+//       bids[existingIndex][digit] = newAmount.toString();
+
+//       // Also update the provider for backward compatibility
+//       final existingProviderIndex = provider.bulkJodiModel.bulkJodi.indexWhere(
+//         (item) => item.jodi == digit,
 //       );
-//       provider.updateBulkJodiItem(existingIndex, updatedItem);
+//       if (existingProviderIndex != -1) {
+//         final updatedItem = BulkJodi(jodi: digit, amount: newAmount);
+//         provider.updateBulkJodiItem(existingProviderIndex, updatedItem);
+//       }
 //     } else {
-//       // Add new item
+//       // Add new item to bids list
+//       bids.add({digit: selectedPoint!.toString()});
+
+//       // Also add to provider for backward compatibility
 //       final newItem = BulkJodi(jodi: digit, amount: selectedPoint!);
 //       provider.addBulkJodiItem(newItem);
 //     }
+
+//     // Notify UI to update
+//     setState(() {});
 //   }
 
 //   void submitBid() {
 //     final provider = Provider.of<BulkJodiBetProvider>(context, listen: false);
 
-//     if (provider.isBulkJodiEmpty()) {
+//     if (bids.isEmpty) {
 //       ScaffoldMessenger.of(context).showSnackBar(
 //         const SnackBar(
 //           content: Text("Please select at least one digit to place a bet"),
@@ -124,12 +140,44 @@
 //       return;
 //     }
 
+//     // Convert bids list to provider format for submission
+//     provider.bulkJodiModel.bulkJodi.clear();
+//     for (var bid in bids) {
+//       bid.forEach((key, value) {
+//         provider.addBulkJodiItem(BulkJodi(jodi: key, amount: int.parse(value)));
+//       });
+//     }
+
 //     // Place the bet
 //     provider.placeBulkJodiBet(context, provider.bulkJodiModel);
 
 //     resetBid();
+
+//     Navigator.pop(context);
 //   }
-  
+
+//   void _showConfirmationDialog(BuildContext context) {
+//     final totalBids = bids.length;
+//     final totalBidAmount = bids.fold<int>(
+//       0,
+//       (sum, bid) => sum + int.parse(bid.values.first),
+//     );
+
+//     showDialog(
+//       context: context,
+//       builder: (context) => BulkJodiBetSummaryDialog(
+//         title: widget.title,
+//         date: DateFormat('dd/MM/yyyy').format(DateTime.now()),
+//         bids: bids,
+//         totalBids: totalBids,
+//         totalBidAmount: totalBidAmount,
+//         onConfirm: () {
+//           Navigator.pop(context);
+//           submitBid();
+//         },
+//       ),
+//     );
+//   }
 
 //   Widget buildPointsSelector() {
 //     return Wrap(
@@ -203,13 +251,17 @@
 //           spacing: 20,
 //           runSpacing: 12,
 //           children: digits.map((digit) {
-//             // Find if this digit exists in the provider's list
-//             final jodiItem = provider.bulkJodiModel.bulkJodi.firstWhere(
-//               (item) => item.jodi == digit,
-//               orElse: () => BulkJodi(jodi: "", amount: 0),
-//             );
+//             // Find if this digit exists in the bids list
+//             String amountText = "";
+//             bool isSelected = false;
 
-//             bool isSelected = jodiItem.jodi == digit;
+//             for (var bid in bids) {
+//               if (bid.containsKey(digit)) {
+//                 amountText = bid[digit]!;
+//                 isSelected = true;
+//                 break;
+//               }
+//             }
 
 //             return GestureDetector(
 //               onTap: () => incrementDigitValue(digit),
@@ -236,7 +288,7 @@
 //                       borderRadius: BorderRadius.circular(20),
 //                     ),
 //                     child: Text(
-//                       isSelected ? "${jodiItem.amount}" : "",
+//                       amountText,
 //                       style: const TextStyle(
 //                         fontWeight: FontWeight.w600,
 //                         fontSize: 12,
@@ -437,9 +489,31 @@
 //                                   ),
 //                                 ),
 //                                 const SizedBox(width: 10),
+//                                 // Flexible(
+//                                 //   child: ElevatedButton(
+//                                 //     onPressed: submitBid,
+//                                 //     style: ElevatedButton.styleFrom(
+//                                 //       backgroundColor: Colors.orange,
+//                                 //       padding: EdgeInsets.symmetric(
+//                                 //         horizontal:
+//                                 //             MediaQuery.of(context).size.width *
+//                                 //             0.06,
+//                                 //         vertical: 12,
+//                                 //       ),
+//                                 //       shape: RoundedRectangleBorder(
+//                                 //         borderRadius: BorderRadius.circular(30),
+//                                 //       ),
+//                                 //     ),
+//                                 //     child: const Text(
+//                                 //       "SUBMIT BID",
+//                                 //       style: TextStyle(color: Colors.white),
+//                                 //     ),
+//                                 //   ),
+//                                 // ),
 //                                 Flexible(
 //                                   child: ElevatedButton(
-//                                     onPressed: submitBid,
+//                                     onPressed: () =>
+//                                         _showConfirmationDialog(context),
 //                                     style: ElevatedButton.styleFrom(
 //                                       backgroundColor: Colors.orange,
 //                                       padding: EdgeInsets.symmetric(
@@ -476,8 +550,10 @@
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/games_model/bulk_jodi_model.dart';
 import 'package:dmboss/provider/games_provider/bulk_jodi_provider.dart';
+import 'package:dmboss/widgets/bulk_summary_dialogue.dart';
 import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -561,31 +637,26 @@ class _BulkJodiState extends State<BulkJodii> {
     final provider = Provider.of<BulkJodiBetProvider>(context, listen: false);
 
     // Check if digit already exists in the bids list
-    final existingIndex = bids.indexWhere(
-      (item) => item.containsKey(digit),
-    );
+    final existingIndex = bids.indexWhere((item) => item.containsKey(digit));
 
     if (existingIndex != -1) {
       // Update existing item in bids list
       final currentAmount = int.parse(bids[existingIndex][digit]!);
       final newAmount = currentAmount + selectedPoint!;
       bids[existingIndex][digit] = newAmount.toString();
-      
+
       // Also update the provider for backward compatibility
       final existingProviderIndex = provider.bulkJodiModel.bulkJodi.indexWhere(
         (item) => item.jodi == digit,
       );
       if (existingProviderIndex != -1) {
-        final updatedItem = BulkJodi(
-          jodi: digit,
-          amount: newAmount,
-        );
+        final updatedItem = BulkJodi(jodi: digit, amount: newAmount);
         provider.updateBulkJodiItem(existingProviderIndex, updatedItem);
       }
     } else {
       // Add new item to bids list
       bids.add({digit: selectedPoint!.toString()});
-      
+
       // Also add to provider for backward compatibility
       final newItem = BulkJodi(jodi: digit, amount: selectedPoint!);
       provider.addBulkJodiItem(newItem);
@@ -622,10 +693,7 @@ class _BulkJodiState extends State<BulkJodii> {
     provider.bulkJodiModel.bulkJodi.clear();
     for (var bid in bids) {
       bid.forEach((key, value) {
-        provider.addBulkJodiItem(BulkJodi(
-          jodi: key,
-          amount: int.parse(value),
-        ));
+        provider.addBulkJodiItem(BulkJodi(jodi: key, amount: int.parse(value)));
       });
     }
 
@@ -633,27 +701,119 @@ class _BulkJodiState extends State<BulkJodii> {
     provider.placeBulkJodiBet(context, provider.bulkJodiModel);
 
     resetBid();
+
+    Navigator.pop(context);
   }
 
+  void _showConfirmationDialog(BuildContext context) {
+    final totalBids = bids.length;
+    final totalBidAmount = bids.fold<int>(
+      0,
+      (sum, bid) => sum + int.parse(bid.values.first),
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => BulkJodiBetSummaryDialog(
+        title: widget.title,
+        date: DateFormat('dd/MM/yyyy').format(DateTime.now()),
+        bids: bids,
+        totalBids: totalBids,
+        totalBidAmount: totalBidAmount,
+        onConfirm: () {
+          Navigator.pop(context);
+          submitBid();
+        },
+      ),
+    );
+  }
+
+  // Widget buildPointsSelector() {
+  //   final screenWidth = MediaQuery.of(context).size.width;
+  //   final pointItemWidth = screenWidth * 0.22;
+  //   final pointItemHeight = screenWidth * 0.1;
+    
+  //   return Wrap(
+  //     spacing: screenWidth * 0.03,
+  //     runSpacing: screenWidth * 0.02,
+  //     children: pointsList.map((point) {
+  //       bool isSelected = selectedPoint == point;
+  //       return GestureDetector(
+  //         onTap: () => selectPoint(point),
+  //         child: Container(
+  //           height: pointItemHeight,
+  //           width: pointItemWidth,
+  //           decoration: BoxDecoration(
+  //             color: Colors.amber.shade100,
+  //             border: Border.all(color: Colors.deepOrangeAccent, width: 2),
+  //           ),
+  //           child: Padding(
+  //             padding: EdgeInsets.all(screenWidth * 0.005),
+  //             child: Row(
+  //               mainAxisSize: MainAxisSize.min,
+  //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //               children: [
+  //                 Icon(
+  //                   Icons.circle,
+  //                   color: isSelected ? Colors.red : Colors.green.shade800,
+  //                   size: screenWidth * 0.012,
+  //                 ),
+  //                 Flexible(
+  //                   child: ClipOval(
+  //                     child: Container(
+  //                       height: pointItemHeight * 0.7,
+  //                       width: pointItemWidth * 0.7,
+  //                       decoration: BoxDecoration(
+  //                         color: isSelected
+  //                             ? Colors.red
+  //                             : Colors.green.shade800,
+  //                       ),
+  //                       alignment: Alignment.center,
+  //                       child: Text(
+  //                         "₹ $point",
+  //                         style: TextStyle(
+  //                           color: Colors.white,
+  //                           fontWeight: FontWeight.bold,
+  //                           fontSize: screenWidth * 0.03,
+  //                         ),
+  //                         overflow: TextOverflow.ellipsis,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 Icon(
+  //                   Icons.circle,
+  //                   color: isSelected ? Colors.red : Colors.green.shade800,
+  //                   size: screenWidth * 0.012,
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //     }).toList(),
+  //   );
+  // }
   Widget buildPointsSelector() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
+    
     return Wrap(
-      spacing: 15,
-      runSpacing: 10,
+      spacing: screenWidth * 0.04,
+      runSpacing: screenWidth * 0.03,
       children: pointsList.map((point) {
         bool isSelected = selectedPoint == point;
         return GestureDetector(
           onTap: () => selectPoint(point),
           child: Container(
-            height: 40,
-            width: 80,
+            height: screenWidth * 0.1,
+            width: screenWidth * 0.2,
             decoration: BoxDecoration(
               color: Colors.amber.shade100,
-              border: Border.all(color: Colors.deepOrangeAccent, width: 3),
+              border: Border.all(color: Colors.deepOrangeAccent, width: 1.5),
             ),
             child: Padding(
-              padding: EdgeInsets.all(
-                MediaQuery.of(context).size.width * 0.005,
-              ),
+              padding: EdgeInsets.all(screenWidth * 0.005),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -661,13 +821,13 @@ class _BulkJodiState extends State<BulkJodii> {
                   Icon(
                     Icons.circle,
                     color: isSelected ? Colors.red : Colors.green.shade800,
-                    size: 5,
+                    size: screenWidth * 0.012,
                   ),
                   Flexible(
                     child: ClipOval(
                       child: Container(
-                        height: 27,
-                        width: 55,
+                        height: screenWidth * 0.07,
+                        width: screenWidth * 0.15,
                         decoration: BoxDecoration(
                           color: isSelected
                               ? Colors.red
@@ -679,7 +839,7 @@ class _BulkJodiState extends State<BulkJodii> {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12.5,
+                            fontSize: isSmallScreen ? 10 : 12.5,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -689,7 +849,7 @@ class _BulkJodiState extends State<BulkJodii> {
                   Icon(
                     Icons.circle,
                     color: isSelected ? Colors.red : Colors.green.shade800,
-                    size: 5,
+                    size: screenWidth * 0.012,
                   ),
                 ],
               ),
@@ -701,16 +861,20 @@ class _BulkJodiState extends State<BulkJodii> {
   }
 
   Widget buildDigitsGrid(List<String> digits) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final digitContainerWidth = screenWidth * 0.15;
+    final digitContainerHeight = screenWidth * 0.08;
+    
     return Consumer<BulkJodiBetProvider>(
       builder: (context, provider, child) {
         return Wrap(
-          spacing: 20,
-          runSpacing: 12,
+          spacing: screenWidth * 0.04,
+          runSpacing: screenWidth * 0.03,
           children: digits.map((digit) {
             // Find if this digit exists in the bids list
             String amountText = "";
             bool isSelected = false;
-            
+
             for (var bid in bids) {
               if (bid.containsKey(digit)) {
                 amountText = bid[digit]!;
@@ -725,11 +889,15 @@ class _BulkJodiState extends State<BulkJodii> {
                 children: [
                   Text(
                     digit,
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.03, 
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
+                  SizedBox(height: screenWidth * 0.005),
                   Container(
-                    width: 60,
-                    height: 35,
+                    width: digitContainerWidth,
+                    height: digitContainerHeight,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: isSelected
@@ -739,15 +907,15 @@ class _BulkJodiState extends State<BulkJodii> {
                         color: isSelected
                             ? Colors.orangeAccent
                             : Colors.grey.shade300,
-                        width: isSelected ? 3 : 0,
+                        width: isSelected ? 2 : 0,
                       ),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(screenWidth * 0.04),
                     ),
                     child: Text(
                       amountText,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 12,
+                        fontSize: screenWidth * 0.03,
                       ),
                     ),
                   ),
@@ -762,6 +930,9 @@ class _BulkJodiState extends State<BulkJodii> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    
     // Setup provider when userId is available
     if (userId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -775,25 +946,31 @@ class _BulkJodiState extends State<BulkJodii> {
         backgroundColor: Colors.orange,
         title: Text(
           widget.title,
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+          style: TextStyle(
+            fontWeight: FontWeight.w600, 
+            fontSize: screenWidth * 0.045
+          ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: screenWidth * 0.05,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           Container(
-            margin: const EdgeInsets.all(10),
+            margin: EdgeInsets.all(screenWidth * 0.02),
             padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.02,
-              vertical: MediaQuery.of(context).size.height * 0.01,
+              horizontal: screenWidth * 0.02,
+              vertical: screenHeight * 0.01,
             ),
             constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.4,
+              maxWidth: screenWidth * 0.4,
             ),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(screenWidth * 0.07),
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [Wallet()]),
           ),
@@ -803,177 +980,176 @@ class _BulkJodiState extends State<BulkJodii> {
           ? const Center(child: CircularProgressIndicator())
           : Consumer<BulkJodiBetProvider>(
               builder: (context, provider, child) {
-                return LayoutBuilder(
-                  builder: (context, constraints) {
-                    return Padding(
-                      padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.width * 0.04,
-                      ),
-                      child: Column(
+                return Padding(
+                  padding: EdgeInsets.all(screenWidth * 0.04),
+                  child: Column(
+                    children: [
+                      // Fixed Top Content
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          // Fixed Top Content
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                          // Date Container
+                          Row(
                             children: [
-                              // Date Container
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.orange,
-                                          width: 2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          widget.gameName,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.all(screenWidth * 0.03),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.orange,
+                                      width: 1.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      widget.gameName,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: screenWidth * 0.035,
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.orange,
-                                          width: 2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "OPEN",
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
-                              const SizedBox(height: 15),
+                              SizedBox(width: screenWidth * 0.02),
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.all(screenWidth * 0.03),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.orange,
+                                      width: 1.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "OPEN",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: screenWidth * 0.035,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: screenHeight * 0.015),
 
-                              // Points Selection
-                              const Text(
-                                "Select Points for Betting",
+                          // Points Selection
+                          Text(
+                            "Select Points for Betting",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                              fontSize: screenWidth * 0.04,
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.01),
+                          buildPointsSelector(),
+                          SizedBox(height: screenHeight * 0.015),
+                        ],
+                      ),
+
+                      // Scrollable Digits Section
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Text(
+                                "Select Digits",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.orange,
+                                  fontSize: screenWidth * 0.04,
                                 ),
                               ),
-                              const SizedBox(height: 10),
-                              buildPointsSelector(),
-                              const SizedBox(height: 15),
-                            ],
-                          ),
-
-                          // Scrollable Digits Section
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Center(
-                                  child: Text(
-                                    "Select Digits",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.orange,
-                                    ),
-                                  ),
-                                ),
-                                const Divider(color: Colors.orange),
-                                const SizedBox(height: 5),
-                                const Text(
-                                  "Select All Digits",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-
-                                // Scrollable digits grid
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    child: buildDigitsGrid(jodiNumbers),
-                                  ),
-                                ),
-                              ],
                             ),
-                          ),
+                            Divider(color: Colors.orange, thickness: 1),
+                            SizedBox(height: screenHeight * 0.005),
+                            Text(
+                              "Select All Digits",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange,
+                                fontSize: screenWidth * 0.035,
+                              ),
+                            ),
+                            SizedBox(height: screenHeight * 0.008),
 
-                          // Fixed Bottom Buttons
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 20.0,
-                              top: 5,
+                            // Scrollable digits grid
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: buildDigitsGrid(jodiNumbers),
+                              ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Flexible(
-                                  child: ElevatedButton(
-                                    onPressed: resetBid,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.orange,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal:
-                                            MediaQuery.of(context).size.width *
-                                            0.06,
-                                        vertical: 12,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                    ),
-                                    child: const Text(
-                                      "RESET BID",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Flexible(
-                                  child: ElevatedButton(
-                                    onPressed: submitBid,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.orange,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal:
-                                            MediaQuery.of(context).size.width *
-                                            0.06,
-                                        vertical: 12,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                    ),
-                                    child: const Text(
-                                      "SUBMIT BID",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                        ],
+                          ],
+                        ),
                       ),
-                    );
-                  },
+
+                      // Fixed Bottom Buttons
+                      Padding(
+                        padding: EdgeInsets.only(
+                          bottom: screenHeight * 0.02,
+                          top: screenHeight * 0.005,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Flexible(
+                              child: ElevatedButton(
+                                onPressed: resetBid,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: screenWidth * 0.06,
+                                    vertical: screenHeight * 0.015,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(screenWidth * 0.07),
+                                  ),
+                                ),
+                                child: Text(
+                                  "RESET BID",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * 0.035,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: screenWidth * 0.02),
+                            Flexible(
+                              child: ElevatedButton(
+                                onPressed: () => _showConfirmationDialog(context),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: screenWidth * 0.06,
+                                    vertical: screenHeight * 0.015,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(screenWidth * 0.07),
+                                  ),
+                                ),
+                                child: Text(
+                                  "SUBMIT BID",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * 0.035,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.015),
+                    ],
+                  ),
                 );
               },
             ),

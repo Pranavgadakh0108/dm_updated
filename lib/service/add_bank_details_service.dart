@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/add_bank_details_model.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -52,11 +53,11 @@ class AddBankDetailsService {
       }
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Error: $errorMessage"),
-            backgroundColor: Colors.red,
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: errorMessage,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 3,
         );
       }
 
@@ -74,9 +75,12 @@ class AddBankDetailsService {
         errorMessage = e.toString();
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
+      showCustomSnackBar(
+          context: context,
+          message: errorMessage,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 3,
+        );
 
       return null;
     }

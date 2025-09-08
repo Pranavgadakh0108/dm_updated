@@ -1,3 +1,179 @@
+// import 'package:dmboss/provider/user_profile_provider.dart';
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+
+// class BetSummaryDialog extends StatefulWidget {
+//   final String title;
+//   final String date;
+//   final List<Map<String, String>> bids;
+//   // final double walletBefore;
+//   // final double walletAfter;
+//   final int totalBids;
+//   final int totalBidAmount;
+//   final VoidCallback onConfirm;
+
+//   const BetSummaryDialog({
+//     super.key,
+//     required this.title,
+//     required this.date,
+//     required this.bids,
+//     required this.totalBids,
+//     required this.totalBidAmount,
+//     required this.onConfirm,
+//   });
+
+//   @override
+//   State<BetSummaryDialog> createState() => _BetSummaryDialogState();
+// }
+
+// class _BetSummaryDialogState extends State<BetSummaryDialog> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       final userProfileProvider = Provider.of<UserProfileProvider>(
+//         context,
+//         listen: false,
+//       );
+//       userProfileProvider.fetchUserProfile();
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Consumer<UserProfileProvider>(
+//       builder: (context, provider, child) {
+//         return Dialog(
+//           shape: RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(12),
+//           ),
+//           child: Padding(
+//             padding: const EdgeInsets.all(12.0),
+//             child: Column(
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 Container(
+//                   width: double.infinity,
+//                   padding: const EdgeInsets.symmetric(vertical: 12),
+//                   decoration: BoxDecoration(
+//                     color: Colors.orange,
+//                     borderRadius: BorderRadius.circular(8),
+//                   ),
+//                   child: Center(
+//                     child: Text(
+//                       "${widget.title}  -  ${widget.date}",
+//                       style: const TextStyle(
+//                         color: Colors.white,
+//                         fontSize: 16,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(height: 10),
+//                 Padding(
+//                   padding: const EdgeInsets.all(8.0),
+//                   child: Row(
+//                     children: const [
+//                       Expanded(
+//                         child: Text(
+//                           "Digit",
+//                           style: TextStyle(fontWeight: FontWeight.bold),
+//                         ),
+//                       ),
+//                       Expanded(
+//                         child: Text(
+//                           "Points",
+//                           style: TextStyle(fontWeight: FontWeight.bold),
+//                         ),
+//                       ),
+//                       Expanded(
+//                         child: Text(
+//                           "Type",
+//                           style: TextStyle(fontWeight: FontWeight.bold),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//                 const Divider(),
+//                 SizedBox(
+//                   height: 200,
+//                   child: ListView.builder(
+//                     itemCount: widget.bids.length,
+//                     itemBuilder: (context, index) {
+//                       final bid = widget.bids[index];
+//                       return Padding(
+//                         padding: const EdgeInsets.all(8.0),
+//                         child: Row(
+//                           children: [
+//                             Expanded(child: Text(bid['digit'] ?? bid['displayDigit']!)),
+//                             Expanded(child: Text(bid['points']?? 'N/A')),
+//                             Expanded(
+//                               child: Text(
+//                                 bid['type']?? 'N/A',
+//                                 style: TextStyle(color: Colors.red),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                 ),
+//                 const Divider(),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     Text("Total Bids: ${widget.totalBids}"),
+//                     Text("Total Bid Amount: ${widget.totalBidAmount}"),
+//                   ],
+//                 ),
+//                 // const SizedBox(height: 8),
+//                 Column(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     Text("Wallet Balance: ${provider.userProfile?.user.wallet.toString() ?? ""}"),
+//                   ],
+//                 ),
+//                 const SizedBox(height: 8),
+//                 const Text(
+//                   "*Note: Bid once played cannot be cancelled*",
+//                   style: TextStyle(color: Colors.red, fontSize: 12),
+//                   textAlign: TextAlign.center,
+//                 ),
+//                 const SizedBox(height: 12),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                   children: [
+//                     ElevatedButton(
+//                       style: ElevatedButton.styleFrom(
+//                         backgroundColor: Colors.grey,
+//                         foregroundColor: Colors.black,
+//                       ),
+
+//                       onPressed: () => Navigator.pop(context),
+//                       child: const Text("Cancel"),
+//                     ),
+//                     ElevatedButton(
+//                       style: ElevatedButton.styleFrom(
+//                         backgroundColor: Colors.orange,
+//                         foregroundColor: Colors.white,
+//                       ),
+//                       onPressed: widget.onConfirm,
+//                       child: const Text("Submit Bet"),
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
+
 import 'package:dmboss/provider/user_profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +219,11 @@ class _BetSummaryDialogState extends State<BetSummaryDialog> {
   Widget build(BuildContext context) {
     return Consumer<UserProfileProvider>(
       builder: (context, provider, child) {
+        final walletBalance = provider.userProfile?.user.wallet ?? 0;
+        final bool hasSufficientBalance = widget.totalBidAmount <= walletBalance;
+        
         return Dialog(
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -130,13 +310,19 @@ class _BetSummaryDialogState extends State<BetSummaryDialog> {
                   ],
                 ),
                 // const SizedBox(height: 8),
-                // Column(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Text("Wallet Before: ${provider.userProfile?.user.wallet.toString() ?? ""}"),
-                //     Text("Wallet After: ${widget.walletAfter}"),
-                //   ],
-                // ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Before Bid: ${walletBalance.toString()}"),
+                    if(hasSufficientBalance)
+                    Text("After Bid: ${walletBalance - widget.totalBidAmount}"),
+                    if (!hasSufficientBalance)
+                      const Text(
+                        "Insufficient balance!",
+                        style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.w600),
+                      ),
+                  ],
+                ),
                 const SizedBox(height: 8),
                 const Text(
                   "*Note: Bid once played cannot be cancelled*",
@@ -158,10 +344,12 @@ class _BetSummaryDialogState extends State<BetSummaryDialog> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        foregroundColor: Colors.white,
+                        backgroundColor: hasSufficientBalance ? Colors.orange : Colors.grey,
+                        foregroundColor: hasSufficientBalance ? Colors.white : Colors.black54,
                       ),
-                      onPressed: widget.onConfirm,
+                      onPressed: hasSufficientBalance ? () {
+                        widget.onConfirm();
+                      } : null,
                       child: const Text("Submit Bet"),
                     ),
                   ],

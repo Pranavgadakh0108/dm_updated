@@ -20,3 +20,4 @@ String getCurrentTimeFormatted() {
 
   return '$hour:$minute $period';
 }
+

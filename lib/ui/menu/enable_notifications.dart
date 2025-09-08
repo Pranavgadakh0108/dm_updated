@@ -178,8 +178,8 @@ class _EnableNotificationsState extends State<EnableNotifications> {
                       const Text(
                         "Enable / Disable Notifications",
                         style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       const SizedBox(width: 5),
@@ -188,7 +188,7 @@ class _EnableNotificationsState extends State<EnableNotifications> {
                         onChanged: _toggleNotifications,
                         inactiveTrackColor: Colors.grey,
                         inactiveThumbColor: Colors.white,
-                        activeColor: Colors.orange,
+                        activeColor: Colors.black,
                       ),
                     ],
                   ),
@@ -234,7 +234,7 @@ class _EnableNotificationsState extends State<EnableNotifications> {
                     icon: Icon(Icons.refresh),
                     label: Text('Refresh Notification Status'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.orange,
                       foregroundColor: Colors.white,
                     ),
                   ),

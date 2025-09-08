@@ -1,4 +1,5 @@
 import 'package:dmboss/provider/winning_history_provider.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -64,6 +65,8 @@ class _WinningHistoryScreenState extends State<WinningHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -79,6 +82,20 @@ class _WinningHistoryScreenState extends State<WinningHistoryScreen> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          Container(
+            margin: EdgeInsets.all(screenWidth * 0.02),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.03,
+              vertical: screenHeight * 0.006,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(screenWidth * 0.1),
+            ),
+            child: Wallet(),
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
@@ -233,7 +250,8 @@ class _WinningHistoryScreenState extends State<WinningHistoryScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                       crossAxisAlignment: CrossAxisAlignment.start,
+    
                         children: [
                           const Text(
                             "Win Amount",
@@ -248,6 +266,23 @@ class _WinningHistoryScreenState extends State<WinningHistoryScreen> {
                               color: Colors.green,
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
+                              
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          const Text(
+                            "Winning Points",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            "${tx?.winningPoints}",
+                            style: const TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
                             ),
                           ),
                         ],
@@ -255,10 +290,10 @@ class _WinningHistoryScreenState extends State<WinningHistoryScreen> {
                       const SizedBox(width: 20),
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Text(
-                              "Narration",
+                              "Winning Digit",
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 12,
@@ -266,7 +301,24 @@ class _WinningHistoryScreenState extends State<WinningHistoryScreen> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              tx?.narration ?? "",
+                              "${tx?.bidNumber}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                              ),
+                            ),
+                            // const SizedBox(height: 2),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${tx?.marketName}",
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 12,
@@ -274,7 +326,15 @@ class _WinningHistoryScreenState extends State<WinningHistoryScreen> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              "Winning Digit:- ${tx?.winningNumber}",
+                              "${tx?.session}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              "${tx?.gameName}",
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 12,

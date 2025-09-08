@@ -40,7 +40,7 @@ void showTermsPopup(
                       size: 60,
                       color: Colors.red,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     const Text(
                       "Terms & Condition",
                       style: TextStyle(
@@ -49,27 +49,27 @@ void showTermsPopup(
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 5),
                     Text(
-                      "Minimum Withdrawal is ${provider.gameSettings?.data.minWithdraw} Rs. Maximum Withdraw Unlimited Per Day.\n\n"
-                      "Process Time Minimum 1 Hour Maximum 72 Hours. Depending On Bank Server.\n\n"
-                      "Withdraw Request Timing Is Morning 10:00 AM To Night 10:00 PM.\n\n"
+                      "Minimum Withdrawal is ${provider.gameSettings?.data.minWithdraw} Rs. Maximum Withdraw Unlimited Per Day.\n"
+                      "Process Time Minimum 1 Hour Maximum 72 Hours. Depending On Bank Server.\n"
+                      "Withdraw Request Timing Is Morning 10:00 AM To Night 10:00 PM.\n"
                       "Withdraw Is Available On All Days Of Week.\n",
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const Text(
-                      "Note: Please Confirm That Bank Details You Have Entered Are Correct, If You Entered Wrong Bank Details Is Not Our Responsibility.",
+                      "Note: Please Confirm That Bank Details You Have Entered Are Correct, If You Entered Wrong Bank Details Is Not Our Responsibility. After submitting the withdraw request, if there is no valis balance in your wallet, then the request will be automatically declined.",
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Colors.red,
                         fontWeight: FontWeight.w600,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     SizedBox(
                       width: double.infinity,
                       height: 40,

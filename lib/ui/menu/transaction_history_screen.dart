@@ -1,4 +1,5 @@
 import 'package:dmboss/provider/transaction_history_provider.dart';
+import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:dmboss/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -63,6 +64,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -81,11 +84,25 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             );
           },
         ),
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.refresh),
+        //     onPressed: _retryLoading,
+        //     tooltip: 'Refresh',
+        //   ),
+        // ],
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _retryLoading,
-            tooltip: 'Refresh',
+          Container(
+            margin: EdgeInsets.all(screenWidth * 0.02),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.03,
+              vertical: screenHeight * 0.006,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(screenWidth * 0.1),
+            ),
+            child: Wallet(),
           ),
         ],
       ),
@@ -221,9 +238,18 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           itemBuilder: (context, index) {
             final transaction =
                 provider.transactionHistoryModel!.transactions[index];
+            print(transaction.type?.name.toString());
+            print("transaction mrket :${transaction.market}");
+            print("transaction gametype :${transaction.gameType}");
             final isDebit = transaction.amount < 0;
-            final amountColor = isDebit ? Colors.red : Colors.green;
-            final amountPrefix = isDebit ? '-' : '+';
+            final amountColor =
+                isDebit || transaction.narration!.toLowerCase().contains('bet')
+                ? Colors.red
+                : Colors.green;
+            final amountPrefix =
+                isDebit || transaction.narration!.toLowerCase().contains('bet')
+                ? '-'
+                : '+';
 
             return Card(
               color: Colors.white,
@@ -246,20 +272,20 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                       children: [
                         Text(
                           DateFormat(
-                            'yyyy-MM-dd',
+                            'dd/MM/yyy',
                           ).format(transaction.createdAt ?? DateTime.now()),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey,
+                            color: Colors.grey[800],
                           ),
                         ),
                         Text(
                           transaction.time ?? "",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey,
+                            color: Colors.grey[800],
                           ),
                         ),
                       ],
@@ -313,14 +339,16 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                 transaction.narration ?? "No description",
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 13,
+                                  fontSize: 11,
                                 ),
-                                maxLines: 2,
+                                maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
                         ),
+
+                        // SizedBox(width: 10,),
                       ],
                     ),
 
@@ -360,8 +388,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   }
 
   Color _getTransactionTypeColor(String narration) {
-    if (narration.toLowerCase().contains('win') ||
-        narration.toLowerCase().contains('add')) {
+    if (narration.toLowerCase().contains('won') ||
+        narration.toLowerCase().contains('deposit')) {
       return Colors.green;
     } else if (narration.toLowerCase().contains('withdraw') ||
         narration.toLowerCase().contains('deduct')) {
@@ -374,14 +402,14 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   }
 
   String _getTransactionType(String narration) {
-    if (narration.toLowerCase().contains('win')) {
+    if (narration.toLowerCase().contains('won')) {
       return 'WINNING';
-    } else if (narration.toLowerCase().contains('add')) {
+    } else if (narration.toLowerCase().contains('deposit')) {
       return 'DEPOSIT';
     } else if (narration.toLowerCase().contains('withdraw')) {
       return 'WITHDRAWAL';
-    } else if (narration.toLowerCase().contains('referral')) {
-      return 'REFERRAL';
+    } else if (narration.toLowerCase().contains('bet')) {
+      return 'BET PLACED';
     } else if (narration.toLowerCase().contains('bonus')) {
       return 'BONUS';
     } else if (narration.toLowerCase().contains('deduct')) {

@@ -103,91 +103,13 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Icon
-                          Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: Icon(
-                              menuIcons[index],
-                              size: 45,
-                              color: Colors.orange,
-                            ),
-                          ),
-
-                          // Badge with count
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child:
-                                Consumer2<
-                                  GetPendingDepositeCountProvider,
-                                  GetPendingWithdrawCountProvider
-                                >(
-                                  builder:
-                                      (
-                                        context,
-                                        depositeProvider,
-                                        withDrawProvider,
-                                        _,
-                                      ) {
-                                        print(
-                                          depositeProvider
-                                              .pendingWithdrawCountModel
-                                              ?.data
-                                              .pendingCount
-                                              .toString(),
-                                        );
-                                        return menuItems[index] ==
-                                                    "Deposite Status" ||
-                                                menuItems[index] ==
-                                                    "Withdraw Status"
-                                            ? Container(
-                                                padding: const EdgeInsets.all(
-                                                  4,
-                                                ),
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.red,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                constraints:
-                                                    const BoxConstraints(
-                                                      minWidth: 20,
-                                                      minHeight: 20,
-                                                    ),
-                                                child: Text(
-                                                  menuItems[index] ==
-                                                          "Deposite Status"
-                                                      ? depositeProvider
-                                                                .pendingWithdrawCountModel
-                                                                ?.data
-                                                                .pendingCount
-                                                                .toString() ??
-                                                            ""
-                                                      : menuItems[index] ==
-                                                            "Withdraw Status"
-                                                      ? withDrawProvider
-                                                                .pendingWithdrawCountModel
-                                                                ?.data
-                                                                .pendingCount
-                                                                .toString() ??
-                                                            ""
-                                                      : "",
-
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              )
-                                            : SizedBox.shrink();
-                                      },
-                                ),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Icon(
+                          menuIcons[index],
+                          size: 45,
+                          color: Colors.orange,
+                        ),
                       ),
 
                       const SizedBox(height: 10),

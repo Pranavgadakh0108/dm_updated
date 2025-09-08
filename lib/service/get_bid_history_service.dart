@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/bid_history_model.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,9 +33,12 @@ class GetBidHistoryService {
       if (result.statusCode == 200) {
         return BidHistoryModel.fromJson(result.data);
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Failed to Fetch bet History")));
+        showCustomSnackBar(
+          context: context,
+          message: "Failed to Fetch Bet History..!!",
+          backgroundColor: Colors.green,
+          durationSeconds: 3,
+        );
       }
     } catch (e) {
       String errorMessage = "Something went wrong";
@@ -49,9 +53,12 @@ class GetBidHistoryService {
         errorMessage = e.toString();
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
+      showCustomSnackBar(
+        context: context,
+        message: errorMessage,
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 3,
+      );
 
       return null;
     }

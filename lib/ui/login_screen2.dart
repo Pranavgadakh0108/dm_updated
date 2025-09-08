@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:dmboss/provider/games_settings_provider.dart';
 import 'package:dmboss/provider/login_user_provider.dart';
 import 'package:dmboss/ui/login_screen1.dart';
 import 'package:dmboss/util/make_call.dart';
@@ -206,70 +207,90 @@ class _LoginScreen2State extends State<LoginScreen2> {
   }
 
   Widget _buildCommonSection(bool isSmallScreen) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return Consumer<GamesSettingsProvider>(
+      builder: (context, gameSettings, _) {
+        return Column(
           children: [
-            GestureDetector(
-              onTap: () => openWhatsApp("+919888195353"),
-              child: Text(
-                'Forgot Password?',
-                style: TextStyle(
-                  fontSize: isSmallScreen ? 12 : 14,
-                  fontWeight: FontWeight.w600,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () => openWhatsApp(
+                    gameSettings.gameSettings?.data.whatsapp == ""
+                        ? "9888195353"
+                        : gameSettings.gameSettings?.data.whatsapp ?? "",
+                  ),
+                  child: Text(
+                    'Forgot Password?',
+                    style: TextStyle(
+                      fontSize: isSmallScreen ? 12 : 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
-              ),
+              ],
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () => openWhatsApp(
+                    gameSettings.gameSettings?.data.whatsapp == ""
+                        ? "9888195353"
+                        : gameSettings.gameSettings?.data.whatsapp ?? "",
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.whatsapp,
+                        color: Colors.green,
+                        size: isSmallScreen ? 30 : 40,
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        gameSettings.gameSettings?.data.whatsapp == ""
+                            ? "9888195353"
+                            : gameSettings.gameSettings?.data.whatsapp ?? "",
+                        style: TextStyle(
+                          fontSize: isSmallScreen ? 12 : 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => makePhoneCall(
+                    gameSettings.gameSettings?.data.whatsapp == ""
+                        ? "9888195353"
+                        : gameSettings.gameSettings?.data.whatsapp ?? "",
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.phone,
+                        color: Colors.black,
+                        size: isSmallScreen ? 22 : 33,
+                      ),
+                      const SizedBox(height: 9),
+                      Text(
+                        gameSettings.gameSettings?.data.whatsapp == ""
+                            ? "9888195353"
+                            : gameSettings.gameSettings?.data.whatsapp ?? "",
+                        style: TextStyle(
+                          fontSize: isSmallScreen ? 12 : 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GestureDetector(
-              onTap: () => openWhatsApp("+919888195353"),
-              child: Column(
-                children: [
-                  Icon(
-                    FontAwesomeIcons.whatsapp,
-                    color: Colors.green,
-                    size: isSmallScreen ? 30 : 40,
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    '+919888195353',
-                    style: TextStyle(
-                      fontSize: isSmallScreen ? 12 : 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () => makePhoneCall("+919888395353"),
-              child: Column(
-                children: [
-                  Icon(
-                    FontAwesomeIcons.phone,
-                    color: Colors.blue,
-                    size: isSmallScreen ? 21 : 31,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    '+919888395353',
-                    style: TextStyle(
-                      fontSize: isSmallScreen ? 12 : 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
+        );
+      },
     );
   }
 }

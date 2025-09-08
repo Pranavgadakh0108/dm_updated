@@ -1,4 +1,6 @@
 import 'package:dmboss/service/add_deposite_points_manual.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
+import 'package:dmboss/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dmboss/model/deposite_manual_points.dart';
 
@@ -81,10 +83,14 @@ class AddDepositePointsManualProvider extends ChangeNotifier {
     try {
       final depositeService = AddDepositePointsManual();
 
-      final result = await depositeService.postDepositeManualDetails(
-        context,
-        depositeManualPoints,
-      );
+      final result = await depositeService
+          .postDepositeManualDetails(context, depositeManualPoints)
+          .then((_) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => AppNavigationBar()),
+            );
+          });
 
       _isLoading = false;
 
@@ -94,21 +100,19 @@ class AddDepositePointsManualProvider extends ChangeNotifier {
 
         clearFields();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Deposit points submitted successfully'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: "Deposite points submitted Successfully",
+          backgroundColor: Colors.green,
+          durationSeconds: 2,
         );
       } else {
         _errorMessage = 'Failed to submit deposit points';
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(_errorMessage!),
-            backgroundColor: Colors.redAccent,
-            duration: const Duration(seconds: 3),
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: _errorMessage!,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 2,
         );
       }
     } catch (e) {
@@ -116,12 +120,11 @@ class AddDepositePointsManualProvider extends ChangeNotifier {
       _errorMessage = e.toString();
       print('Add deposit points error: $e');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
-          backgroundColor: Colors.redAccent,
-          duration: const Duration(seconds: 3),
-        ),
+      showCustomSnackBar(
+        context: context,
+        message: e.toString(),
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 2,
       );
     }
 

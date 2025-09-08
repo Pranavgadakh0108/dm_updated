@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/payment_gateway_model.dart';
 import 'package:dmboss/model/payment_gateway_response.dart';
 import 'package:dmboss/util/make_call.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,18 +29,25 @@ class PostPaymentGateway {
   Future<PaymentGatewayResponse?> postPaymentGateway(
     BuildContext context,
     PaymentGatewayIntegration paymentGateWay,
+    String method,
   ) async {
     try {
       final dio = await _getDioInstance();
 
       final response = await dio.post(
-        '/deposit/norapay/create-order',
+        method == 'Norapay'
+            ? '/deposit/norapay/create-order'
+            : '/deposit/finixpay/create',
         data: paymentGateWay.toJson(),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.data['payment_link']);
-        makePayment(response.data['payment_link']);
+        print("---------------------");
+        print(response.data);
+        method == 'Norapay'
+            ? makePayment(response.data['upi_intent'])
+            : makePayment(response.data['pay_url']);
         return PaymentGatewayResponse.fromJson(response.data);
       } else {
         throw Exception('Failed to do payment: ${response.statusCode}');
@@ -61,11 +71,11 @@ class PostPaymentGateway {
       print(e.response?.data);
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Error: $errorMessage"),
-            backgroundColor: Colors.red,
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: errorMessage,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 2,
         );
       }
 
@@ -83,9 +93,12 @@ class PostPaymentGateway {
         errorMessage = e.toString();
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
+      showCustomSnackBar(
+        context: context,
+        message: errorMessage,
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 2,
+      );
 
       return null;
     }

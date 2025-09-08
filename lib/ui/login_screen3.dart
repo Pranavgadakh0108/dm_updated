@@ -1,12 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/provider/register_user_provider.dart';
 import 'package:dmboss/ui/login_screen1.dart';
 import 'package:dmboss/ui/login_screen2.dart';
 import 'package:dmboss/widgets/always_phone_prefix.dart';
 import 'package:dmboss/widgets/custom_text_field.dart';
-import 'package:dmboss/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -2,24 +2,26 @@
 // import 'package:dmboss/model/games_model/single_ank_model.dart';
 // import 'package:dmboss/provider/games_provider/full_sangam_provider.dart';
 // import 'package:dmboss/widgets/add_button.dart';
+// import 'package:dmboss/widgets/bet_summarry_dialogue.dart';
 // import 'package:dmboss/widgets/custom_textfield_screen1.dart';
-// import 'package:dmboss/widgets/date_container.dart';
 // import 'package:dmboss/widgets/game_app_bar.dart';
 // import 'package:dmboss/widgets/submit_button.dart';
 // import 'package:flutter/material.dart';
+// import 'package:intl/intl.dart';
 // import 'package:provider/provider.dart';
 
 // class FullSangam extends StatefulWidget {
 //   final String title;
 //   final String gameName;
-//   final String marketId; // Added marketId parameter
+//   final String marketId;
 
 //   const FullSangam({
 //     super.key,
 //     required this.title,
 //     required this.gameName,
-//     required this.marketId, // Added to constructor
+//     required this.marketId,
 //   });
+
 //   @override
 //   State<FullSangam> createState() => _FullSangamState();
 // }
@@ -58,7 +60,6 @@
 //     _closePannaFocusNode.addListener(() => _onClosePannaFocusChange());
 //     _filteredClosePannaNumbers = halfSangam;
 
-//     // You can now use widget.marketId for any initialization
 //     print("Market ID in FullSangam: ${widget.marketId}");
 //   }
 
@@ -94,7 +95,6 @@
 //       } else {
 //         try {
 //           _filteredOpenPannaNumbers = halfSangam.where((number) {
-//             //return number.toString().contains(input);
 //             return number.toString().startsWith(input);
 //           }).toList();
 //         } catch (e) {
@@ -145,18 +145,47 @@
 //                       itemCount: _filteredOpenPannaNumbers.length,
 //                       itemBuilder: (context, index) {
 //                         final number = _filteredOpenPannaNumbers[index];
-//                         return ListTile(
-//                           title: Text(number.toString()),
-//                           onTap: () {
-//                             setState(() {
-//                               _openPannaController.text = number.toString();
-//                               _openPannaController.selection = TextSelection.fromPosition(
-//                                 TextPosition(offset: _openPannaController.text.length),
-//                               );
-//                             });
-//                             _removeOpenPannaOverlay();
-//                           },
+//                         return SizedBox(
+//                           child: Padding(
+//                             padding: const EdgeInsets.symmetric(
+//                               vertical: 7,
+//                               horizontal: 15,
+//                             ),
+//                             child: GestureDetector(
+//                               onTap: () {
+//                                 setState(() {
+//                                   _openPannaController.text = number.toString();
+//                                   _openPannaController
+//                                       .selection = TextSelection.fromPosition(
+//                                     TextPosition(
+//                                       offset: _openPannaController.text.length,
+//                                     ),
+//                                   );
+//                                 });
+//                                 _removeOpenPannaOverlay();
+//                               },
+//                               child: Text(
+//                                 number.toString(),
+//                                 style: TextStyle(fontSize: 16),
+//                               ),
+//                             ),
+//                           ),
 //                         );
+//                         // ListTile(
+//                         //   title: Text(number.toString()),
+//                         //   onTap: () {
+//                         //     setState(() {
+//                         //       _openPannaController.text = number.toString();
+//                         //       _openPannaController.selection =
+//                         //           TextSelection.fromPosition(
+//                         //             TextPosition(
+//                         //               offset: _openPannaController.text.length,
+//                         //             ),
+//                         //           );
+//                         //     });
+//                         //     _removeOpenPannaOverlay();
+//                         //   },
+//                         // );
 //                       },
 //                     ),
 //             ),
@@ -192,8 +221,7 @@
 //       } else {
 //         try {
 //           _filteredClosePannaNumbers = halfSangam.where((number) {
-//            // return number.toString().contains(input);
-//            return number.toString().startsWith(input);
+//             return number.toString().startsWith(input);
 //           }).toList();
 //         } catch (e) {
 //           _filteredClosePannaNumbers = [];
@@ -243,18 +271,45 @@
 //                       itemCount: _filteredClosePannaNumbers.length,
 //                       itemBuilder: (context, index) {
 //                         final number = _filteredClosePannaNumbers[index];
-//                         return ListTile(
-//                           title: Text(number.toString()),
-//                           onTap: () {
-//                             setState(() {
-//                               _closePannaController.text = number.toString();
-//                               _closePannaController.selection = TextSelection.fromPosition(
-//                                 TextPosition(offset: _closePannaController.text.length),
-//                               );
-//                             });
-//                             _removeClosePannaOverlay();
-//                           },
+//                         return SizedBox(
+//                           child: Padding(
+//                             padding: const EdgeInsets.symmetric(
+//                               vertical: 7,
+//                               horizontal: 15,
+//                             ),
+//                             child: GestureDetector(
+//                               onTap: () {
+//                                 setState(() {
+//                                   _closePannaController.text = number
+//                                       .toString();
+//                                   _closePannaController
+//                                       .selection = TextSelection.fromPosition(
+//                                     TextPosition(
+//                                       offset: _closePannaController.text.length,
+//                                     ),
+//                                   );
+//                                 });
+//                                 _removeClosePannaOverlay();
+//                               },
+//                               child: Text(
+//                                 number.toString(),
+//                                 style: TextStyle(fontSize: 16),
+//                               ),
+//                             ),
+//                           ),
 //                         );
+//                         // ListTile(
+//                         //   title: Text(number.toString()),
+//                         //   onTap: () {
+//                         //     setState(() {
+//                         //       _closePannaController.text = number.toString();
+//                         //       _closePannaController.selection = TextSelection.fromPosition(
+//                         //         TextPosition(offset: _closePannaController.text.length),
+//                         //       );
+//                         //     });
+//                         //     _removeClosePannaOverlay();
+//                         //   },
+//                         // );
 //                       },
 //                     ),
 //             ),
@@ -283,7 +338,8 @@
 //           'closePanna': _closePannaController.text,
 //           'points': _pointsController.text,
 //           'type': 'OPEN',
-//           'displayDigit': "${_openPannaController.text}-${_closePannaController.text}",
+//           'displayDigit':
+//               "${_openPannaController.text}-${_closePannaController.text}",
 //         });
 
 //         // Clear all fields
@@ -304,17 +360,17 @@
 //     });
 //   }
 
-//   void _submitAllBids(BuildContext context) {
-//     final provider = Provider.of<FullSangamProvider>(context, listen: false);
+//   void _submitAllBids(BuildContext context, FullSangamProvider provider) {
+//     //final provider = Provider.of<FullSangamProvider>(context, listen: false);
+
+//     FocusScope.of(context).unfocus();
 
 //     for (var bid in bids) {
 //       final singleAnkModel = SingleAnkModel(
 //         gameId: widget.marketId,
-//         gameType: "FULL_SANGAM", // Changed to FULL_SANGAM
-//         number: bid['displayDigit']!, // Using the combined display digit
+//         gameType: "FULL_SANGAM",
+//         number: bid['displayDigit']!,
 //         amount: int.parse(bid['points']!),
-//         // You might need to add additional fields for open/close values
-//         // depending on your API requirements
 //       );
 
 //       provider.placeSingleAnkBet(context, singleAnkModel);
@@ -324,6 +380,34 @@
 //     setState(() {
 //       bids.clear();
 //     });
+
+//     Navigator.pop(context);
+//   }
+
+//   void _showConfirmationDialog(
+//     BuildContext context,
+//     FullSangamProvider provider,
+//   ) {
+//     final totalBids = bids.length;
+//     final totalBidAmount = bids.fold<int>(
+//       0,
+//       (sum, bid) => sum + int.parse(bid['points']!),
+//     );
+
+//     showDialog(
+//       context: context,
+//       builder: (context) => BetSummaryDialog(
+//         title: widget.title,
+//         date: DateFormat('dd/MM/yyyy').format(DateTime.now()),
+//         bids: bids,
+//         totalBids: totalBids,
+//         totalBidAmount: totalBidAmount,
+//         onConfirm: () {
+//           Navigator.pop(context);
+//           _submitAllBids(context, provider);
+//         },
+//       ),
+//     );
 //   }
 
 //   @override
@@ -349,352 +433,456 @@
 //               actions: [
 //                 Container(
 //                   margin: const EdgeInsets.all(10),
-//                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+//                   padding: const EdgeInsets.symmetric(
+//                     horizontal: 10,
+//                     vertical: 5,
+//                   ),
 //                   decoration: BoxDecoration(
 //                     color: Colors.white,
 //                     borderRadius: BorderRadius.circular(30),
 //                   ),
-//                   child: Wallet()
+//                   child: Wallet(),
 //                 ),
 //               ],
 //             ),
-//             body: LayoutBuilder(
-//               builder: (context, constraints) {
-//                 return SingleChildScrollView(
-//                   child: ConstrainedBox(
-//                     constraints: BoxConstraints(minHeight: constraints.maxHeight),
-//                     child: Padding(
-//                       padding: const EdgeInsets.all(15),
-//                       child: Column(
-//                         mainAxisSize: MainAxisSize.min,
-//                         children: [
-//                           // Date and Game Name
-//                           Row(
-//                             children: [
-//                               Expanded(child: DateContainer()),
-//                               const SizedBox(width: 10),
-//                               Expanded(
-//                                 child: Container(
-//                                   padding: const EdgeInsets.all(12),
-//                                   decoration: BoxDecoration(
-//                                     border: Border.all(
-//                                       color: Colors.orange,
-//                                       width: 2,
-//                                     ),
-//                                     borderRadius: BorderRadius.circular(10),
-//                                   ),
-//                                   child: Center(
-//                                     child: Text(
-//                                       widget.gameName,
-//                                       style: const TextStyle(
-//                                         fontWeight: FontWeight.bold,
-//                                         fontSize: 14,
-//                                       ),
-//                                     ),
-//                                   ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                           const SizedBox(height: 15),
-
-//                           Form(
-//                             key: _globalKey,
-//                             child: Column(
-//                               children: [
-//                                 // Open Panna field
-//                                 Row(
-//                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                   children: [
-//                                     SizedBox(width: 10),
-//                                     Text(
-//                                       "Enter Open Pana: ",
-//                                       style: TextStyle(fontWeight: FontWeight.w600),
-//                                     ),
-//                                     SizedBox(width: 50),
-//                                     Expanded(
-//                                       child: CompositedTransformTarget(
-//                                         link: _openPannaLayerLink,
-//                                         child: GestureDetector(
-//                                           onTap: () {
-//                                             FocusScope.of(context).requestFocus(_openPannaFocusNode);
-//                                             _showOpenPannaDropdownOverlay();
-//                                           },
-//                                           child: CustomTextfieldScreen1(
-//                                             controller: _openPannaController,
-//                                             focusNode: _openPannaFocusNode,
-//                                             hintText: "Enter Pana",
-//                                             onChanged: (value) {
-//                                               // For Panna - limit to 3 digits
-//                                               if (value.length > 3) {
-//                                                 _openPannaController.text = value.substring(0, 3);
-//                                                 _openPannaController.selection = TextSelection.fromPosition(
-//                                                   TextPosition(offset: 3),
-//                                                 );
-//                                               } else {
-//                                                 _openPannaController.text = value;
-//                                               }
-//                                             },
-//                                             validator: (value) {
-//                                               if (value == null || value.isEmpty || !halfSangam.contains(value)) {
-//                                                 return "Enter valid pana";
-//                                               }
-//                                               return null;
-//                                             },
-//                                           ),
-//                                         ),
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-//                                 const SizedBox(height: 10),
-
-//                                 // Close Panna field
-//                                 Row(
-//                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                   children: [
-//                                     SizedBox(width: 10),
-//                                     Text(
-//                                       "Enter Close Pana: ",
-//                                       style: TextStyle(fontWeight: FontWeight.w600),
-//                                     ),
-//                                     SizedBox(width: 43),
-//                                     Expanded(
-//                                       child: CompositedTransformTarget(
-//                                         link: _closePannaLayerLink,
-//                                         child: GestureDetector(
-//                                           onTap: () {
-//                                             FocusScope.of(context).requestFocus(_closePannaFocusNode);
-//                                             _showClosePannaDropdownOverlay();
-//                                           },
-//                                           child: CustomTextfieldScreen1(
-//                                             controller: _closePannaController,
-//                                             focusNode: _closePannaFocusNode,
-//                                             hintText: "Enter Pana",
-//                                             onChanged: (value) {
-//                                               // For Panna - limit to 3 digits
-//                                               if (value.length > 3) {
-//                                                 _closePannaController.text = value.substring(0, 3);
-//                                                 _closePannaController.selection = TextSelection.fromPosition(
-//                                                   TextPosition(offset: 3),
-//                                                 );
-//                                               } else {
-//                                                 _closePannaController.text = value;
-//                                               }
-//                                             },
-//                                             validator: (value) {
-//                                               if (value == null || value.isEmpty || !halfSangam.contains(value)) {
-//                                                 return "Enter valid pana";
-//                                               }
-//                                               return null;
-//                                             },
-//                                           ),
-//                                         ),
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-//                                 const SizedBox(height: 10),
-
-//                                 // Enter Points
-//                                 Row(
-//                                   children: [
-//                                     SizedBox(width: 10),
-//                                     Text(
-//                                       "Enter Points: ",
-//                                       style: TextStyle(fontWeight: FontWeight.w600),
-//                                     ),
-//                                     SizedBox(width: 95),
-//                                     Expanded(
-//                                       child: CustomTextfieldScreen1(
-//                                         controller: _pointsController,
-//                                         hintText: "Enter Points",
-//                                         onChanged: (value) {
-//                                           setState(() {
-//                                             _pointsController.text = value;
-//                                           });
-//                                         },
-//                                         validator: (value) {
-//                                           if (value == null ||
-//                                               value.isEmpty ||
-//                                               int.parse(value) < 10 ||
-//                                               int.parse(value) > 1000) {
-//                                             return "Enter amount \nbetween 10 - 1000";
-//                                           }
-//                                           return null;
-//                                         },
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-
-//                                 const SizedBox(height: 15),
-
-//                                 // Add Bid Button
-//                                 Row(
-//                                   mainAxisAlignment: MainAxisAlignment.center,
-//                                   children: [
-//                                     AddButton(data: "ADD BID", onPressed: _addBid),
-//                                   ],
-//                                 ),
-//                               ],
-//                             ),
-//                           ),
-//                           const SizedBox(height: 15),
-
-//                           // Bid List Table
-//                           Container(
-//                             constraints: BoxConstraints(
-//                               maxHeight: MediaQuery.of(context).size.height * 0.4,
-//                             ),
+//             body: GestureDetector(
+//               onTap: () => FocusScope.of(context).unfocus(),
+//               child: Padding(
+//                 padding: const EdgeInsets.all(15),
+//                 child: Column(
+//                   children: [
+//                     // Date and Game Name
+//                     Row(
+//                       children: [
+//                         Expanded(
+//                           child: Container(
+//                             padding: const EdgeInsets.all(12),
 //                             decoration: BoxDecoration(
-//                               border: Border.all(color: Colors.orange, width: 2),
+//                               border: Border.all(
+//                                 color: Colors.orange,
+//                                 width: 2,
+//                               ),
 //                               borderRadius: BorderRadius.circular(10),
 //                             ),
-//                             child: Column(
-//                               children: [
-//                                 Container(
-//                                   padding: const EdgeInsets.symmetric(
-//                                     vertical: 8,
-//                                     horizontal: 10,
-//                                   ),
-//                                   child: Padding(
-//                                     padding: const EdgeInsets.only(top: 8),
-//                                     child: Row(
-//                                       mainAxisAlignment:
-//                                           MainAxisAlignment.spaceBetween,
-//                                       children: const [
-//                                         Expanded(
-//                                           child: Text(
-//                                             "Pana",
-//                                             textAlign: TextAlign.center,
-//                                           ),
-//                                         ),
-//                                         Expanded(
-//                                           child: Text(
-//                                             "Amount",
-//                                             textAlign: TextAlign.center,
-//                                           ),
-//                                         ),
-//                                         Expanded(
-//                                           child: Text(
-//                                             "Game type",
-//                                             textAlign: TextAlign.center,
-//                                           ),
-//                                         ),
-//                                       ],
+//                             child: Center(
+//                               child: Text(
+//                                 widget.gameName,
+//                                 style: const TextStyle(
+//                                   fontWeight: FontWeight.bold,
+//                                   fontSize: 14,
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                         const SizedBox(width: 10),
+//                         Expanded(
+//                           child: Container(
+//                             padding: const EdgeInsets.all(12),
+//                             decoration: BoxDecoration(
+//                               border: Border.all(
+//                                 color: Colors.orange,
+//                                 width: 2,
+//                               ),
+//                               borderRadius: BorderRadius.circular(10),
+//                             ),
+//                             child: Center(
+//                               child: Text(
+//                                 "OPEN",
+//                                 style: const TextStyle(
+//                                   fontWeight: FontWeight.bold,
+//                                   fontSize: 14,
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                     const SizedBox(height: 15),
+
+//                     Expanded(
+//                       child: SingleChildScrollView(
+//                         padding: EdgeInsets.only(
+//                           bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+//                         ),
+//                         child: Form(
+//                           key: _globalKey,
+//                           child: Column(
+//                             children: [
+//                               // Open Panna field
+//                               Row(
+//                                 mainAxisAlignment:
+//                                     MainAxisAlignment.spaceBetween,
+//                                 children: [
+//                                   const SizedBox(width: 10),
+//                                   Text(
+//                                     "Enter Open Pana: ",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.w600,
 //                                     ),
 //                                   ),
-//                                 ),
-//                                 Padding(
-//                                   padding: const EdgeInsets.all(8.0),
-//                                   child: const Divider(
-//                                     height: 1,
-//                                     color: Colors.black,
+//                                   const SizedBox(width: 47),
+//                                   Expanded(
+//                                     child: CompositedTransformTarget(
+//                                       link: _openPannaLayerLink,
+//                                       child: GestureDetector(
+//                                         onTap: () {
+//                                           FocusScope.of(
+//                                             context,
+//                                           ).requestFocus(_openPannaFocusNode);
+//                                           _showOpenPannaDropdownOverlay();
+//                                         },
+//                                         child: CustomTextfieldScreen1(
+//                                           controller: _openPannaController,
+//                                           focusNode: _openPannaFocusNode,
+//                                           hintText: "Enter Pana",
+//                                           onChanged: (value) {
+//                                             // For Panna - limit to 3 digits
+//                                             if (value.length > 3) {
+//                                               _openPannaController.text = value
+//                                                   .substring(0, 3);
+//                                               _openPannaController.selection =
+//                                                   TextSelection.fromPosition(
+//                                                     TextPosition(offset: 3),
+//                                                   );
+//                                             } else {
+//                                               _openPannaController.text = value;
+//                                             }
+//                                           },
+//                                           validator: (value) {
+//                                             if (value == null ||
+//                                                 value.isEmpty ||
+//                                                 !halfSangam.contains(value)) {
+//                                               return "Enter valid pana";
+//                                             }
+//                                             return null;
+//                                           },
+//                                         ),
+//                                       ),
+//                                     ),
 //                                   ),
+//                                 ],
+//                               ),
+//                               const SizedBox(height: 10),
+
+//                               // Close Panna field
+//                               Row(
+//                                 mainAxisAlignment:
+//                                     MainAxisAlignment.spaceBetween,
+//                                 children: [
+//                                   const SizedBox(width: 10),
+//                                   Text(
+//                                     "Enter Close Pana: ",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.w600,
+//                                     ),
+//                                   ),
+//                                   const SizedBox(width: 43),
+//                                   Expanded(
+//                                     child: CompositedTransformTarget(
+//                                       link: _closePannaLayerLink,
+//                                       child: GestureDetector(
+//                                         onTap: () {
+//                                           FocusScope.of(
+//                                             context,
+//                                           ).requestFocus(_closePannaFocusNode);
+//                                           _showClosePannaDropdownOverlay();
+//                                         },
+//                                         child: CustomTextfieldScreen1(
+//                                           controller: _closePannaController,
+//                                           focusNode: _closePannaFocusNode,
+//                                           hintText: "Enter Pana",
+//                                           onChanged: (value) {
+//                                             // For Panna - limit to 3 digits
+//                                             if (value.length > 3) {
+//                                               _closePannaController.text = value
+//                                                   .substring(0, 3);
+//                                               _closePannaController.selection =
+//                                                   TextSelection.fromPosition(
+//                                                     TextPosition(offset: 3),
+//                                                   );
+//                                             } else {
+//                                               _closePannaController.text =
+//                                                   value;
+//                                             }
+//                                           },
+//                                           validator: (value) {
+//                                             if (value == null ||
+//                                                 value.isEmpty ||
+//                                                 !halfSangam.contains(value)) {
+//                                               return "Enter valid pana";
+//                                             }
+//                                             return null;
+//                                           },
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ],
+//                               ),
+//                               const SizedBox(height: 10),
+
+//                               // Enter Points
+//                               Row(
+//                                 children: [
+//                                   const SizedBox(width: 10),
+//                                   Text(
+//                                     "Enter Points: ",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.w600,
+//                                     ),
+//                                   ),
+//                                   const SizedBox(width: 85),
+//                                   Expanded(
+//                                     child: CustomTextfieldScreen1(
+//                                       controller: _pointsController,
+//                                       hintText: "Enter Points",
+//                                       onChanged: (value) {
+//                                         setState(() {
+//                                           _pointsController.text = value;
+//                                         });
+//                                       },
+//                                       validator: (value) {
+//                                         if (value == null ||
+//                                             value.isEmpty ||
+//                                             int.parse(value) < 10 ||
+//                                             int.parse(value) > 1000) {
+//                                           return "Enter amount \nbetween 10 - 1000";
+//                                         }
+//                                         return null;
+//                                       },
+//                                     ),
+//                                   ),
+//                                 ],
+//                               ),
+
+//                               const SizedBox(height: 15),
+
+//                               // Add Bid Button
+//                               Row(
+//                                 mainAxisAlignment: MainAxisAlignment.end,
+//                                 children: [
+//                                   AddButton(
+//                                     data: "ADD BID",
+//                                     onPressed: _addBid,
+//                                   ),
+//                                   SizedBox(width: 9)
+//                                 ],
+//                               ),
+//                               const SizedBox(height: 15),
+
+//                               // Bid List Table
+//                               Container(
+//                                 constraints: BoxConstraints(
+//                                   maxHeight:
+//                                       MediaQuery.of(context).size.height *
+//                                       0.4, // Reduced height
 //                                 ),
-//                                 Expanded(
-//                                   child: ListView.builder(
-//                                     itemCount: bids.length,
-//                                     itemBuilder: (context, index) {
-//                                       return Padding(
-//                                         padding: const EdgeInsets.all(8.0),
-//                                         child: Container(
-//                                           decoration: BoxDecoration(
-//                                             color: Colors.white,
-//                                             borderRadius: BorderRadius.circular(10),
-//                                             boxShadow: [
-//                                               BoxShadow(
-//                                                 color: Colors.grey,
-//                                                 blurRadius: 0.5,
-//                                                 spreadRadius: 1,
-//                                                 offset: Offset(0, 1),
+
+//                                 child: Column(
+//                                   children: [
+//                                     // Table header
+//                                     Container(
+//                                       // padding: const EdgeInsets.symmetric(
+//                                       //   vertical: 8,
+//                                       //   horizontal: 10,
+//                                       // ),
+//                                       child: Padding(
+//                                         padding: const EdgeInsets.only(top: 8),
+//                                         child: Row(
+//                                           mainAxisAlignment:
+//                                               MainAxisAlignment.spaceBetween,
+//                                           children: const [
+//                                             Expanded(
+//                                               child: Text(
+//                                                 "Digit",
+//                                                 textAlign: TextAlign.center,
+//                                                 style: TextStyle(
+//                                                   fontSize: 14,
+//                                                   fontWeight: FontWeight.bold,
+//                                                 ),
 //                                               ),
-//                                             ],
-//                                           ),
-//                                           child: ListTile(
-//                                             title: Row(
-//                                               children: [
-//                                                 Expanded(
-//                                                   child: Text(
-//                                                     bids[index]['displayDigit']!,
-//                                                     textAlign: TextAlign.center,
-//                                                   ),
+//                                             ),
+//                                             Expanded(
+//                                               child: Text(
+//                                                 "Amount",
+//                                                 textAlign: TextAlign.center,
+//                                                 style: TextStyle(
+//                                                   fontSize: 14,
+//                                                   fontWeight: FontWeight.bold,
 //                                                 ),
-//                                                 Text('|'),
-//                                                 Expanded(
-//                                                   child: Text(
-//                                                     bids[index]['points']!,
-//                                                     textAlign: TextAlign.center,
-//                                                   ),
+//                                               ),
+//                                             ),
+//                                             Expanded(
+//                                               child: Text(
+//                                                 "Type",
+//                                                 textAlign: TextAlign.center,
+//                                                 style: TextStyle(
+//                                                   fontSize: 14,
+//                                                   fontWeight: FontWeight.bold,
 //                                                 ),
-//                                                 Text('|'),
-//                                                 Expanded(
-//                                                   child: Row(
-//                                                     mainAxisAlignment:
-//                                                         MainAxisAlignment.center,
-//                                                     children: [
-//                                                       SizedBox(width: 5),
-//                                                       Text(
-//                                                         bids[index]['type']!,
-//                                                         textAlign: TextAlign.center,
+//                                               ),
+//                                             ),
+//                                             Expanded(
+//                                               child: Text(
+//                                                 "Delete",
+//                                                 textAlign: TextAlign.center,
+//                                                 style: TextStyle(
+//                                                   fontSize: 14,
+//                                                   fontWeight: FontWeight.bold,
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ],
+//                                         ),
+//                                       ),
+//                                     ),
+//                                     Padding(
+//                                       padding: EdgeInsets.all(
+//                                         MediaQuery.of(context).size.width *
+//                                             0.02,
+//                                       ),
+//                                       child: const Divider(
+//                                         height: 1,
+//                                         color: Colors.black,
+//                                       ),
+//                                     ),
+//                                     // Bid list
+//                                     Expanded(
+//                                       child: ListView.builder(
+//                                         itemCount: bids.length,
+//                                         itemBuilder: (context, index) {
+//                                           return Padding(
+//                                             padding: const EdgeInsets.symmetric(
+//                                               vertical: 4,
+//                                               horizontal: 8,
+//                                             ),
+//                                             child: Container(
+//                                               decoration: BoxDecoration(
+//                                                 color: Colors
+//                                                     .grey[100], // Lighter background
+//                                                 borderRadius:
+//                                                     BorderRadius.circular(8),
+//                                               ),
+//                                               child: ListTile(
+//                                                 contentPadding:
+//                                                     const EdgeInsets.symmetric(
+//                                                       horizontal: 8,
+//                                                     ),
+//                                                 minVerticalPadding: 0,
+//                                                 dense:
+//                                                     true, // Makes the list tile more compact
+//                                                 title: Row(
+//                                                   mainAxisAlignment:
+//                                                       MainAxisAlignment
+//                                                           .spaceBetween,
+//                                                   children: [
+//                                                     Expanded(
+//                                                       child: Text(
+//                                                         bids[index]['displayDigit']!,
+//                                                         textAlign:
+//                                                             TextAlign.center,
+//                                                         style: TextStyle(
+//                                                           fontSize: 12,
+//                                                           fontWeight:
+//                                                           FontWeight.w600,
+//                                                         ),
 //                                                       ),
-//                                                       const SizedBox(width: 8),
-//                                                       GestureDetector(
+//                                                     ),
+//                                                     Expanded(
+//                                                       child: Text(
+//                                                         bids[index]['points']!,
+//                                                         textAlign:
+//                                                             TextAlign.center,
+//                                                         style: TextStyle(
+//                                                           fontSize: 12,
+//                                                           fontWeight:
+//                                                           FontWeight.w600,
+//                                                         ),
+//                                                       ),
+//                                                     ),
+//                                                     Expanded(
+//                                                       child: Text(
+//                                                         bids[index]['type']!,
+//                                                         textAlign:
+//                                                             TextAlign.center,
+//                                                         style: TextStyle(
+//                                                           fontSize: 12,
+//                                                           fontWeight:
+//                                                           FontWeight.w600,
+//                                                         ),
+//                                                       ),
+//                                                     ),
+//                                                     Expanded(
+//                                                       child: GestureDetector(
 //                                                         onTap: () =>
 //                                                             _deleteBid(index),
 //                                                         child: const Icon(
 //                                                           Icons.delete,
 //                                                           color: Colors.red,
-//                                                           size: 20,
+//                                                           size:
+//                                                               20, // Smaller delete icon
 //                                                         ),
 //                                                       ),
-//                                                     ],
-//                                                   ),
+//                                                     ),
+//                                                   ],
 //                                                 ),
-//                                               ],
-//                                             ),
-//                                           ),
-//                                         ),
-//                                       );
-//                                     },
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-//                           ),
-
-//                           const SizedBox(height: 10),
-
-//                           // Submit Button with Consumer
-//                           Consumer<FullSangamProvider>(
-//                             builder: (context, provider, child) {
-//                               return provider.isLoading
-//                                   ? CircularProgressIndicator()
-//                                   : SubmitButton(
-//                                       data: "Submit",
-//                                       onPressed: () {
-//                                         if (bids.isNotEmpty) {
-//                                           _submitAllBids(context);
-//                                         } else {
-//                                           ScaffoldMessenger.of(context).showSnackBar(
-//                                             SnackBar(
-//                                               content: Text("Please add at least one bid"),
-//                                               backgroundColor: Colors.red,
+//                                               ),
 //                                             ),
 //                                           );
-//                                         }
-//                                       },
-//                                     );
-//                             },
+//                                         },
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+
+//                               const SizedBox(height: 10),
+
+//                               // Submit Button with Consumer
+//                               Consumer<FullSangamProvider>(
+//                                 builder: (context, provider, child) {
+//                                   return provider.isLoading
+//                                       ? const CircularProgressIndicator()
+//                                       : SubmitButton(
+//                                           data: "Submit",
+//                                           onPressed: () {
+//                                             if (bids.isNotEmpty) {
+//                                               _showConfirmationDialog(
+//                                                 context,
+//                                                 provider,
+//                                               );
+//                                             } else {
+//                                               ScaffoldMessenger.of(
+//                                                 context,
+//                                               ).showSnackBar(
+//                                                 SnackBar(
+//                                                   content: Text(
+//                                                     "Please add at least one bid",
+//                                                   ),
+//                                                   backgroundColor: Colors.red,
+//                                                 ),
+//                                               );
+//                                             }
+//                                           },
+//                                         );
+//                                 },
+//                               ),
+//                               SizedBox(
+//                                 height:
+//                                     MediaQuery.of(context).viewInsets.bottom > 0
+//                                     ? 40
+//                                     : 60,
+//                               ),
+//                             ],
 //                           ),
-//                           SizedBox(height: 40),
-//                         ],
+//                         ),
 //                       ),
 //                     ),
-//                   ),
-//                 );
-//               },
+//                   ],
+//                 ),
+//               ),
 //             ),
 //           );
 //         },
@@ -832,7 +1020,7 @@ class _FullSangamState extends State<FullSangam> {
           child: Material(
             elevation: 4,
             child: Container(
-              constraints: const BoxConstraints(maxHeight: 200),
+              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.25),
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(color: Colors.grey),
@@ -852,9 +1040,9 @@ class _FullSangamState extends State<FullSangam> {
                         final number = _filteredOpenPannaNumbers[index];
                         return SizedBox(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 7,
-                              horizontal: 15,
+                            padding: EdgeInsets.symmetric(
+                              vertical: MediaQuery.of(context).size.height * 0.01,
+                              horizontal: MediaQuery.of(context).size.width * 0.04,
                             ),
                             child: GestureDetector(
                               onTap: () {
@@ -871,26 +1059,11 @@ class _FullSangamState extends State<FullSangam> {
                               },
                               child: Text(
                                 number.toString(),
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
                               ),
                             ),
                           ),
                         );
-                        // ListTile(
-                        //   title: Text(number.toString()),
-                        //   onTap: () {
-                        //     setState(() {
-                        //       _openPannaController.text = number.toString();
-                        //       _openPannaController.selection =
-                        //           TextSelection.fromPosition(
-                        //             TextPosition(
-                        //               offset: _openPannaController.text.length,
-                        //             ),
-                        //           );
-                        //     });
-                        //     _removeOpenPannaOverlay();
-                        //   },
-                        // );
                       },
                     ),
             ),
@@ -958,7 +1131,7 @@ class _FullSangamState extends State<FullSangam> {
           child: Material(
             elevation: 4,
             child: Container(
-              constraints: const BoxConstraints(maxHeight: 200),
+              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.25),
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(color: Colors.grey),
@@ -978,9 +1151,9 @@ class _FullSangamState extends State<FullSangam> {
                         final number = _filteredClosePannaNumbers[index];
                         return SizedBox(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 7,
-                              horizontal: 15,
+                            padding: EdgeInsets.symmetric(
+                              vertical: MediaQuery.of(context).size.height * 0.01,
+                              horizontal: MediaQuery.of(context).size.width * 0.04,
                             ),
                             child: GestureDetector(
                               onTap: () {
@@ -998,23 +1171,11 @@ class _FullSangamState extends State<FullSangam> {
                               },
                               child: Text(
                                 number.toString(),
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
                               ),
                             ),
                           ),
                         );
-                        // ListTile(
-                        //   title: Text(number.toString()),
-                        //   onTap: () {
-                        //     setState(() {
-                        //       _closePannaController.text = number.toString();
-                        //       _closePannaController.selection = TextSelection.fromPosition(
-                        //         TextPosition(offset: _closePannaController.text.length),
-                        //       );
-                        //     });
-                        //     _removeClosePannaOverlay();
-                        //   },
-                        // );
                       },
                     ),
             ),
@@ -1066,8 +1227,6 @@ class _FullSangamState extends State<FullSangam> {
   }
 
   void _submitAllBids(BuildContext context, FullSangamProvider provider) {
-    //final provider = Provider.of<FullSangamProvider>(context, listen: false);
-
     FocusScope.of(context).unfocus();
 
     for (var bid in bids) {
@@ -1085,6 +1244,8 @@ class _FullSangamState extends State<FullSangam> {
     setState(() {
       bids.clear();
     });
+
+    Navigator.pop(context);
   }
 
   void _showConfirmationDialog(
@@ -1115,6 +1276,9 @@ class _FullSangamState extends State<FullSangam> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    
     return ChangeNotifierProvider(
       create: (context) => FullSangamProvider(),
       child: Consumer<FullSangamProvider>(
@@ -1125,24 +1289,30 @@ class _FullSangamState extends State<FullSangam> {
               backgroundColor: Colors.orange,
               title: Text(
                 widget.title,
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                style: TextStyle(
+                  fontWeight: FontWeight.w600, 
+                  fontSize: screenWidth * 0.045
+                ),
               ),
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  size: screenWidth * 0.06,
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               actions: [
                 Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
+                  margin: EdgeInsets.all(screenWidth * 0.02),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.03,
+                    vertical: screenHeight * 0.005,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(screenWidth * 0.1),
                   ),
                   child: Wallet(),
                 ),
@@ -1151,7 +1321,7 @@ class _FullSangamState extends State<FullSangam> {
             body: GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
               child: Padding(
-                padding: const EdgeInsets.all(15),
+                padding: EdgeInsets.all(screenWidth * 0.04),
                 child: Column(
                   children: [
                     // Date and Game Name
@@ -1159,42 +1329,42 @@ class _FullSangamState extends State<FullSangam> {
                       children: [
                         Expanded(
                           child: Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: EdgeInsets.all(screenWidth * 0.03),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Colors.orange,
                                 width: 2,
                               ),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(screenWidth * 0.03),
                             ),
                             child: Center(
                               child: Text(
                                 widget.gameName,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: screenWidth * 0.035,
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        SizedBox(width: screenWidth * 0.03),
                         Expanded(
                           child: Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: EdgeInsets.all(screenWidth * 0.03),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Colors.orange,
                                 width: 2,
                               ),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(screenWidth * 0.03),
                             ),
                             child: Center(
                               child: Text(
                                 "OPEN",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: screenWidth * 0.035,
                                 ),
                               ),
                             ),
@@ -1202,12 +1372,12 @@ class _FullSangamState extends State<FullSangam> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 15),
+                    SizedBox(height: screenHeight * 0.02),
 
                     Expanded(
                       child: SingleChildScrollView(
                         padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                          bottom: MediaQuery.of(context).viewInsets.bottom + screenHeight * 0.02,
                         ),
                         child: Form(
                           key: _globalKey,
@@ -1215,25 +1385,23 @@ class _FullSangamState extends State<FullSangam> {
                             children: [
                               // Open Panna field
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const SizedBox(width: 10),
+                                  SizedBox(width: screenWidth * 0.02),
                                   Text(
                                     "Enter Open Pana: ",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
+                                      fontSize: screenWidth * 0.035,
                                     ),
                                   ),
-                                  const SizedBox(width: 50),
+                                  SizedBox(width: screenWidth * 0.1),
                                   Expanded(
                                     child: CompositedTransformTarget(
                                       link: _openPannaLayerLink,
                                       child: GestureDetector(
                                         onTap: () {
-                                          FocusScope.of(
-                                            context,
-                                          ).requestFocus(_openPannaFocusNode);
+                                          FocusScope.of(context).requestFocus(_openPannaFocusNode);
                                           _showOpenPannaDropdownOverlay();
                                         },
                                         child: CustomTextfieldScreen1(
@@ -1267,29 +1435,27 @@ class _FullSangamState extends State<FullSangam> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
+                              SizedBox(height: screenHeight * 0.015),
 
                               // Close Panna field
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const SizedBox(width: 10),
+                                  SizedBox(width: screenWidth * 0.02),
                                   Text(
                                     "Enter Close Pana: ",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
+                                      fontSize: screenWidth * 0.035,
                                     ),
                                   ),
-                                  const SizedBox(width: 43),
+                                  SizedBox(width: screenWidth * 0.1),
                                   Expanded(
                                     child: CompositedTransformTarget(
                                       link: _closePannaLayerLink,
                                       child: GestureDetector(
                                         onTap: () {
-                                          FocusScope.of(
-                                            context,
-                                          ).requestFocus(_closePannaFocusNode);
+                                          FocusScope.of(context).requestFocus(_closePannaFocusNode);
                                           _showClosePannaDropdownOverlay();
                                         },
                                         child: CustomTextfieldScreen1(
@@ -1324,19 +1490,20 @@ class _FullSangamState extends State<FullSangam> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
+                              SizedBox(height: screenHeight * 0.015),
 
                               // Enter Points
                               Row(
                                 children: [
-                                  const SizedBox(width: 10),
+                                  SizedBox(width: screenWidth * 0.02),
                                   Text(
                                     "Enter Points: ",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
+                                      fontSize: screenWidth * 0.035,
                                     ),
                                   ),
-                                  const SizedBox(width: 95),
+                                  SizedBox(width: screenWidth * 0.2),
                                   Expanded(
                                     child: CustomTextfieldScreen1(
                                       controller: _pointsController,
@@ -1360,48 +1527,41 @@ class _FullSangamState extends State<FullSangam> {
                                 ],
                               ),
 
-                              const SizedBox(height: 15),
+                              SizedBox(height: screenHeight * 0.02),
 
                               // Add Bid Button
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   AddButton(
                                     data: "ADD BID",
                                     onPressed: _addBid,
                                   ),
+                                  SizedBox(width: screenWidth * 0.02)
                                 ],
                               ),
-                              const SizedBox(height: 15),
+                              SizedBox(height: screenHeight * 0.02),
 
                               // Bid List Table
                               Container(
                                 constraints: BoxConstraints(
-                                  maxHeight:
-                                      MediaQuery.of(context).size.height *
-                                      0.4, // Reduced height
+                                  maxHeight: screenHeight * 0.3,
                                 ),
-
                                 child: Column(
                                   children: [
                                     // Table header
                                     Container(
-                                      // padding: const EdgeInsets.symmetric(
-                                      //   vertical: 8,
-                                      //   horizontal: 10,
-                                      // ),
                                       child: Padding(
-                                        padding: const EdgeInsets.only(top: 8),
+                                        padding: EdgeInsets.only(top: screenHeight * 0.01),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: const [
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
                                             Expanded(
                                               child: Text(
                                                 "Digit",
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: screenWidth * 0.035,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -1411,7 +1571,7 @@ class _FullSangamState extends State<FullSangam> {
                                                 "Amount",
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: screenWidth * 0.035,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -1421,7 +1581,7 @@ class _FullSangamState extends State<FullSangam> {
                                                 "Type",
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: screenWidth * 0.035,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -1431,7 +1591,7 @@ class _FullSangamState extends State<FullSangam> {
                                                 "Delete",
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: screenWidth * 0.035,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -1441,10 +1601,7 @@ class _FullSangamState extends State<FullSangam> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.all(
-                                        MediaQuery.of(context).size.width *
-                                            0.02,
-                                      ),
+                                      padding: EdgeInsets.all(screenWidth * 0.01),
                                       child: const Divider(
                                         height: 1,
                                         color: Colors.black,
@@ -1456,69 +1613,61 @@ class _FullSangamState extends State<FullSangam> {
                                         itemCount: bids.length,
                                         itemBuilder: (context, index) {
                                           return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 4,
-                                              horizontal: 8,
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: screenHeight * 0.005,
+                                              horizontal: screenWidth * 0.02,
                                             ),
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                color: Colors
-                                                    .grey[100], // Lighter background
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
+                                                color: Colors.grey[100],
+                                                borderRadius: BorderRadius.circular(screenWidth * 0.02),
                                               ),
                                               child: ListTile(
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 8,
-                                                    ),
+                                                contentPadding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.02,
+                                                ),
                                                 minVerticalPadding: 0,
-                                                dense:
-                                                    true, // Makes the list tile more compact
+                                                dense: true,
                                                 title: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     Expanded(
                                                       child: Text(
                                                         bids[index]['displayDigit']!,
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                        textAlign: TextAlign.center,
                                                         style: TextStyle(
-                                                          fontSize: 12,
+                                                          fontSize: screenWidth * 0.03,
+                                                          fontWeight: FontWeight.w600,
                                                         ),
                                                       ),
                                                     ),
                                                     Expanded(
                                                       child: Text(
                                                         bids[index]['points']!,
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                        textAlign: TextAlign.center,
                                                         style: TextStyle(
-                                                          fontSize: 12,
+                                                          fontSize: screenWidth * 0.03,
+                                                          fontWeight: FontWeight.w600,
                                                         ),
                                                       ),
                                                     ),
                                                     Expanded(
                                                       child: Text(
                                                         bids[index]['type']!,
-                                                        textAlign:
-                                                            TextAlign.center,
+                                                        textAlign: TextAlign.center,
                                                         style: TextStyle(
-                                                          fontSize: 12,
+                                                          fontSize: screenWidth * 0.03,
+                                                          fontWeight: FontWeight.w600,
                                                         ),
                                                       ),
                                                     ),
                                                     Expanded(
                                                       child: GestureDetector(
-                                                        onTap: () =>
-                                                            _deleteBid(index),
-                                                        child: const Icon(
+                                                        onTap: () => _deleteBid(index),
+                                                        child: Icon(
                                                           Icons.delete,
                                                           color: Colors.red,
-                                                          size:
-                                                              18, // Smaller delete icon
+                                                          size: screenWidth * 0.05,
                                                         ),
                                                       ),
                                                     ),
@@ -1534,7 +1683,7 @@ class _FullSangamState extends State<FullSangam> {
                                 ),
                               ),
 
-                              const SizedBox(height: 10),
+                              SizedBox(height: screenHeight * 0.02),
 
                               // Submit Button with Consumer
                               Consumer<FullSangamProvider>(
@@ -1550,9 +1699,7 @@ class _FullSangamState extends State<FullSangam> {
                                                 provider,
                                               );
                                             } else {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
+                                              ScaffoldMessenger.of(context).showSnackBar(
                                                 SnackBar(
                                                   content: Text(
                                                     "Please add at least one bid",
@@ -1566,10 +1713,9 @@ class _FullSangamState extends State<FullSangam> {
                                 },
                               ),
                               SizedBox(
-                                height:
-                                    MediaQuery.of(context).viewInsets.bottom > 0
-                                    ? 20
-                                    : 40,
+                                height: MediaQuery.of(context).viewInsets.bottom > 0
+                                    ? screenHeight * 0.05
+                                    : screenHeight * 0.07,
                               ),
                             ],
                           ),

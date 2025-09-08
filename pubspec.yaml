@@ -43,6 +43,7 @@ dependencies:
   shared_preferences: ^2.5.3
   workmanager: ^0.9.0+3
   awesome_notifications: ^0.10.1
+  #webview_flutter: ^4.13.0
   # flutter_local_notifications: ^17.0.0
   # app_settings: ^6.1.1
   # permission_handler: ^12.0.1
@@ -62,7 +63,7 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/dmbossBlackLogo.jpg"
+  image_path: "assets/images/dmboss.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

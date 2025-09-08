@@ -41,8 +41,7 @@ class BulkDpBetProvider extends ChangeNotifier {
     _isLoading = false;
 
     if (response != null) {
-      print("--------------------------------------");
-      print(response);
+      
       _betResponse = response;
       showCustomSnackBar(
         context: context,

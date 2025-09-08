@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/deposite_manual_points.dart';
+import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,11 +56,11 @@ class AddDepositePointsManual {
       }
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Error: $errorMessage"),
-            backgroundColor: Colors.red,
-          ),
+        showCustomSnackBar(
+          context: context,
+          message: errorMessage,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 3,
         );
       }
 
@@ -77,9 +78,12 @@ class AddDepositePointsManual {
         errorMessage = e.toString();
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
+      showCustomSnackBar(
+          context: context,
+          message: errorMessage,
+          backgroundColor: Colors.redAccent,
+          durationSeconds: 3,
+        );
 
       return null;
     }
