@@ -275,16 +275,16 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 5),
 
-                Text(
-                  "Method: ${deposit.method}",
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
+                // Text(
+                //   "Method: ${deposit.method}",
+                //   style: const TextStyle(
+                //     fontSize: 12,
+                //     fontWeight: FontWeight.w500,
+                //   ),
+                // ),
+                // const SizedBox(height: 8),
 
                 Text(
                   _getStatusMessage(deposit.status ?? 0),

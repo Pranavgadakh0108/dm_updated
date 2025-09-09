@@ -60,15 +60,15 @@ class GameCard extends StatelessWidget {
                     Text(
                       "Open : $openTime",
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 11.4,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(width: 12),
+                    SizedBox(width: 10),
                     Text(
                       "Close : $closeTime",
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 11.4,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

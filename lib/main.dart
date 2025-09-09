@@ -27,6 +27,7 @@ import 'package:dmboss/provider/mobile_exist_provider.dart';
 import 'package:dmboss/provider/notification_admin_provider.dart';
 import 'package:dmboss/provider/payment_gateway_provider.dart';
 import 'package:dmboss/provider/payment_provider.dart';
+import 'package:dmboss/provider/payment_status_provider.dart';
 import 'package:dmboss/provider/pending_withdraw_count.dart';
 import 'package:dmboss/provider/register_user_provider.dart';
 import 'package:dmboss/provider/transaction_history_provider.dart';
@@ -53,7 +54,7 @@ void main() async {
   // Initialize Workmanager with the callback dispatcher from NotificationPollingService
   Workmanager().initialize(
     NotificationPollingService.callbackDispatcher,
-    isInDebugMode: true,
+    isInDebugMode: false,
   );
 
   // Initialize notifications
@@ -100,12 +101,13 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => GetPendingDepositeCountProvider(),
         ),
-         ChangeNotifierProvider(create: (_) => GetImageSlidersProvider()),
+        ChangeNotifierProvider(create: (_) => GetImageSlidersProvider()),
         ChangeNotifierProvider(create: (_) => GetPaymentModeProvider()),
         ChangeNotifierProvider(create: (_) => GetNotificationsProvider()),
         ChangeNotifierProvider(create: (_) => GetGamesChartProvider()),
         ChangeNotifierProvider(create: (_) => GetNotificationsAdminProvider()),
-        ChangeNotifierProvider(create: (_)=> PaymentProvider())
+        ChangeNotifierProvider(create: (_) => PaymentProvider()),
+        ChangeNotifierProvider(create: (_) => PaymentStatusProvider()),
       ],
       child: const MyApp(),
     ),

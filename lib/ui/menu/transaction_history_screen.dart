@@ -243,11 +243,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             print("transaction gametype :${transaction.gameType}");
             final isDebit = transaction.amount < 0;
             final amountColor =
-                isDebit || transaction.narration!.toLowerCase().contains('bet')
+                isDebit || transaction.narration!.toLowerCase().contains('bet') || transaction.narration!.toLowerCase().contains('withdraw')
                 ? Colors.red
                 : Colors.green;
             final amountPrefix =
-                isDebit || transaction.narration!.toLowerCase().contains('bet')
+                isDebit || transaction.narration!.toLowerCase().contains('bet') || transaction.narration!.toLowerCase().contains('withdraw')
                 ? '-'
                 : '+';
 

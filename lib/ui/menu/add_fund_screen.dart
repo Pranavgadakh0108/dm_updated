@@ -196,7 +196,7 @@ class _AddFundScreenState extends State<AddFundScreen> {
                                         _amountController.text,
                                       );
                                     });
-                            }
+                            
                             paymentProvider.gamesList?.data.active == "MANUAL"
                                 ? Navigator.push(
                                     context,
@@ -217,7 +217,7 @@ class _AddFundScreenState extends State<AddFundScreen> {
                                           ),
                                     ),
                                   );
-                          },
+                          }},
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange,
                             minimumSize: Size(double.infinity, 50),

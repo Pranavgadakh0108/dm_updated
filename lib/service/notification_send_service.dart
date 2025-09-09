@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 class NotificationService {
   static Future<void> initialize() async {
     await AwesomeNotifications().initialize(
-      // Set the icon (use null for default app icon)
-      null,
+      'resource://drawable/dmboss',
       [
         NotificationChannel(
           channelKey: 'new_entries_channel',
@@ -17,16 +16,26 @@ class NotificationService {
           channelShowBadge: true,
           playSound: true,
           criticalAlerts: true,
+          // Enable background execution
+          enableVibration: true,
+          enableLights: true,
         ),
       ],
-      // Channel groups (optional)
       channelGroups: [],
-      // Debug mode
       debug: false,
     );
 
-    // Request permissions
-    await AwesomeNotifications().requestPermissionToSendNotifications();
+    // Request permissions for background notifications
+    await AwesomeNotifications().requestPermissionToSendNotifications(
+      permissions: [
+        NotificationPermission.Alert,
+        NotificationPermission.Sound,
+        NotificationPermission.Badge,
+        NotificationPermission.Vibration,
+        NotificationPermission.Light,
+        NotificationPermission.CriticalAlert,
+      ],
+    );
 
     // Set up notification click listener
     AwesomeNotifications().setListeners(

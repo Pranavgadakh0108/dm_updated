@@ -1,14 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:dmboss/model/payment_gateway_response.dart';
-import 'package:dmboss/model/payment_model.dart';
-import 'package:dmboss/service/payment_service.dart';
-import 'package:dmboss/widgets/navigation_bar.dart';
+import 'package:dmboss/model/payment_status_model.dart';
+import 'package:dmboss/model/payment_status_model_redirected.dart';
+import 'package:dmboss/model/payment_status_model_tnxid.dart';
+import 'package:dmboss/service/payment_status_service.dart';
 import 'package:flutter/material.dart';
 
-class PaymentProvider extends ChangeNotifier {
+class PaymentStatusProvider extends ChangeNotifier {
   bool _isLoading = false;
-  PaymentGatewayResponse? _paymentGatewayResponse;
+  PaymentStatusModelRedirected? _paymentGatewayResponse;
   String? _errorMessage;
   String? _successMessage;
 
@@ -17,10 +17,9 @@ class PaymentProvider extends ChangeNotifier {
   String? _phone;
   String? _redirectUrl;
 
-  String? _orderId;
-
   bool get isLoading => _isLoading;
-  PaymentGatewayResponse? get paymentGatewayResponse => _paymentGatewayResponse;
+  PaymentStatusModelRedirected? get paymentGatewayResponse =>
+      _paymentGatewayResponse;
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
 
@@ -28,8 +27,6 @@ class PaymentProvider extends ChangeNotifier {
   String get name => _name ?? '';
   String get phone => _phone ?? '';
   String get redirectUrl => _redirectUrl ?? '';
-
-  String get orderId => _orderId ?? '';
 
   void setAmount(String value) {
     _amount = value.isNotEmpty ? value : null;
@@ -48,11 +45,6 @@ class PaymentProvider extends ChangeNotifier {
 
   void setRedirectUrl(String value) {
     _redirectUrl = value.isNotEmpty ? value : null;
-    notifyListeners();
-  }
-  
-  void setOrderId(String value){
-    _orderId = value.isNotEmpty ? value : null;
     notifyListeners();
   }
 
@@ -86,7 +78,8 @@ class PaymentProvider extends ChangeNotifier {
 
   Future<void> postPaymentGateway(
     BuildContext context,
-    PaymentModel paymentGateWayIntegration,
+    PaymentStatusModel paymentGateWayIntegration,
+    PaymentStatusModelTnxRedirected paymentStatusModelTnxRedirected,
     String method,
   ) async {
     _isLoading = true;
@@ -95,16 +88,15 @@ class PaymentProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final service = PaymentService();
+      final service = PaymentStatusService();
 
-      final result = await service
-          .postPaymentGateway(context, paymentGateWayIntegration, method)
-          .then((_) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => AppNavigationBar()),
-            );
-          });
+      final result = await service.postPaymentGateway(
+        context,
+        paymentGateWayIntegration,
+        paymentStatusModelTnxRedirected,
+        method,
+
+      );
 
       if (result != null) {
         _paymentGatewayResponse = result;

@@ -122,7 +122,9 @@ class _BulkSpBetSummaryDialogState extends State<BulkSpBetSummaryDialog> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Wallet Balance: ₹${walletBalance.toString()}"),
+                    Text("Before Bid: ${walletBalance.toString()}"),
+                    if(hasSufficientBalance)
+                    Text("After Bid: ${walletBalance - widget.totalBidAmount}"),
                     if (!hasSufficientBalance)
                       const Text(
                         "Insufficient balance!",

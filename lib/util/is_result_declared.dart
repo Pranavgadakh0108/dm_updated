@@ -117,7 +117,12 @@
 
 import 'package:flutter/material.dart';
 
-bool isGameActive(String resultStatus, String openTime, String closeTime, {String? resultDeclaredTime}) {
+bool isGameActive(
+  String resultStatus,
+  String openTime,
+  String closeTime, {
+  String? resultDeclaredTime,
+}) {
   try {
     print(
       'Received - Status: "$resultStatus", Open: "$openTime", Close: "$closeTime", Result Declared: "$resultDeclaredTime"',
@@ -132,7 +137,12 @@ bool isGameActive(String resultStatus, String openTime, String closeTime, {Strin
       );
 
       // Try to auto-correct by assuming parameters are in wrong order
-      return _tryAutoCorrectParameters(resultStatus, openTime, closeTime, resultDeclaredTime: resultDeclaredTime);
+      return _tryAutoCorrectParameters(
+        resultStatus,
+        openTime,
+        closeTime,
+        resultDeclaredTime: resultDeclaredTime,
+      );
     }
 
     final status = resultStatus.toUpperCase();
@@ -156,20 +166,28 @@ bool isGameActive(String resultStatus, String openTime, String closeTime, {Strin
     if (resultDeclaredTime != null && resultDeclaredTime.isNotEmpty) {
       final declaredTimeOfDay = _parseTimeOfDay(resultDeclaredTime);
       final scheduledCloseTimeOfDay = _parseTimeOfDay(closeTime);
-      
+
       // If result was declared before the scheduled close time
       if (_isBeforeTimeOfDay(declaredTimeOfDay, scheduledCloseTimeOfDay)) {
-        print('Result declared early at ${_formatTimeOfDay(declaredTimeOfDay)} '
-              '(before scheduled close time ${_formatTimeOfDay(scheduledCloseTimeOfDay)})');
-        
+        print(
+          'Result declared early at ${_formatTimeOfDay(declaredTimeOfDay)} '
+          '(before scheduled close time ${_formatTimeOfDay(scheduledCloseTimeOfDay)})',
+        );
+
         // Check if current time is before the early declaration time
-        final isBeforeDeclaration = _isBeforeTimeOfDay(currentTimeOfDay, declaredTimeOfDay);
+        final isBeforeDeclaration = _isBeforeTimeOfDay(
+          currentTimeOfDay,
+          declaredTimeOfDay,
+        );
         print('Current time before declaration time: $isBeforeDeclaration');
-        
+
         // Game is only active if current time is BEFORE the early declaration time
         if (status == 'OPEN_CLOSE') {
           final openTimeOfDay = _parseTimeOfDay(openTime);
-          final isBeforeOpen = _isBeforeTimeOfDay(currentTimeOfDay, openTimeOfDay);
+          final isBeforeOpen = _isBeforeTimeOfDay(
+            currentTimeOfDay,
+            openTimeOfDay,
+          );
           return isBeforeOpen && isBeforeDeclaration;
         } else if (status == 'CLOSE_CLOSE') {
           return isBeforeDeclaration;
@@ -202,6 +220,19 @@ bool isGameActive(String resultStatus, String openTime, String closeTime, {Strin
   }
 }
 
+bool isAllResultDeclared(
+  String open,
+  String close,
+  String openPanna,
+  String closePanna,
+) {
+  if (close != "" && open != "" && openPanna != "" && closePanna != "") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool _tryAutoCorrectParameters(
   String possibleTime,
   String possibleOpenTime,
@@ -228,10 +259,14 @@ bool _tryAutoCorrectParameters(
       if (resultDeclaredTime != null && resultDeclaredTime.isNotEmpty) {
         final declaredTimeOfDay = _parseTimeOfDay(resultDeclaredTime);
         if (_isBeforeTimeOfDay(declaredTimeOfDay, closeTimeOfDay)) {
-          final isBeforeDeclaration = _isBeforeTimeOfDay(currentTimeOfDay, declaredTimeOfDay);
-          
+          final isBeforeDeclaration = _isBeforeTimeOfDay(
+            currentTimeOfDay,
+            declaredTimeOfDay,
+          );
+
           if (status == 'OPEN_CLOSE') {
-            return _isBeforeTimeOfDay(currentTimeOfDay, openTimeOfDay) && isBeforeDeclaration;
+            return _isBeforeTimeOfDay(currentTimeOfDay, openTimeOfDay) &&
+                isBeforeDeclaration;
           } else if (status == 'CLOSE_CLOSE') {
             return isBeforeDeclaration;
           }

@@ -1241,14 +1241,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       game?.result.status.name ?? "",
                                       game?.open ?? "",
                                       game?.close ?? "",
+                                    ) ||
+                                    isAllResultDeclared(
+                                      game?.result.open ?? "",
+                                      game?.result.close ?? "",
+                                      game?.result.openPanna ?? "",
+                                      game?.result.closePanna ?? "",
                                     )) {
-                                  print(
-                                    isGameActive(
-                                      game?.result.status.name ?? "",
-                                      game?.open ?? "",
-                                      game?.close ?? "",
-                                    ),
-                                  );
                                   showMarketCloseDialog(context);
                                 } else {
                                   print(

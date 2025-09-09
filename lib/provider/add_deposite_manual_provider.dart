@@ -94,8 +94,11 @@ class AddDepositePointsManualProvider extends ChangeNotifier {
 
       _isLoading = false;
 
-      if (result != null) {
+      print("result:---$result");
+      //if (result != null) {
+      if (result == null) {
         _depositePoints = result;
+        
         _successMessage = 'Deposit points submitted successfully';
 
         clearFields();

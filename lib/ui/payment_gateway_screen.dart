@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:dmboss/model/payment_gateway_model.dart';
 import 'package:dmboss/model/payment_model.dart';
 import 'package:dmboss/provider/get_qr_code_provider.dart';
 import 'package:dmboss/provider/payment_gateway_provider.dart';
@@ -221,9 +220,7 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
                                   context,
                                   paymentGatewayModel,
                                   widget.mode ?? "MANUAL",
-                                ).then((_){
-                                  
-                                });
+                                );
                               }
                             },
                             style: ElevatedButton.styleFrom(

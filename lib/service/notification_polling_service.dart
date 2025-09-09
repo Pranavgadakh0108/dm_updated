@@ -13,7 +13,7 @@ class NotificationPollingService {
   static String? _lastNotificationId;
 
   // Maximum age for notifications to be considered "recent" (5 minutes)
-  static const Duration maxNotificationAge = Duration(minutes: 2);
+  static const Duration maxNotificationAge = Duration(minutes: 5);
 
   // Track app state
   static bool _isAppInForeground = false;
@@ -83,7 +83,7 @@ class NotificationPollingService {
       await Workmanager().registerPeriodicTask(
         checkNotificationsTask,
         checkNotificationsTask,
-        frequency: Duration(minutes: 3),
+        frequency: Duration(minutes: 10), // More frequent background checks
         constraints: Constraints(
           networkType: NetworkType.connected,
           requiresBatteryNotLow: false,
