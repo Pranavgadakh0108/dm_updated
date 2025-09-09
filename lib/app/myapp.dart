@@ -1,8 +1,10 @@
-import 'package:dmboss/service/notification_polling_service.dart';
+// app/myapp.dart
 import 'package:dmboss/ui/splash_screen.dart';
 import 'package:flutter/material.dart';
 
-final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -27,22 +29,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    // Update app state in notification service
-    switch (state) {
-      case AppLifecycleState.resumed:
-        NotificationPollingService.setAppState(true);
-        NotificationPollingService.startPolling();
-        break;
-      case AppLifecycleState.inactive:
-      case AppLifecycleState.paused:
-      case AppLifecycleState.detached:
-        NotificationPollingService.setAppState(false);
-        NotificationPollingService.stopPolling();
-        break;
-      case AppLifecycleState.hidden:
-        // Handle if needed
-        break;
-    }
+    // You can keep this for other lifecycle needs, but notification handling
+    // is now done by FCM automatically
+    print('App lifecycle state changed to: $state');
   }
 
   @override

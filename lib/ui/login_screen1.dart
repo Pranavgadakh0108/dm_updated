@@ -42,7 +42,9 @@ class _LoginScreen1State extends State<LoginScreen1> {
   @override
   void initState() {
     super.initState();
-    _loadTransactionHistory();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadTransactionHistory();
+    });
   }
 
   Future<void> _loadTransactionHistory() async {

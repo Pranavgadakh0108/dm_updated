@@ -148,7 +148,7 @@ class PaymentService {
 
         // Determine which URL to use for payment
         String? paymentUrl;
-        if (method == "Finixpay") {
+        if (method == "Finixpay" || method == "Safeppay") {
           paymentUrl = payUrl ?? data?['deeplink'] as String?;
         } else {
           paymentUrl = upiIntent ?? paymentLink;

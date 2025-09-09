@@ -228,6 +228,10 @@ bool isAllResultDeclared(
 ) {
   if (close != "" && open != "" && openPanna != "" && closePanna != "") {
     return true;
+  } else if (close != "" && closePanna != "") {
+    return true;
+  } else if (open != "" && openPanna != "") {
+    return true;
   } else {
     return false;
   }

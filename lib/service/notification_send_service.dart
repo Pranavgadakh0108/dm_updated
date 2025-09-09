@@ -16,7 +16,6 @@ class NotificationService {
           channelShowBadge: true,
           playSound: true,
           criticalAlerts: true,
-          // Enable background execution
           enableVibration: true,
           enableLights: true,
         ),

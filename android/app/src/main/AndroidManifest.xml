@@ -29,6 +29,17 @@
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true">
+
+    <!-- AwesomeNotifications Background Service -->
+        <service
+            android:name="com.awesome_notifications.services.BackgroundService"
+            android:enabled="true"
+            android:exported="false" />
+        
+        <service
+            android:name="com.awesome_notifications.services.DartBackgroundService"
+            android:enabled="true"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

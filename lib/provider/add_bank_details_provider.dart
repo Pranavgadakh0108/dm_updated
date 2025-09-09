@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'package:dmboss/service/add_bank_details_service.dart';
 import 'package:dmboss/widgets/custom_snackbar.dart';
 //import 'package:dmboss/widgets/navigation_bar.dart';
@@ -79,16 +81,15 @@ class AddBankDetailsProvider extends ChangeNotifier {
       // .then((_) {
       //   Navigator.pushReplacement(
       //     context,
-      //     MaterialPageRoute(builder: (context) => AppNavigationBar()),
+      //     MaterialPageRoute(builder: (context) => WithdrawPoints()),
       //   );
-      // }
-      // );
+      // });
 
       _isLoading = false;
 
       if (result != null) {
         _bankDetails = result;
-       // _successMessage = 'Bank details added successfully';
+        // _successMessage = 'Bank details added successfully';
 
         clearFields();
         showCustomSnackBar(

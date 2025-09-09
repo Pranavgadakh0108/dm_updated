@@ -1,4 +1,7 @@
+// ignore_for_file: avoid_print, deprecated_member_use
+
 import 'dart:async';
+import 'package:dmboss/service/background_notification_service.dart';
 import 'package:dmboss/service/get_notifications_model.dart';
 import 'package:dmboss/service/notification_send_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,115 +15,166 @@ class NotificationPollingService {
   static DateTime? _lastChecked;
   static String? _lastNotificationId;
 
-  // Maximum age for notifications to be considered "recent" (5 minutes)
-  static const Duration maxNotificationAge = Duration(minutes: 5);
+  static Timer? _backgroundTimer;
+  static const Duration foregroundPollingInterval = Duration(minutes: 1);
+  static const Duration backgroundPollingInterval = Duration(minutes: 1);
+  static const Duration maxNotificationAge = Duration(minutes: 1);
 
-  // Track app state
   static bool _isAppInForeground = false;
 
-  // Background callback handler - MUST be a top-level function
   @pragma('vm:entry-point')
   static void callbackDispatcher() {
     Workmanager().executeTask((task, inputData) async {
-      print("Workmanager background task executed: $task");
+      print("Workmanager task started: $task");
 
-      switch (task) {
-        case checkNotificationsTask:
-          await _executeBackgroundCheck();
-          return true;
-        default:
-          return false;
+      try {
+        switch (task) {
+          case checkNotificationsTask:
+            await _executeBackgroundCheck();
+            return true;
+          default:
+            print("Unknown task: $task");
+            return false;
+        }
+      } catch (e, stackTrace) {
+        print("Error in Workmanager task: $e");
+        print("Stack trace: $stackTrace");
+        return false;
       }
     });
   }
 
-  // Separate method for background execution
-  @pragma('vm:entry-point')
-  static Future<void> _executeBackgroundCheck() async {
-    try {
-      print("Executing background notification check");
+  static void reducePollingFrequency() {
+    print("Reducing polling frequency for background");
 
-      // Initialize dependencies for background
-      WidgetsFlutterBinding.ensureInitialized();
+    // Stop foreground polling
+    _pollingTimer?.cancel();
+    _pollingTimer = null;
 
-      final service = GetNotificationsService();
-      final NotificationModel? result = await service.getNotifications();
+    _backgroundTimer ??= Timer.periodic(backgroundPollingInterval, (timer) {
+      print("Background polling triggered");
+      checkForNewNotifications();
+    });
+  }
 
-      if (result != null && result.success && result.data.isNotEmpty) {
-        await _processBackgroundNotifications(result.data);
-      }
-    } catch (e) {
-      print('Error in background notification check: $e');
-    }
+  static void startPolling() {
+    print("Starting foreground polling");
+
+    // Stop background polling
+    _backgroundTimer?.cancel();
+    _backgroundTimer = null;
+
+    // Stop any existing foreground polling
+    _pollingTimer?.cancel();
+
+    // Immediate check
+    checkForNewNotifications();
+
+    // Start periodic foreground polling
+    _pollingTimer = Timer.periodic(foregroundPollingInterval, (timer) {
+      print("Foreground polling triggered");
+      checkForNewNotifications();
+    });
+  }
+
+  static void stopPolling() {
+    print("Stopping all polling");
+    _pollingTimer?.cancel();
+    _pollingTimer = null;
+    _backgroundTimer?.cancel();
+    _backgroundTimer = null;
   }
 
   static Future<void> initialize() async {
     await _loadLastCheckedTime();
     await _loadLastNotificationId();
 
-    // Initialize Workmanager with the callback dispatcher
-    Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-
-    // Register the background task with more aggressive settings
+    await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+    await Future.delayed(Duration(seconds: 2));
     await _registerBackgroundTask();
 
-    // Start foreground polling
+    // Start with foreground polling by default
     startPolling();
+
+    print("NotificationPollingService initialized");
   }
 
-  // Method to update app state
   static void setAppState(bool isInForeground) {
     _isAppInForeground = isInForeground;
     print("App state changed: ${isInForeground ? 'Foreground' : 'Background'}");
+
+    // Automatically adjust polling based on app state
+    if (isInForeground) {
+      startPolling();
+    } else {
+      reducePollingFrequency();
+    }
   }
 
   static Future<void> _registerBackgroundTask() async {
     try {
-      // Cancel any existing task first to avoid duplicates
       await Workmanager().cancelByTag(checkNotificationsTask);
 
-      // Register periodic background task with more frequent checks
       await Workmanager().registerPeriodicTask(
         checkNotificationsTask,
         checkNotificationsTask,
-        frequency: Duration(minutes: 10), // More frequent background checks
+        frequency: Duration(minutes: 15),
+        initialDelay: Duration(seconds: 10),
         constraints: Constraints(
           networkType: NetworkType.connected,
           requiresBatteryNotLow: false,
           requiresCharging: false,
           requiresDeviceIdle: false,
         ),
-        initialDelay: Duration(seconds: 30),
-        existingWorkPolicy:
-            ExistingPeriodicWorkPolicy.replace, // Replace old tasks
+        existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
+        backoffPolicy: BackoffPolicy.linear,
+        backoffPolicyDelay: Duration(seconds: 30),
       );
 
-      print("Background notification task registered successfully");
-    } catch (e) {
-      print("Error registering background notification task: $e");
+      print("Background task registered successfully");
+    } catch (e, stackTrace) {
+      print("Error registering background task: $e");
+      print("Stack trace: $stackTrace");
+      await _registerOneTimeTask();
     }
   }
 
-  static void startPolling() {
-    stopPolling();
-
-    // Initial check
-    checkForNewNotifications();
-
-    // Set up periodic polling for foreground (less frequent in foreground)
-    _pollingTimer = Timer.periodic(Duration(minutes: 5), (timer) {
-      checkForNewNotifications();
-    });
+  static Future<void> _registerOneTimeTask() async {
+    try {
+      await Workmanager().registerOneOffTask(
+        "${checkNotificationsTask}_onetime",
+        checkNotificationsTask,
+        initialDelay: Duration(minutes: 15),
+        constraints: Constraints(networkType: NetworkType.connected),
+        existingWorkPolicy: ExistingWorkPolicy.replace,
+      );
+      print("One-time task registered as fallback");
+    } catch (e) {
+      print("Error registering one-time task: $e");
+    }
   }
 
-  static void stopPolling() {
-    _pollingTimer?.cancel();
-    _pollingTimer = null;
+  @pragma('vm:entry-point')
+  static Future<void> _executeBackgroundCheck() async {
+    try {
+      print("Executing WorkManager background check");
+
+      WidgetsFlutterBinding.ensureInitialized();
+      await BackgroundNotificationService.initializeForBackground();
+
+      final service = GetNotificationsService();
+      final NotificationModel? result = await service.getNotifications();
+
+      if (result != null && result.success && result.data.isNotEmpty) {
+        await _processNotifications(result.data, isBackground: true);
+      }
+    } catch (e) {
+      print('Error in background notification check: $e');
+    }
   }
 
   static Future<void> checkForNewNotifications() async {
     try {
-      // Check if notifications are enabled
       final bool notificationsEnabled = await _areNotificationsEnabled();
       if (!notificationsEnabled) {
         print("Notifications are disabled, skipping check");
@@ -131,7 +185,10 @@ class NotificationPollingService {
       final NotificationModel? result = await service.getNotifications();
 
       if (result != null && result.success && result.data.isNotEmpty) {
-        await _processRecentNotifications(result.data);
+        await _processNotifications(
+          result.data,
+          isBackground: !_isAppInForeground,
+        );
         _lastChecked = DateTime.now();
         await _saveLastCheckedTime();
       }
@@ -140,103 +197,87 @@ class NotificationPollingService {
     }
   }
 
-  // Separate processing for background to handle app state differences
-  static Future<void> _processBackgroundNotifications(
-    List<Datum> notifications,
-  ) async {
-    // Sort by creation date (newest first)
-    notifications.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  static Future<void> _processNotifications(
+    List<Datum> notifications, {
+    required bool isBackground,
+  }) async {
+    if (notifications.isEmpty) return;
 
-    // Get the most recent notification
+    notifications.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     final Datum mostRecentNotification = notifications.first;
 
-    // Check if the notification is too old to send
-    if (_isNotificationTooOld(mostRecentNotification.createdAt)) {
-      print(
-        "Background: Notification is too old: ${mostRecentNotification.title}",
-      );
-      // Still update the last known ID to avoid checking this again
-      _lastNotificationId = mostRecentNotification.id;
-      await _saveLastNotificationId();
-      return;
-    }
-
-    // If we have a last known notification ID, check if it's different
-    if (_lastNotificationId != null &&
-        _lastNotificationId == mostRecentNotification.id) {
-      print("Background: No new notifications since last check");
-      return;
-    }
-
-    // If this is the first time checking or we have a new notification
-    if (_lastNotificationId == null ||
-        _lastNotificationId != mostRecentNotification.id) {
-      // Send notification - this will work even when app is terminated
-      await NotificationService.showCustomNotification(
-        title: mostRecentNotification.title,
-        body: mostRecentNotification.message,
-        data: {
-          'type': 'new_notification',
-          'id': mostRecentNotification.id,
-          'title': mostRecentNotification.title,
-          'message': mostRecentNotification.message,
-          'isResult': mostRecentNotification.isResult.toString(),
-          'screen': 'home',
-          'from_background': 'true',
-        },
-      );
-
-      // Update last known notification ID
-      _lastNotificationId = mostRecentNotification.id;
-      await _saveLastNotificationId();
-
-      print("Background: Sent notification: ${mostRecentNotification.title}");
-    }
-  }
-
-  static Future<void> _processRecentNotifications(
-    List<Datum> notifications,
-  ) async {
-    // Similar processing but for foreground
-    notifications.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
-    final Datum mostRecentNotification = notifications.first;
+    print("Processing notification: ${mostRecentNotification.id}");
+    print("Last known ID: $_lastNotificationId");
+    print(
+      "Current notification age: ${DateTime.now().difference(mostRecentNotification.createdAt).inMinutes} minutes",
+    );
 
     if (_isNotificationTooOld(mostRecentNotification.createdAt)) {
       print(
-        "Foreground: Notification is too old: ${mostRecentNotification.title}",
+        "${isBackground ? 'Background' : 'Foreground'}: Notification is too old",
       );
       _lastNotificationId = mostRecentNotification.id;
       await _saveLastNotificationId();
       return;
     }
 
-    if (_lastNotificationId != null &&
-        _lastNotificationId == mostRecentNotification.id) {
-      print("Foreground: No new notifications since last check");
+    if (_lastNotificationId == mostRecentNotification.id) {
+      print(
+        "${isBackground ? 'Background' : 'Foreground'}: Already processed this notification",
+      );
       return;
     }
 
-    if (_lastNotificationId == null ||
-        _lastNotificationId != mostRecentNotification.id) {
-      await NotificationService.showCustomNotification(
-        title: mostRecentNotification.title,
-        body: mostRecentNotification.message,
-        data: {
-          'type': 'new_notification',
-          'id': mostRecentNotification.id,
-          'title': mostRecentNotification.title,
-          'message': mostRecentNotification.message,
-          'isResult': mostRecentNotification.isResult.toString(),
-          'screen': 'home',
-          'from_background': 'false',
-        },
-      );
+    String? _processingNotificationId;
+    if (_processingNotificationId == mostRecentNotification.id) {
+      print("Already processing this notification, skipping duplicate");
+      return;
+    }
 
+    _processingNotificationId = mostRecentNotification.id;
+
+    try {
+      if (isBackground) {
+        await BackgroundNotificationService.showBackgroundNotification(
+          title: mostRecentNotification.title,
+          body: mostRecentNotification.message,
+          data: {
+            'type': 'new_notification',
+            'id': mostRecentNotification.id,
+            'title': mostRecentNotification.title,
+            'message': mostRecentNotification.message,
+            'isResult': mostRecentNotification.isResult.toString(),
+            'screen': 'home',
+            'from_background': 'true',
+          },
+        );
+      } else {
+        await NotificationService.showCustomNotification(
+          title: mostRecentNotification.title,
+          body: mostRecentNotification.message,
+          data: {
+            'type': 'new_notification',
+            'id': mostRecentNotification.id,
+            'title': mostRecentNotification.title,
+            'message': mostRecentNotification.message,
+            'isResult': mostRecentNotification.isResult.toString(),
+            'screen': 'home',
+            'from_background': 'false',
+          },
+        );
+      }
+
+      // Update the last notification ID immediately
       _lastNotificationId = mostRecentNotification.id;
       await _saveLastNotificationId();
 
-      print("Foreground: Sent notification: ${mostRecentNotification.title}");
+      print(
+        "${isBackground ? 'Background' : 'Foreground'}: Sent notification: ${mostRecentNotification.title}",
+      );
+    } catch (e) {
+      print("Error showing notification: $e");
+    } finally {
+      _processingNotificationId = null;
     }
   }
 
@@ -292,6 +333,7 @@ class NotificationPollingService {
       'lastNotificationId': _lastNotificationId,
       'lastChecked': _lastChecked?.toString(),
       'pollingActive': _pollingTimer != null,
+      'backgroundPollingActive': _backgroundTimer != null,
       'maxNotificationAge': '${maxNotificationAge.inMinutes} minutes',
       'appInForeground': _isAppInForeground,
     };

@@ -64,7 +64,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-     final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -243,11 +243,15 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             print("transaction gametype :${transaction.gameType}");
             final isDebit = transaction.amount < 0;
             final amountColor =
-                isDebit || transaction.narration!.toLowerCase().contains('bet') || transaction.narration!.toLowerCase().contains('withdraw')
+                isDebit ||
+                    transaction.narration!.toLowerCase().contains('bet') ||
+                    transaction.narration!.toLowerCase().contains('withdraw')
                 ? Colors.red
                 : Colors.green;
             final amountPrefix =
-                isDebit || transaction.narration!.toLowerCase().contains('bet') || transaction.narration!.toLowerCase().contains('withdraw')
+                isDebit ||
+                    transaction.narration!.toLowerCase().contains('bet') ||
+                    transaction.narration!.toLowerCase().contains('withdraw')
                 ? '-'
                 : '+';
 
@@ -336,7 +340,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                transaction.narration ?? "No description",
+                                transaction.narration!.toLowerCase().contains(
+                                      'deposit',
+                                    )
+                                    ? "Deposit Successfully"
+                                    : transaction.narration ?? "No description",
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 11,

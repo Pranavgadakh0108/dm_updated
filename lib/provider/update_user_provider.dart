@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'package:dmboss/service/update_user.dart';
 import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';

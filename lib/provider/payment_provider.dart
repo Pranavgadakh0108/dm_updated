@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:dmboss/model/payment_gateway_response.dart';
 import 'package:dmboss/model/payment_model.dart';

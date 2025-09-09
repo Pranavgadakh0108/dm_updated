@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'package:dmboss/service/add_deposite_points_manual.dart';
 import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:dmboss/widgets/navigation_bar.dart';
@@ -98,7 +100,7 @@ class AddDepositePointsManualProvider extends ChangeNotifier {
       //if (result != null) {
       if (result == null) {
         _depositePoints = result;
-        
+
         _successMessage = 'Deposit points submitted successfully';
 
         clearFields();

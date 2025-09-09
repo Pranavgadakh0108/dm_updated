@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "219114146140",
+    "project_id": "signlog-fc5f3",
+    "storage_bucket": "signlog-fc5f3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219114146140:android:ae4369e9e3d9354044d999",
+        "android_client_info": {
+          "package_name": "com.example.dmboss"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBds39Nl38yzpL972WTPGPkfXREWWabpJU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

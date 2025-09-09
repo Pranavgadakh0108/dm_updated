@@ -4,6 +4,7 @@ import 'package:dmboss/model/withdraw_coins_model.dart';
 import 'package:dmboss/provider/games_settings_provider.dart';
 import 'package:dmboss/provider/get_bank_details_provider.dart';
 import 'package:dmboss/provider/withdraw_coins_provider.dart';
+import 'package:dmboss/ui/add_bank_details.dart';
 import 'package:dmboss/widgets/custom_profile_text_field.dart';
 import 'package:dmboss/util/make_whatsapp_chat.dart';
 import 'package:dmboss/widgets/game_app_bar.dart';
@@ -201,6 +202,7 @@ class _WithdrawPointsState extends State<WithdrawPoints> {
                           hintText: "A/C Number",
                           readOnly: true,
                         ),
+
                         const SizedBox(height: 20),
                         CustomProfileTextFormField(
                           controller: TextEditingController(
@@ -209,6 +211,18 @@ class _WithdrawPointsState extends State<WithdrawPoints> {
                           hintText: "IFSC",
                           readOnly: true,
                         ),
+                        // OrangeButton(
+                        //   text: "Add Bank Details",
+
+                        //   onPressed: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => AddBankDetailsPage(),
+                        //       ),
+                        //     );
+                        //   },
+                        // ),
                         const SizedBox(height: 40),
                         GestureDetector(
                           onTap: () => openWhatsApp("+919888195353"),

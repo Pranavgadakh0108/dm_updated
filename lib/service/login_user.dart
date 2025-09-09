@@ -113,9 +113,13 @@ class AuthService {
     try {
       final dio = await getDioInstance();
 
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      final fcmToken = sharedPreferences.getString('fcm_token');
+
       final response = await dio.post(
         '/auth/login',
-        data: {'mobile': mobile, 'password': password},
+        data: {'mobile': mobile, 'password': password, 'fcm_token': fcmToken},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

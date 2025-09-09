@@ -637,6 +637,1382 @@
 
 // ignore_for_file: camel_case_types
 
+// import 'package:dmboss/provider/get_games_chart_provider.dart';
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+// import '../model/get_charts_data_model.dart';
+
+// class PanelTable extends StatefulWidget {
+//   final String data;
+//   final String marketName;
+//   const PanelTable({super.key, required this.data, required this.marketName});
+
+//   @override
+//   State<PanelTable> createState() => _PanelTableState();
+
+//   static TableRow _buildRow(
+//     String date,
+//     List<List<String>> values,
+//     List<int> redIndexes,
+//     bool isSmallScreen,
+//   ) {
+//     return TableRow(
+//       decoration: BoxDecoration(
+//         color: Colors.grey[50],
+//       ),
+//       children: [
+//         TableCell(
+//           child: Container(
+//             padding: EdgeInsets.all(isSmallScreen ? 4 : 6),
+//             color: Colors.grey[100],
+//             child: Center(
+//               child: Text(
+//                 date,
+//                 style: TextStyle(
+//                   fontSize: isSmallScreen ? 7 : 9,
+//                   fontWeight: FontWeight.w600,
+//                 ),
+//                 textAlign: TextAlign.center,
+//               ),
+//             ),
+//           ),
+//         ),
+//         for (int i = 0; i < values.length; i++)
+//           TableCell(
+//             child: Container(
+//               padding: EdgeInsets.all(isSmallScreen ? 2 : 4),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: [
+//                   // Left column
+//                   Column(
+//                     mainAxisAlignment: MainAxisAlignment.start,
+//                     children: [
+//                       Text(
+//                         values[i][0].isEmpty ? '-' : values[i][0],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                       Text(
+//                         values[i][1].isEmpty ? '-' : values[i][1],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                       Text(
+//                         values[i][2].isEmpty ? '-' : values[i][2],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   // Middle big number
+//                   Column(
+//                     children: [
+//                       Center(
+//                         child: Text(
+//                           values[i][3].isEmpty ? '-' : values[i][3],
+//                           style: TextStyle(
+//                             fontSize: isSmallScreen ? 10 : 12,
+//                             fontWeight: FontWeight.bold,
+//                             color: redIndexes.contains(i)
+//                                 ? Colors.red
+//                                 : Colors.black,
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   // Right column
+//                   Column(
+//                     mainAxisAlignment: MainAxisAlignment.end,
+//                     children: [
+//                       Text(
+//                         values[i][4].isEmpty ? '-' : values[i][4],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                       Text(
+//                         values[i][5].isEmpty ? '-' : values[i][5],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                       Text(
+//                         values[i][6].isEmpty ? '-' : values[i][6],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//       ],
+//     );
+//   }
+// }
+
+// class _PanelTableState extends State<PanelTable> {
+//   bool _isLoading = true;
+//   String? _errorMessage;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       _loadChartData();
+//     });
+//   }
+
+//   Future<void> _loadChartData() async {
+//     setState(() {
+//       _isLoading = true;
+//       _errorMessage = null;
+//     });
+
+//     try {
+//       final provider = Provider.of<GetGamesChartProvider>(
+//         context,
+//         listen: false,
+//       );
+
+//       provider.resetData();
+//       await provider.getChartDataProvider(context, widget.data);
+//     } catch (error) {
+//       setState(() {
+//         _errorMessage = 'Failed to load Chart. Please try again.';
+//       });
+//     } finally {
+//       setState(() {
+//         _isLoading = false;
+//       });
+//     }
+//   }
+
+//   void _retryLoading() {
+//     _loadChartData();
+//   }
+
+//   // Helper method to parse date from "dd/MM/yyyy" format
+//   DateTime? _parseDate(String dateString) {
+//     try {
+//       if (dateString.contains('/')) {
+//         List<String> parts = dateString.split('/');
+//         if (parts.length == 3) {
+//           int day = int.parse(parts[0]);
+//           int month = int.parse(parts[1]);
+//           int year = int.parse(parts[2]);
+//           return DateTime(year, month, day);
+//         }
+//       } else if (dateString.contains('-')) {
+//         return DateTime.parse(dateString);
+//       }
+//       return DateTime.parse(dateString);
+//     } catch (e) {
+//       print('Error parsing date: $dateString - $e');
+//       return null;
+//     }
+//   }
+
+//   // Helper method to group data by week and ensure correct day matching
+//   List<Map<String, dynamic>> _groupDataByWeek(List<Datum> data) {
+//     if (data.isEmpty) return [];
+
+//     data.sort((a, b) {
+//       DateTime? dateA = _parseDate(a.date);
+//       DateTime? dateB = _parseDate(b.date);
+
+//       if (dateA == null && dateB == null) return 0;
+//       if (dateA == null) return -1;
+//       if (dateB == null) return 1;
+
+//       return dateA.compareTo(dateB);
+//     });
+
+//     List<Map<String, dynamic>> weeklyData = [];
+//     Map<DateTime, List<Datum>> weekMap = {};
+
+//     for (var item in data) {
+//       try {
+//         DateTime? itemDate = _parseDate(item.date);
+//         if (itemDate == null) continue;
+
+//         DateTime weekStart = _getMonday(itemDate);
+
+//         if (!weekMap.containsKey(weekStart)) {
+//           weekMap[weekStart] = [];
+//         }
+//         weekMap[weekStart]!.add(item);
+//       } catch (e) {
+//         print('Error processing date: ${item.date}');
+//       }
+//     }
+
+//     weeklyData = weekMap.entries.map((entry) {
+//       DateTime weekStart = entry.key;
+//       DateTime weekEnd = weekStart.add(const Duration(days: 6));
+//       return {'startDate': weekStart, 'endDate': weekEnd, 'data': entry.value};
+//     }).toList();
+
+//     weeklyData.sort(
+//       (a, b) =>
+//           (a['startDate'] as DateTime).compareTo(b['startDate'] as DateTime),
+//     );
+
+//     return weeklyData;
+//   }
+
+//   // Get Monday of the week for a given date
+//   DateTime _getMonday(DateTime date) {
+//     return date.subtract(Duration(days: date.weekday - 1));
+//   }
+
+//   // Format date for display
+//   String _formatDateRange(DateTime start, DateTime end) {
+//     return '${start.day}/${start.month}/${start.year}\nto\n${end.day}/${end.month}/${end.year}';
+//   }
+
+//   // Convert Datum to table values
+//   List<String> _datumToValues(Datum datum) {
+//     return [
+//       datum.openPanna.isNotEmpty ? datum.openPanna[0] : "*",
+//       "*",
+//       datum.openPanna.length > 1 ? datum.openPanna[1] : "*",
+//       datum.jodi,
+//       datum.closePanna.isNotEmpty ? datum.closePanna[0] : "*",
+//       "*",
+//       datum.closePanna.length > 1 ? datum.closePanna[1] : "*",
+//     ];
+//   }
+
+//   // Get panel values for a week, ordered by day of week (Monday to Sunday)
+//   List<List<String>> _getWeeklyPanelValues(List<Datum> weekData) {
+//     List<List<String>> panelValues = List.generate(
+//       7,
+//       (_) => ["*", "*", "*", "-", "*", "*", "*"],
+//     );
+
+//     for (var item in weekData) {
+//       try {
+//         DateTime? itemDate = _parseDate(item.date);
+//         if (itemDate == null) continue;
+
+//         int dayOfWeek = itemDate.weekday - 1;
+//         if (dayOfWeek >= 0 && dayOfWeek < 7) {
+//           panelValues[dayOfWeek] = _datumToValues(item);
+//         }
+//       } catch (e) {
+//         print('Error processing date: ${item.date}');
+//       }
+//     }
+
+//     return panelValues;
+//   }
+
+//   // Find red indexes (empty or problematic values)
+//   List<int> _findRedIndexes(List<List<String>> values) {
+//     List<int> redIndexes = [];
+//     for (int i = 0; i < values.length; i++) {
+//       if (values[i][3] == "00" || values[i][3] == "0") {
+//         redIndexes.add(i);
+//       }
+//     }
+//     return redIndexes;
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final screenWidth = MediaQuery.of(context).size.width;
+//     final isSmallScreen = screenWidth < 380;
+//     final isVerySmallScreen = screenWidth < 340;
+
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       appBar: AppBar(
+//         backgroundColor: Colors.orange,
+//         elevation: 3,
+//         title: Text(
+//           "Charts",
+//           style: TextStyle(
+//             fontWeight: FontWeight.w600,
+//             fontSize: isSmallScreen ? 16 : 18,
+//           ),
+//         ),
+//         leading: IconButton(
+//           icon: Icon(
+//             Icons.arrow_back_ios,
+//             size: isSmallScreen ? 18 : 24,
+//           ),
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//         ),
+//       ),
+//       body: Consumer<GetGamesChartProvider>(
+//         builder: (context, chartProvider, child) {
+//           if (_isLoading) {
+//             return const Center(child: CircularProgressIndicator());
+//           }
+
+//           if (_errorMessage != null) {
+//             return Center(
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   Text(
+//                     _errorMessage!,
+//                     style: TextStyle(fontSize: isSmallScreen ? 14 : 16),
+//                     textAlign: TextAlign.center,
+//                   ),
+//                   const SizedBox(height: 16),
+//                   ElevatedButton(
+//                     onPressed: _retryLoading,
+//                     child: Text(
+//                       'Retry',
+//                       style: TextStyle(fontSize: isSmallScreen ? 14 : 16),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             );
+//           }
+
+//           if (chartProvider.getChartDataModel == null) {
+//             return Center(
+//               child: Text(
+//                 'No chart data available',
+//                 style: TextStyle(fontSize: isSmallScreen ? 14 : 16),
+//               ),
+//             );
+//           }
+
+//           final chartData = chartProvider.getChartDataModel;
+//           final weeklyData = _groupDataByWeek(chartData?.data ?? []);
+
+//           return SingleChildScrollView(
+//             scrollDirection: Axis.vertical,
+//             child: Padding(
+//               padding: EdgeInsets.all(isSmallScreen ? 6 : 8),
+//               child: Column(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   Container(
+//                     width: double.infinity,
+//                     decoration: BoxDecoration(
+//                       borderRadius: BorderRadius.circular(6),
+//                       color: Colors.blue[900],
+//                     ),
+//                     padding: EdgeInsets.all(isSmallScreen ? 10 : 12),
+//                     child: Text(
+//                       "${widget.marketName.toUpperCase()} MATKA PANEL RECORD",
+//                       style: TextStyle(
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white,
+//                         fontSize: isSmallScreen ? 12 : 14,
+//                       ),
+//                       textAlign: TextAlign.center,
+//                     ),
+//                   ),
+//                   const SizedBox(height: 6),
+//                   chartProvider.getChartDataModel?.data.isEmpty ?? true
+//                       ? Text(
+//                           "No Data Available for this Market",
+//                           style: TextStyle(fontSize: isSmallScreen ? 12 : 14),
+//                         )
+//                       : Container(
+//                           width: double.infinity,
+//                           padding: EdgeInsets.all(isSmallScreen ? 8 : 10),
+//                           decoration: BoxDecoration(
+//                             color: Colors.white,
+//                             border: Border.all(color: Colors.grey[300]!),
+//                             borderRadius: BorderRadius.circular(6),
+//                           ),
+//                           child: Text(
+//                             widget.marketName.toUpperCase(),
+//                             style: TextStyle(
+//                               fontWeight: FontWeight.bold,
+//                               color: Colors.black,
+//                               fontSize: isSmallScreen ? 11 : 13,
+//                             ),
+//                             textAlign: TextAlign.center,
+//                           ),
+//                         ),
+//                   const SizedBox(height: 10),
+
+//                   // Responsive table
+//                   Container(
+//                     width: double.infinity,
+//                     padding: EdgeInsets.all(isSmallScreen ? 4 : 6),
+//                     decoration: BoxDecoration(
+//                       border: Border.all(color: Colors.grey[400]!),
+//                       borderRadius: BorderRadius.circular(6),
+//                     ),
+//                     child: Table(
+//                       border: TableBorder.all(
+//                         color: Colors.grey[400]!,
+//                         width: 1,
+//                         borderRadius: BorderRadius.circular(4),
+//                       ),
+//                       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+//                       columnWidths: {
+//                         0: FixedColumnWidth(isVerySmallScreen ? 50 : isSmallScreen ? 55 : 60),
+//                         1: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
+//                         2: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
+//                         3: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
+//                         4: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
+//                         5: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
+//                         6: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
+//                         7: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
+//                       },
+//                       children: [
+//                         // Header Row
+//                         TableRow(
+//                           decoration: BoxDecoration(
+//                             color: Colors.yellow[700],
+//                           ),
+//                           children: [
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "DATE",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "MON",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "TUE",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "WED",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "THU",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "FRI",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "SAT",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "SUN",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                         // Data Rows
+//                         if (weeklyData.isEmpty)
+//                           TableRow(
+//                             children: [
+//                               TableCell(
+//                                 child: Padding(
+//                                   padding: EdgeInsets.all(isSmallScreen ? 8 : 12),
+//                                   child: Center(
+//                                     child: Text(
+//                                       "No data",
+//                                       style: TextStyle(
+//                                         fontStyle: FontStyle.italic,
+//                                         color: Colors.grey,
+//                                         fontSize: isSmallScreen ? 10 : 12,
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                               for (int i = 0; i < 7; i++)
+//                                 const TableCell(child: SizedBox.shrink()),
+//                             ],
+//                           )
+//                         else
+//                           for (var week in weeklyData)
+//                             PanelTable._buildRow(
+//                               _formatDateRange(
+//                                 week['startDate'] as DateTime,
+//                                 week['endDate'] as DateTime,
+//                               ),
+//                               _getWeeklyPanelValues(
+//                                 week['data'] as List<Datum>,
+//                               ),
+//                               _findRedIndexes(
+//                                 _getWeeklyPanelValues(
+//                                   week['data'] as List<Datum>,
+//                                 ),
+//                               ),
+//                               isSmallScreen,
+//                             ),
+//                       ],
+//                     ),
+//                   ),
+//                   const SizedBox(height: 16),
+//                 ],
+//               ),
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+
+// import 'package:dmboss/provider/get_games_chart_provider.dart';
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+// import '../model/get_charts_data_model.dart';
+
+// class PanelTable extends StatefulWidget {
+//   final String data;
+//   final String marketName;
+//   const PanelTable({super.key, required this.data, required this.marketName});
+
+//   @override
+//   State<PanelTable> createState() => _PanelTableState();
+
+//   static TableRow _buildRow(
+//     String date,
+//     List<List<String>> values,
+//     List<int> redIndexes,
+//     bool isSmallScreen,
+//   ) {
+//     return TableRow(
+//       decoration: BoxDecoration(color: Colors.grey[50]),
+//       children: [
+//         TableCell(
+//           child: Container(
+//             padding: EdgeInsets.all(isSmallScreen ? 4 : 6),
+//             color: Colors.grey[100],
+//             child: Center(
+//               child: Text(
+//                 date,
+//                 style: TextStyle(
+//                   fontSize: isSmallScreen ? 7 : 9,
+//                   fontWeight: FontWeight.w600,
+//                 ),
+//                 textAlign: TextAlign.center,
+//               ),
+//             ),
+//           ),
+//         ),
+//         for (int i = 0; i < values.length; i++)
+//           TableCell(
+//             child: Container(
+//               padding: EdgeInsets.all(isSmallScreen ? 2 : 4),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: [
+//                   // Left column - Open Panna
+//                   Column(
+//                     mainAxisAlignment: MainAxisAlignment.start,
+//                     children: [
+//                       Text(
+//                         values[i][0],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                       Text(
+//                         values[i][1],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                       Text(
+//                         values[i][2],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   // Middle big number - Jodi
+//                   Column(
+//                     children: [
+//                       Center(
+//                         child: Text(
+//                           values[i][3],
+//                           style: TextStyle(
+//                             fontSize: isSmallScreen ? 10 : 12,
+//                             fontWeight: FontWeight.bold,
+//                             color: redIndexes.contains(i)
+//                                 ? Colors.red
+//                                 : Colors.black,
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   // Right column - Close Panna
+//                   Column(
+//                     mainAxisAlignment: MainAxisAlignment.end,
+//                     children: [
+//                       Text(
+//                         values[i][4],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                       Text(
+//                         values[i][5],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                       Text(
+//                         values[i][6],
+//                         style: TextStyle(
+//                           fontSize: isSmallScreen ? 8 : 10,
+//                           fontWeight: FontWeight.w600,
+//                           color: redIndexes.contains(i)
+//                               ? Colors.red
+//                               : Colors.black,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//       ],
+//     );
+//   }
+// }
+
+// class _PanelTableState extends State<PanelTable> {
+//   bool _isLoading = true;
+//   String? _errorMessage;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       _loadChartData();
+//     });
+//   }
+
+//   Future<void> _loadChartData() async {
+//     setState(() {
+//       _isLoading = true;
+//       _errorMessage = null;
+//     });
+
+//     try {
+//       final provider = Provider.of<GetGamesChartProvider>(
+//         context,
+//         listen: false,
+//       );
+
+//       provider.resetData();
+//       await provider.getChartDataProvider(context, widget.data);
+//     } catch (error) {
+//       setState(() {
+//         _errorMessage = 'Failed to load Chart. Please try again.';
+//       });
+//     } finally {
+//       setState(() {
+//         _isLoading = false;
+//       });
+//     }
+//   }
+
+//   void _retryLoading() {
+//     _loadChartData();
+//   }
+
+//   DateTime? _parseDate(String dateString) {
+//     try {
+//       if (dateString.contains('/')) {
+//         List<String> parts = dateString.split('/');
+//         if (parts.length == 3) {
+//           int day = int.parse(parts[0]);
+//           int month = int.parse(parts[1]);
+//           int year = int.parse(parts[2]);
+//           return DateTime(year, month, day);
+//         }
+//       } else if (dateString.contains('-')) {
+//         return DateTime.parse(dateString);
+//       }
+//       return DateTime.parse(dateString);
+//     } catch (e) {
+//       print('Error parsing date: $dateString - $e');
+//       return null;
+//     }
+//   }
+
+//   // Helper method to group data by week and ensure correct day matching
+//   List<Map<String, dynamic>> _groupDataByWeek(List<Datum> data) {
+//     if (data.isEmpty) return [];
+
+//     data.sort((a, b) {
+//       DateTime? dateA = _parseDate(a.date);
+//       DateTime? dateB = _parseDate(b.date);
+
+//       if (dateA == null && dateB == null) return 0;
+//       if (dateA == null) return -1;
+//       if (dateB == null) return 1;
+
+//       return dateA.compareTo(dateB);
+//     });
+
+//     List<Map<String, dynamic>> weeklyData = [];
+//     Map<DateTime, List<Datum>> weekMap = {};
+
+//     for (var item in data) {
+//       try {
+//         DateTime? itemDate = _parseDate(item.date);
+//         if (itemDate == null) continue;
+
+//         DateTime weekStart = _getMonday(itemDate);
+
+//         if (!weekMap.containsKey(weekStart)) {
+//           weekMap[weekStart] = [];
+//         }
+//         weekMap[weekStart]!.add(item);
+//       } catch (e) {
+//         print('Error processing date: ${item.date}');
+//       }
+//     }
+
+//     weeklyData = weekMap.entries.map((entry) {
+//       DateTime weekStart = entry.key;
+//       DateTime weekEnd = weekStart.add(const Duration(days: 6));
+//       return {'startDate': weekStart, 'endDate': weekEnd, 'data': entry.value};
+//     }).toList();
+
+//     weeklyData.sort(
+//       (a, b) =>
+//           (a['startDate'] as DateTime).compareTo(b['startDate'] as DateTime),
+//     );
+
+//     return weeklyData;
+//   }
+
+//   DateTime _getMonday(DateTime date) {
+//     return date.subtract(Duration(days: date.weekday - 1));
+//   }
+
+//   String _formatDateRange(DateTime start, DateTime end) {
+//     return '${start.day}/${start.month}/${start.year}\nto\n${end.day}/${end.month}/${end.year}';
+//   }
+
+//   // Convert Datum to table values
+//   List<String> _datumToValues(Datum datum) {
+//     // Process open_panna
+//     List<String> openPannaParts = [];
+//     if (datum.openPanna.isNotEmpty && datum.openPanna != "-") {
+//       // Split open_panna into individual characters
+//       openPannaParts = datum.openPanna.split('');
+//     }
+
+//     // Ensure we have exactly 3 parts for open_panna
+//     while (openPannaParts.length < 3) {
+//       openPannaParts.add("*");
+//     }
+
+//     // Process close_panna
+//     List<String> closePannaParts = [];
+//     if (datum.closePanna.isNotEmpty && datum.closePanna != "-") {
+//       // Split close_panna into individual characters
+//       closePannaParts = datum.closePanna.split('');
+//     }
+
+//     // Ensure we have exactly 3 parts for close_panna
+//     while (closePannaParts.length < 3) {
+//       closePannaParts.add("*");
+//     }
+
+//     // Determine jodi value
+//     String jodiValue = "-";
+//     if (datum.jodi.isNotEmpty && datum.jodi != "-") {
+//       jodiValue = datum.jodi;
+//     } else if (datum.open.isNotEmpty && datum.close.isNotEmpty) {
+//       // If jodi is empty but both open and close exist, combine them
+//       jodiValue = "${datum.open}${datum.close}";
+//     } else if (datum.open.isNotEmpty) {
+//       // If only open exists
+//       jodiValue = datum.open;
+//     } else if (datum.close.isNotEmpty) {
+//       // If only close exists
+//       jodiValue = datum.close;
+//     }
+
+//     return [
+//       openPannaParts[0], // First digit of open_panna
+//       openPannaParts.length > 1 ? openPannaParts[1] : "*", // Second digit
+//       openPannaParts.length > 2 ? openPannaParts[2] : "*", // Third digit
+//       jodiValue, // Jodi or combined open+close
+//       closePannaParts[0], // First digit of close_panna
+//       closePannaParts.length > 1 ? closePannaParts[1] : "*", // Second digit
+//       closePannaParts.length > 2 ? closePannaParts[2] : "*", // Third digit
+//     ];
+//   }
+
+//   // Get panel values for a week, ordered by day of week (Monday to Sunday)
+//   List<List<String>> _getWeeklyPanelValues(List<Datum> weekData) {
+//     List<List<String>> panelValues = List.generate(
+//       7,
+//       (_) => ["*", "*", "*", "-", "*", "*", "*"],
+//     );
+
+//     for (var item in weekData) {
+//       try {
+//         DateTime? itemDate = _parseDate(item.date);
+//         if (itemDate == null) continue;
+
+//         int dayOfWeek = itemDate.weekday - 1;
+//         if (dayOfWeek >= 0 && dayOfWeek < 7) {
+//           panelValues[dayOfWeek] = _datumToValues(item);
+//         }
+//       } catch (e) {
+//         print('Error processing date: ${item.date}');
+//       }
+//     }
+
+//     return panelValues;
+//   }
+
+//   // Find red indexes (empty or problematic values)
+//   List<int> _findRedIndexes(List<List<String>> values) {
+//     List<int> redIndexes = [];
+//     for (int i = 0; i < values.length; i++) {
+//       if (values[i][3] == "00" || values[i][3] == "0" || values[i][3] == "-") {
+//         redIndexes.add(i);
+//       }
+//     }
+//     return redIndexes;
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final screenWidth = MediaQuery.of(context).size.width;
+//     final isSmallScreen = screenWidth < 380;
+//     final isVerySmallScreen = screenWidth < 340;
+
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       appBar: AppBar(
+//         backgroundColor: Colors.orange,
+//         elevation: 3,
+//         title: Text(
+//           "Charts",
+//           style: TextStyle(
+//             fontWeight: FontWeight.w600,
+//             fontSize: isSmallScreen ? 16 : 18,
+//           ),
+//         ),
+//         leading: IconButton(
+//           icon: Icon(Icons.arrow_back_ios, size: isSmallScreen ? 18 : 24),
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//         ),
+//       ),
+//       body: Consumer<GetGamesChartProvider>(
+//         builder: (context, chartProvider, child) {
+//           if (_isLoading) {
+//             return const Center(child: CircularProgressIndicator());
+//           }
+
+//           if (_errorMessage != null) {
+//             return Center(
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   Text(
+//                     _errorMessage!,
+//                     style: TextStyle(fontSize: isSmallScreen ? 14 : 16),
+//                     textAlign: TextAlign.center,
+//                   ),
+//                   const SizedBox(height: 16),
+//                   ElevatedButton(
+//                     onPressed: _retryLoading,
+//                     child: Text(
+//                       'Retry',
+//                       style: TextStyle(fontSize: isSmallScreen ? 14 : 16),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             );
+//           }
+
+//           if (chartProvider.getChartDataModel == null) {
+//             return Center(
+//               child: Text(
+//                 'No chart data available',
+//                 style: TextStyle(fontSize: isSmallScreen ? 14 : 16),
+//               ),
+//             );
+//           }
+
+//           final chartData = chartProvider.getChartDataModel;
+//           final weeklyData = _groupDataByWeek(chartData?.data ?? []);
+
+//           return SingleChildScrollView(
+//             scrollDirection: Axis.vertical,
+//             child: Padding(
+//               padding: EdgeInsets.all(isSmallScreen ? 6 : 8),
+//               child: Column(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   Container(
+//                     width: double.infinity,
+//                     decoration: BoxDecoration(
+//                       borderRadius: BorderRadius.circular(6),
+//                       color: Colors.blue[900],
+//                     ),
+//                     padding: EdgeInsets.all(isSmallScreen ? 10 : 12),
+//                     child: Text(
+//                       "${widget.marketName.toUpperCase()} MATKA PANEL RECORD",
+//                       style: TextStyle(
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white,
+//                         fontSize: isSmallScreen ? 12 : 14,
+//                       ),
+//                       textAlign: TextAlign.center,
+//                     ),
+//                   ),
+//                   const SizedBox(height: 6),
+//                   chartProvider.getChartDataModel?.data.isEmpty ?? true
+//                       ? Text(
+//                           "No Data Available for this Market",
+//                           style: TextStyle(fontSize: isSmallScreen ? 12 : 14),
+//                         )
+//                       : Container(
+//                           width: double.infinity,
+//                           padding: EdgeInsets.all(isSmallScreen ? 8 : 10),
+//                           decoration: BoxDecoration(
+//                             color: Colors.white,
+//                             border: Border.all(color: Colors.grey[300]!),
+//                             borderRadius: BorderRadius.circular(6),
+//                           ),
+//                           child: Text(
+//                             widget.marketName.toUpperCase(),
+//                             style: TextStyle(
+//                               fontWeight: FontWeight.bold,
+//                               color: Colors.black,
+//                               fontSize: isSmallScreen ? 11 : 13,
+//                             ),
+//                             textAlign: TextAlign.center,
+//                           ),
+//                         ),
+//                   const SizedBox(height: 10),
+
+//                   // Responsive table
+//                   Container(
+//                     width: double.infinity,
+//                     padding: EdgeInsets.all(isSmallScreen ? 4 : 6),
+//                     decoration: BoxDecoration(
+//                       border: Border.all(color: Colors.grey[400]!),
+//                       borderRadius: BorderRadius.circular(6),
+//                     ),
+//                     child: Table(
+//                       border: TableBorder.all(
+//                         color: Colors.grey[400]!,
+//                         width: 1,
+//                         borderRadius: BorderRadius.circular(4),
+//                       ),
+//                       defaultVerticalAlignment:
+//                           TableCellVerticalAlignment.middle,
+//                       columnWidths: {
+//                         0: FixedColumnWidth(
+//                           isVerySmallScreen
+//                               ? 50
+//                               : isSmallScreen
+//                               ? 55
+//                               : 60,
+//                         ),
+//                         1: FixedColumnWidth(
+//                           isVerySmallScreen
+//                               ? 36
+//                               : isSmallScreen
+//                               ? 38
+//                               : 42,
+//                         ),
+//                         2: FixedColumnWidth(
+//                           isVerySmallScreen
+//                               ? 36
+//                               : isSmallScreen
+//                               ? 38
+//                               : 42,
+//                         ),
+//                         3: FixedColumnWidth(
+//                           isVerySmallScreen
+//                               ? 36
+//                               : isSmallScreen
+//                               ? 38
+//                               : 42,
+//                         ),
+//                         4: FixedColumnWidth(
+//                           isVerySmallScreen
+//                               ? 36
+//                               : isSmallScreen
+//                               ? 38
+//                               : 42,
+//                         ),
+//                         5: FixedColumnWidth(
+//                           isVerySmallScreen
+//                               ? 36
+//                               : isSmallScreen
+//                               ? 38
+//                               : 42,
+//                         ),
+//                         6: FixedColumnWidth(
+//                           isVerySmallScreen
+//                               ? 36
+//                               : isSmallScreen
+//                               ? 38
+//                               : 42,
+//                         ),
+//                         7: FixedColumnWidth(
+//                           isVerySmallScreen
+//                               ? 36
+//                               : isSmallScreen
+//                               ? 38
+//                               : 42,
+//                         ),
+//                       },
+//                       children: [
+//                         // Header Row
+//                         TableRow(
+//                           decoration: BoxDecoration(color: Colors.yellow[700]),
+//                           children: [
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "DATE",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen
+//                                           ? 7
+//                                           : isSmallScreen
+//                                           ? 8
+//                                           : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "MON",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen
+//                                           ? 7
+//                                           : isSmallScreen
+//                                           ? 8
+//                                           : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "TUE",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen
+//                                           ? 7
+//                                           : isSmallScreen
+//                                           ? 8
+//                                           : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "WED",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen
+//                                           ? 7
+//                                           : isSmallScreen
+//                                           ? 8
+//                                           : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "THU",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen
+//                                           ? 7
+//                                           : isSmallScreen
+//                                           ? 8
+//                                           : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "FRI",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen
+//                                           ? 7
+//                                           : isSmallScreen
+//                                           ? 8
+//                                           : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "SAT",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen
+//                                           ? 7
+//                                           : isSmallScreen
+//                                           ? 8
+//                                           : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                             TableCell(
+//                               child: Padding(
+//                                 padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+//                                 child: Center(
+//                                   child: Text(
+//                                     "SUN",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: isVerySmallScreen
+//                                           ? 7
+//                                           : isSmallScreen
+//                                           ? 8
+//                                           : 9,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                         // Data Rows
+//                         if (weeklyData.isEmpty)
+//                           TableRow(
+//                             children: [
+//                               TableCell(
+//                                 child: Padding(
+//                                   padding: EdgeInsets.all(
+//                                     isSmallScreen ? 8 : 12,
+//                                   ),
+//                                   child: Center(
+//                                     child: Text(
+//                                       "No data",
+//                                       style: TextStyle(
+//                                         fontStyle: FontStyle.italic,
+//                                         color: Colors.grey,
+//                                         fontSize: isSmallScreen ? 10 : 12,
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                               for (int i = 0; i < 7; i++)
+//                                 const TableCell(child: SizedBox.shrink()),
+//                             ],
+//                           )
+//                         else
+//                           for (var week in weeklyData)
+//                             PanelTable._buildRow(
+//                               _formatDateRange(
+//                                 week['startDate'] as DateTime,
+//                                 week['endDate'] as DateTime,
+//                               ),
+//                               _getWeeklyPanelValues(
+//                                 week['data'] as List<Datum>,
+//                               ),
+//                               _findRedIndexes(
+//                                 _getWeeklyPanelValues(
+//                                   week['data'] as List<Datum>,
+//                                 ),
+//                               ),
+//                               isSmallScreen,
+//                             ),
+//                       ],
+//                     ),
+//                   ),
+//                   const SizedBox(height: 16),
+//                 ],
+//               ),
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+
 import 'package:dmboss/provider/get_games_chart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -657,9 +2033,7 @@ class PanelTable extends StatefulWidget {
     bool isSmallScreen,
   ) {
     return TableRow(
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-      ),
+      decoration: BoxDecoration(color: Colors.grey[50]),
       children: [
         TableCell(
           child: Container(
@@ -684,12 +2058,12 @@ class PanelTable extends StatefulWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // Left column
+                  // Left column - Open Panna
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        values[i][0].isEmpty ? '-' : values[i][0],
+                        values[i][0],
                         style: TextStyle(
                           fontSize: isSmallScreen ? 8 : 10,
                           fontWeight: FontWeight.w600,
@@ -699,7 +2073,7 @@ class PanelTable extends StatefulWidget {
                         ),
                       ),
                       Text(
-                        values[i][1].isEmpty ? '-' : values[i][1],
+                        values[i][1],
                         style: TextStyle(
                           fontSize: isSmallScreen ? 8 : 10,
                           fontWeight: FontWeight.w600,
@@ -709,7 +2083,7 @@ class PanelTable extends StatefulWidget {
                         ),
                       ),
                       Text(
-                        values[i][2].isEmpty ? '-' : values[i][2],
+                        values[i][2],
                         style: TextStyle(
                           fontSize: isSmallScreen ? 8 : 10,
                           fontWeight: FontWeight.w600,
@@ -720,12 +2094,12 @@ class PanelTable extends StatefulWidget {
                       ),
                     ],
                   ),
-                  // Middle big number
+                  // Middle big number - Jodi
                   Column(
                     children: [
                       Center(
                         child: Text(
-                          values[i][3].isEmpty ? '-' : values[i][3],
+                          values[i][3],
                           style: TextStyle(
                             fontSize: isSmallScreen ? 10 : 12,
                             fontWeight: FontWeight.bold,
@@ -737,12 +2111,12 @@ class PanelTable extends StatefulWidget {
                       ),
                     ],
                   ),
-                  // Right column
+                  // Right column - Close Panna
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        values[i][4].isEmpty ? '-' : values[i][4],
+                        values[i][4],
                         style: TextStyle(
                           fontSize: isSmallScreen ? 8 : 10,
                           fontWeight: FontWeight.w600,
@@ -752,7 +2126,7 @@ class PanelTable extends StatefulWidget {
                         ),
                       ),
                       Text(
-                        values[i][5].isEmpty ? '-' : values[i][5],
+                        values[i][5],
                         style: TextStyle(
                           fontSize: isSmallScreen ? 8 : 10,
                           fontWeight: FontWeight.w600,
@@ -762,7 +2136,7 @@ class PanelTable extends StatefulWidget {
                         ),
                       ),
                       Text(
-                        values[i][6].isEmpty ? '-' : values[i][6],
+                        values[i][6],
                         style: TextStyle(
                           fontSize: isSmallScreen ? 8 : 10,
                           fontWeight: FontWeight.w600,
@@ -904,14 +2278,53 @@ class _PanelTableState extends State<PanelTable> {
 
   // Convert Datum to table values
   List<String> _datumToValues(Datum datum) {
+    // Process open_panna
+    List<String> openPannaParts = [];
+    if (datum.openPanna.isNotEmpty && datum.openPanna != "-") {
+      // Split open_panna into individual characters
+      openPannaParts = datum.openPanna.split('');
+    }
+
+    // Ensure we have exactly 3 parts for open_panna
+    while (openPannaParts.length < 3) {
+      openPannaParts.add("*");
+    }
+
+    // Process close_panna
+    List<String> closePannaParts = [];
+    if (datum.closePanna.isNotEmpty && datum.closePanna != "-") {
+      // Split close_panna into individual characters
+      closePannaParts = datum.closePanna.split('');
+    }
+
+    // Ensure we have exactly 3 parts for close_panna
+    while (closePannaParts.length < 3) {
+      closePannaParts.add("*");
+    }
+
+    // Determine jodi value
+    String jodiValue = "-";
+    if (datum.jodi.isNotEmpty && datum.jodi != "-") {
+      jodiValue = datum.jodi;
+    } else if (datum.open.isNotEmpty && datum.close.isNotEmpty) {
+      // If jodi is empty but both open and close exist, combine them
+      jodiValue = "${datum.open}${datum.close}";
+    } else if (datum.open.isNotEmpty) {
+      // If only open exists
+      jodiValue = datum.open;
+    } else if (datum.close.isNotEmpty) {
+      // If only close exists
+      jodiValue = datum.close;
+    }
+
     return [
-      datum.openPanna.isNotEmpty ? datum.openPanna[0] : "*",
-      "*",
-      datum.openPanna.length > 1 ? datum.openPanna[1] : "*",
-      datum.jodi,
-      datum.closePanna.isNotEmpty ? datum.closePanna[0] : "*",
-      "*",
-      datum.closePanna.length > 1 ? datum.closePanna[1] : "*",
+      openPannaParts[0], // First digit of open_panna
+      openPannaParts.length > 1 ? openPannaParts[1] : "*", // Second digit
+      openPannaParts.length > 2 ? openPannaParts[2] : "*", // Third digit
+      jodiValue, // Jodi or combined open+close
+      closePannaParts[0], // First digit of close_panna
+      closePannaParts.length > 1 ? closePannaParts[1] : "*", // Second digit
+      closePannaParts.length > 2 ? closePannaParts[2] : "*", // Third digit
     ];
   }
 
@@ -939,14 +2352,52 @@ class _PanelTableState extends State<PanelTable> {
     return panelValues;
   }
 
-  // Find red indexes (empty or problematic values)
-  List<int> _findRedIndexes(List<List<String>> values) {
+  // Find red indexes based on the difference between open and close being 0 or 5
+  List<int> _findRedIndexes(List<List<String>> values, List<Datum> weekData) {
     List<int> redIndexes = [];
-    for (int i = 0; i < values.length; i++) {
-      if (values[i][3] == "00" || values[i][3] == "0") {
-        redIndexes.add(i);
+
+    // Create a map to quickly find the original Datum for each day
+    Map<int, Datum> dayToDatum = {};
+    for (var item in weekData) {
+      try {
+        DateTime? itemDate = _parseDate(item.date);
+        if (itemDate == null) continue;
+
+        int dayOfWeek = itemDate.weekday - 1;
+        if (dayOfWeek >= 0 && dayOfWeek < 7) {
+          dayToDatum[dayOfWeek] = item;
+        }
+      } catch (e) {
+        print('Error processing date: ${item.date}');
       }
     }
+
+    for (int i = 0; i < values.length; i++) {
+      if (dayToDatum.containsKey(i)) {
+        Datum datum = dayToDatum[i]!;
+
+        // Check if both open and close are valid numbers
+        if (datum.open.isNotEmpty &&
+            datum.close.isNotEmpty &&
+            datum.open != "-" &&
+            datum.close != "-") {
+          try {
+            int openValue = int.parse(datum.open);
+            int closeValue = int.parse(datum.close);
+            int difference = (openValue - closeValue).abs();
+
+            // Check if difference is 0 or 5
+            if (difference == 0 || difference == 5) {
+              redIndexes.add(i);
+            }
+          } catch (e) {
+            // If parsing fails, skip this index
+            print('Error parsing open/close values: ${e.toString()}');
+          }
+        }
+      }
+    }
+
     return redIndexes;
   }
 
@@ -969,10 +2420,7 @@ class _PanelTableState extends State<PanelTable> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            size: isSmallScreen ? 18 : 24,
-          ),
+          icon: Icon(Icons.arrow_back_ios, size: isSmallScreen ? 18 : 24),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -1083,23 +2531,70 @@ class _PanelTableState extends State<PanelTable> {
                         width: 1,
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
                       columnWidths: {
-                        0: FixedColumnWidth(isVerySmallScreen ? 50 : isSmallScreen ? 55 : 60),
-                        1: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
-                        2: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
-                        3: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
-                        4: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
-                        5: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
-                        6: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
-                        7: FixedColumnWidth(isVerySmallScreen ? 36 : isSmallScreen ? 38 : 42),
+                        0: FixedColumnWidth(
+                          isVerySmallScreen
+                              ? 50
+                              : isSmallScreen
+                              ? 55
+                              : 60,
+                        ),
+                        1: FixedColumnWidth(
+                          isVerySmallScreen
+                              ? 36
+                              : isSmallScreen
+                              ? 38
+                              : 42,
+                        ),
+                        2: FixedColumnWidth(
+                          isVerySmallScreen
+                              ? 36
+                              : isSmallScreen
+                              ? 38
+                              : 42,
+                        ),
+                        3: FixedColumnWidth(
+                          isVerySmallScreen
+                              ? 36
+                              : isSmallScreen
+                              ? 38
+                              : 42,
+                        ),
+                        4: FixedColumnWidth(
+                          isVerySmallScreen
+                              ? 36
+                              : isSmallScreen
+                              ? 38
+                              : 42,
+                        ),
+                        5: FixedColumnWidth(
+                          isVerySmallScreen
+                              ? 36
+                              : isSmallScreen
+                              ? 38
+                              : 42,
+                        ),
+                        6: FixedColumnWidth(
+                          isVerySmallScreen
+                              ? 36
+                              : isSmallScreen
+                              ? 38
+                              : 42,
+                        ),
+                        7: FixedColumnWidth(
+                          isVerySmallScreen
+                              ? 36
+                              : isSmallScreen
+                              ? 38
+                              : 42,
+                        ),
                       },
                       children: [
                         // Header Row
                         TableRow(
-                          decoration: BoxDecoration(
-                            color: Colors.yellow[700],
-                          ),
+                          decoration: BoxDecoration(color: Colors.yellow[700]),
                           children: [
                             TableCell(
                               child: Padding(
@@ -1109,7 +2604,11 @@ class _PanelTableState extends State<PanelTable> {
                                     "DATE",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                      fontSize: isVerySmallScreen
+                                          ? 7
+                                          : isSmallScreen
+                                          ? 8
+                                          : 9,
                                     ),
                                   ),
                                 ),
@@ -1123,7 +2622,11 @@ class _PanelTableState extends State<PanelTable> {
                                     "MON",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                      fontSize: isVerySmallScreen
+                                          ? 7
+                                          : isSmallScreen
+                                          ? 8
+                                          : 9,
                                     ),
                                   ),
                                 ),
@@ -1137,7 +2640,11 @@ class _PanelTableState extends State<PanelTable> {
                                     "TUE",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                      fontSize: isVerySmallScreen
+                                          ? 7
+                                          : isSmallScreen
+                                          ? 8
+                                          : 9,
                                     ),
                                   ),
                                 ),
@@ -1151,7 +2658,11 @@ class _PanelTableState extends State<PanelTable> {
                                     "WED",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                      fontSize: isVerySmallScreen
+                                          ? 7
+                                          : isSmallScreen
+                                          ? 8
+                                          : 9,
                                     ),
                                   ),
                                 ),
@@ -1165,7 +2676,11 @@ class _PanelTableState extends State<PanelTable> {
                                     "THU",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                      fontSize: isVerySmallScreen
+                                          ? 7
+                                          : isSmallScreen
+                                          ? 8
+                                          : 9,
                                     ),
                                   ),
                                 ),
@@ -1179,7 +2694,11 @@ class _PanelTableState extends State<PanelTable> {
                                     "FRI",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                      fontSize: isVerySmallScreen
+                                          ? 7
+                                          : isSmallScreen
+                                          ? 8
+                                          : 9,
                                     ),
                                   ),
                                 ),
@@ -1193,7 +2712,11 @@ class _PanelTableState extends State<PanelTable> {
                                     "SAT",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                      fontSize: isVerySmallScreen
+                                          ? 7
+                                          : isSmallScreen
+                                          ? 8
+                                          : 9,
                                     ),
                                   ),
                                 ),
@@ -1207,7 +2730,11 @@ class _PanelTableState extends State<PanelTable> {
                                     "SUN",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: isVerySmallScreen ? 7 : isSmallScreen ? 8 : 9,
+                                      fontSize: isVerySmallScreen
+                                          ? 7
+                                          : isSmallScreen
+                                          ? 8
+                                          : 9,
                                     ),
                                   ),
                                 ),
@@ -1221,7 +2748,9 @@ class _PanelTableState extends State<PanelTable> {
                             children: [
                               TableCell(
                                 child: Padding(
-                                  padding: EdgeInsets.all(isSmallScreen ? 8 : 12),
+                                  padding: EdgeInsets.all(
+                                    isSmallScreen ? 8 : 12,
+                                  ),
                                   child: Center(
                                     child: Text(
                                       "No data",
@@ -1252,6 +2781,7 @@ class _PanelTableState extends State<PanelTable> {
                                 _getWeeklyPanelValues(
                                   week['data'] as List<Datum>,
                                 ),
+                                week['data'] as List<Datum>,
                               ),
                               isSmallScreen,
                             ),

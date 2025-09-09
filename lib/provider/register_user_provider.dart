@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dmboss/model/register_user_model.dart';
 import 'package:dmboss/service/register_user.dart';
 import 'package:dmboss/widgets/custom_snackbar.dart';
