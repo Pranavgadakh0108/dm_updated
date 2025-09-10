@@ -4,7 +4,6 @@ import 'package:dmboss/model/withdraw_coins_model.dart';
 import 'package:dmboss/provider/games_settings_provider.dart';
 import 'package:dmboss/provider/get_bank_details_provider.dart';
 import 'package:dmboss/provider/withdraw_coins_provider.dart';
-import 'package:dmboss/ui/add_bank_details.dart';
 import 'package:dmboss/widgets/custom_profile_text_field.dart';
 import 'package:dmboss/util/make_whatsapp_chat.dart';
 import 'package:dmboss/widgets/game_app_bar.dart';

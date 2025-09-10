@@ -45,3 +45,17 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    implementation(kotlin("stdlib-jdk7"))
+    
+    // Firebase BoM (Bill of Materials) for consistent versions
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    
+    // Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-messaging")
+    
+    // Add Firebase Performance to fix the missing class error
+    implementation("com.google.firebase:firebase-perf")
+}

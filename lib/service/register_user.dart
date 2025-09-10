@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/register_user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   Future<Dio> getDioInstance() async {
@@ -30,17 +31,24 @@ class AuthService {
         'Registration data: mobile=$mobile, name=$name, password=$password',
       );
 
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      final fcmToken = sharedPreferences.getString('fcm_token');
+
       final response = await dio.post(
         '/auth/register',
         data: {
           'mobile': mobile,
           'name': name,
-          // 'email': email,
+          'fcm_token': fcmToken,
           'password': password,
           'confirmPassword': confirmPassword,
+          
         },
       );
 
+      print("fcm token: $fcmToken");
+      print("-----------------------------------------------");
       print('Response status: ${response.statusCode}');
       print('Response data: ${response.data}');
 

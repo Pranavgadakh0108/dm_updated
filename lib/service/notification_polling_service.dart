@@ -228,13 +228,13 @@ class NotificationPollingService {
       return;
     }
 
-    String? _processingNotificationId;
-    if (_processingNotificationId == mostRecentNotification.id) {
+    String? processingNotificationId;
+    if (processingNotificationId == mostRecentNotification.id) {
       print("Already processing this notification, skipping duplicate");
       return;
     }
 
-    _processingNotificationId = mostRecentNotification.id;
+    processingNotificationId = mostRecentNotification.id;
 
     try {
       if (isBackground) {
@@ -277,7 +277,7 @@ class NotificationPollingService {
     } catch (e) {
       print("Error showing notification: $e");
     } finally {
-      _processingNotificationId = null;
+      processingNotificationId = null;
     }
   }
 
