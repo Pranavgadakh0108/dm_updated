@@ -11,7 +11,6 @@ class HowToPlayProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
 
-  // Getter methods for easy access to the nested data
   String get howToPlay => _howToPlayData?.data.howToPlay ?? '';
   String get howToDeposit => _howToPlayData?.data.howToDeposite ?? '';
   String get howToWithdraw => _howToPlayData?.data.howToWithdraw ?? '';
@@ -35,13 +34,11 @@ class HowToPlayProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Helper method to check if data is available
   bool get hasData => _howToPlayData != null && _howToPlayData!.success;
 
-  // Helper method to get all help sections as a map for easy access
   Map<String, String> getHelpSections() {
     if (_howToPlayData == null) return {};
-    
+
     return {
       'How to Play': _howToPlayData!.data.howToPlay,
       'How to Deposit': _howToPlayData!.data.howToDeposite,
@@ -49,7 +46,6 @@ class HowToPlayProvider extends ChangeNotifier {
     };
   }
 
-  // Clear the stored data
   void clearData() {
     _howToPlayData = null;
     _errorMessage = null;

@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:dmboss/data/common.dart';
 import 'package:dmboss/ui/menu/add_fund_history.dart';
 import 'package:dmboss/ui/menu/add_fund_screen.dart';
@@ -34,14 +32,12 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            //height: 180,
             height: MediaQuery.of(context).size.height * 0.15,
             child: DrawerHeader(
               decoration: BoxDecoration(color: Colors.blueGrey.shade100),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Profile Info
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -65,9 +61,8 @@ class AppDrawer extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // Logo Image
+
                   Padding(
-                    //padding: const EdgeInsets.only(right: 20),
                     padding: EdgeInsets.only(
                       right: MediaQuery.of(context).size.width * 0.05,
                     ),
@@ -92,65 +87,6 @@ class AppDrawer extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                // SizedBox(
-                //   //height: 180,
-                //   height: MediaQuery.of(context).size.height * 0.15,
-                //   child: DrawerHeader(
-                //     decoration: BoxDecoration(color: Colors.blueGrey.shade100),
-                //     child: Row(
-                //       crossAxisAlignment: CrossAxisAlignment.start,
-                //       children: [
-                //         // Profile Info
-                //         Expanded(
-                //           child: Column(
-                //             mainAxisAlignment: MainAxisAlignment.start,
-                //             crossAxisAlignment: CrossAxisAlignment.start,
-                //             children: [
-                //               Text(
-                //                 username,
-                //                 style: const TextStyle(
-                //                   fontSize: 16,
-                //                   fontWeight: FontWeight.w500,
-                //                 ),
-                //               ),
-                //               const SizedBox(height: 4),
-                //               Text(
-                //                 phoneNumber,
-                //                 style: const TextStyle(
-                //                   fontSize: 14,
-                //                   fontWeight: FontWeight.w500,
-                //                 ),
-                //               ),
-                //             ],
-                //           ),
-                //         ),
-                //         // Logo Image
-                //         Padding(
-                //           //padding: const EdgeInsets.only(right: 20),
-                //           padding: EdgeInsets.only(
-                //             right: MediaQuery.of(context).size.width * 0.05,
-                //           ),
-                //           child: Container(
-                //             height: 50,
-                //             width: 50,
-                //             decoration: BoxDecoration(
-                //               color: Colors.black,
-                //               borderRadius: BorderRadius.circular(20),
-                //             ),
-                //             child: Padding(
-                //               padding: const EdgeInsets.all(12.0),
-                //               child: Image.asset(
-                //                 'assets/images/dmbossLogo.png',
-                //               ),
-                //             ),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-
-                // Menu Items
                 DrawerItem(
                   icon: Icons.home,
                   title: 'Home',
@@ -174,7 +110,6 @@ class AppDrawer extends StatelessWidget {
                           username: username,
                           phoneNumber: phoneNumber,
                         ),
-                        //ProfilePage()
                       ),
                     );
                   },
@@ -283,7 +218,7 @@ class AppDrawer extends StatelessWidget {
                 ),
                 DrawerItem(
                   icon: Icons.assistant_direction_rounded,
-                  //title: 'Reffer And Earn',
+
                   title: 'Share App',
                   onTap: () {
                     Navigator.push(

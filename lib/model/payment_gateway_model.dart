@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final paymentGatewayIntegration = paymentGatewayIntegrationFromJson(jsonString);
 
 import 'dart:convert';
 

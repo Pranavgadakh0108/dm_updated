@@ -2,7 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
-import 'package:dmboss/model/how_to_play_model.dart'; // Adjust import path as needed
+import 'package:dmboss/model/how_to_play_model.dart';
 import 'package:dmboss/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,7 +31,6 @@ class HowToPlayService {
       final result = await dio.get("/users/help-links/all");
 
       if (result.statusCode == 200) {
-        // Parse the response as HowToPlayModel
         return HowToPlayModel.fromJson(result.data);
       } else {
         showCustomSnackBar(

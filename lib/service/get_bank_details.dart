@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/get_bank_details_model.dart';
@@ -26,7 +28,6 @@ class GetBankDetails {
     BuildContext context,
     String? userId,
   ) async {
-    print(userId);
     try {
       final dio = await _getDioInstance();
 

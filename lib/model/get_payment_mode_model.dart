@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getPaymentMode = getPaymentModeFromJson(jsonString?);
 
 import 'dart:convert';
 

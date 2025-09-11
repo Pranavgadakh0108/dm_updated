@@ -1,8 +1,8 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:dmboss/service/add_bank_details_service.dart';
 import 'package:dmboss/widgets/custom_snackbar.dart';
-//import 'package:dmboss/widgets/navigation_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:dmboss/model/add_bank_details_model.dart';
 
@@ -40,7 +40,6 @@ class AddBankDetailsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Clear all fields
   void clearFields() {
     _accountHolderName = null;
     _accountNumber = null;
@@ -48,14 +47,12 @@ class AddBankDetailsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Clear messages
   void clearMessages() {
     _errorMessage = null;
     _successMessage = null;
     notifyListeners();
   }
 
-  // Check if all required fields are filled
   bool get isFormValid {
     return _accountHolderName != null &&
         _accountHolderName!.isNotEmpty &&
@@ -78,18 +75,11 @@ class AddBankDetailsProvider extends ChangeNotifier {
       final bankService = AddBankDetailsService();
 
       final result = await bankService.postBankDetails(context, addBankDetails);
-      // .then((_) {
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => WithdrawPoints()),
-      //   );
-      // });
 
       _isLoading = false;
 
       if (result != null) {
         _bankDetails = result;
-        // _successMessage = 'Bank details added successfully';
 
         clearFields();
         showCustomSnackBar(

@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getImageSliders = getImageSlidersFromJson(jsonString);
 
 import 'dart:convert';
 

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dmboss/model/withdraw_coins_model.dart';
 import 'package:dmboss/service/withdraw_points_service.dart';
 import 'package:dmboss/widgets/custom_snackbar.dart';
@@ -23,21 +25,21 @@ class WithdrawCoinsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Clear all fields
+  
   void clearFields() {
     _amount = null;
 
     notifyListeners();
   }
 
-  // Clear messages
+  
   void clearMessages() {
     _errorMessage = null;
     _successMessage = null;
     notifyListeners();
   }
 
-  // Check if all required fields are filled
+  
   bool get isFormValid {
     return _amount != null && _amount!.isNotEmpty;
   }

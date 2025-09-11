@@ -27,7 +27,7 @@ class _CustomPhoneFieldState extends State<CustomPhoneField> {
       keyboardType: TextInputType.phone,
       cursorColor: Colors.pink,
       enabled: widget.enabled,
-      // Only allow digits
+
       style: TextStyle(color: Colors.black),
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(

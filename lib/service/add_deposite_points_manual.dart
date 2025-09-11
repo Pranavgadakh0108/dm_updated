@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/deposite_manual_points.dart';
@@ -79,11 +81,11 @@ class AddDepositePointsManual {
       }
 
       showCustomSnackBar(
-          context: context,
-          message: errorMessage,
-          backgroundColor: Colors.redAccent,
-          durationSeconds: 3,
-        );
+        context: context,
+        message: errorMessage,
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 3,
+      );
 
       return null;
     }

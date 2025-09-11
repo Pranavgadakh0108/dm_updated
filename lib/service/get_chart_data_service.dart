@@ -30,7 +30,6 @@ class GetChartDataService {
   ) async {
     try {
       final dio = await _getDioInstance();
-      print(marketId);
 
       final result = await dio.get("/admin/results/chart/$marketId");
 
@@ -56,10 +55,6 @@ class GetChartDataService {
       } else {
         errorMessage = e.toString();
       }
-
-      // ScaffoldMessenger.of(
-      //   context,
-      // ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
 
       return null;
     }

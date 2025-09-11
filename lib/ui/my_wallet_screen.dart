@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/provider/get_pending_request_count.dart';
 import 'package:dmboss/provider/pending_withdraw_count.dart';
@@ -71,10 +69,10 @@ class _MyWalletScreenState extends State<MyWalletScreen> {
           child: GridView.builder(
             itemCount: menuItems.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // 2 columns
+              crossAxisCount: 2,
               mainAxisSpacing: 40,
               crossAxisSpacing: 40,
-              childAspectRatio: 1, // square look
+              childAspectRatio: 1,
             ),
             itemBuilder: (context, index) {
               return GestureDetector(

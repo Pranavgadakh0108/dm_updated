@@ -29,8 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final GlobalKey<FormState> _globalKey = GlobalKey();
 
-  int step =
-      1; // 1 = Mobile only, 2 = Existing User (Password), 3 = New User (Name + Password)
+  int step = 1;
   bool isExistingUser = false;
   bool _isLoading = true;
   String? _errorMessage;
@@ -38,7 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void handleContinue() {
     if (_globalKey.currentState!.validate()) {
       if (step == 1) {
-        // Mock check: if mobile ends with 5 → existing user
         if (mobileController.text.endsWith("5")) {
           isExistingUser = true;
           step = 2;
@@ -47,13 +45,11 @@ class _LoginScreenState extends State<LoginScreen> {
           step = 3;
         }
       } else if (step == 2) {
-        // Login success
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const AppNavigationBar()),
         );
       } else if (step == 3) {
-        // Register and auto login success
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const AppNavigationBar()),
@@ -103,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return WillPopScope(
       onWillPop: () async {
         showExitDialog(context);
-        return false; // prevent default back
+        return false;
       },
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -121,7 +117,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       SizedBox(height: screenHeight * 0.08),
 
-                      // App logo
                       Container(
                         height: screenHeight * 0.2,
                         width: screenHeight * 0.2,
@@ -138,7 +133,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       SizedBox(height: screenHeight * 0.1),
 
-                      // Step 1: Phone field (always shown)
                       CustomPhoneField(
                         controller: mobileController,
                         onChanged: (value) {
@@ -158,7 +152,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       SizedBox(height: screenHeight * 0.025),
 
-                      // Step 2: Existing user → Password
                       if (step == 2) ...[
                         CustomTextField(
                           controller: passwordController,
@@ -182,7 +175,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: screenHeight * 0.05),
                       ],
 
-                      // Step 3: New user → Name + Password
                       if (step == 3) ...[
                         CustomTextField(
                           controller: nameController,
@@ -244,13 +236,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: screenHeight * 0.05),
                       ],
 
-                      // Continue Button
                       OrangeButton(text: 'Continue', onPressed: handleContinue),
                       SizedBox(height: screenHeight * 0.03),
 
-                      // Create Account & Forgot Password section
-                      if (step == 1 ||
-                          step == 2) // hide this when inside progressive flow
+                      if (step == 1 || step == 2)
                         Column(
                           children: [
                             Row(

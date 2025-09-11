@@ -16,7 +16,6 @@ class OrangeButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          // padding: const EdgeInsets.symmetric(vertical: 15),
           padding: EdgeInsets.symmetric(
             vertical: MediaQuery.of(context).size.height * 0.015,
           ),

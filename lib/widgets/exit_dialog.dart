@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 void showExitDialog(BuildContext context) {
   showDialog(
     context: context,
-    barrierDismissible: false, // prevent closing by tapping outside
+    barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0), 
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
         title: const Text(
           "Dear User",
           style: TextStyle(
@@ -22,15 +20,12 @@ void showExitDialog(BuildContext context) {
         ),
         content: const Text(
           "Are you sure you want to close Application?",
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.black87,
-          ),
+          style: TextStyle(fontSize: 16, color: Colors.black87),
         ),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // close dialog
+              Navigator.of(context).pop();
             },
             child: const Text(
               "NO",
@@ -43,7 +38,7 @@ void showExitDialog(BuildContext context) {
           ),
           TextButton(
             onPressed: () {
-              exit(0); 
+              exit(0);
             },
             child: const Text(
               "YES",

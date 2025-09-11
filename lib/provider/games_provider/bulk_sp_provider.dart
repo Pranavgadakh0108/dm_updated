@@ -57,7 +57,6 @@ class BulkSpBetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Individual setters for each property
   void setGameId(String value) {
     _bulkSpModel = BulkSpModel(
       gameId: value,
@@ -76,7 +75,6 @@ class BulkSpBetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Methods to manage the bulkSp list
   void addBulkSpItem(BulkSp item) {
     _bulkSpModel = BulkSpModel(
       gameId: _bulkSpModel.gameId,
@@ -117,12 +115,10 @@ class BulkSpBetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Helper method to get total amount from all bulkSp items
   int getTotalAmount() {
     return _bulkSpModel.bulkSp.fold(0, (sum, item) => sum + item.amount);
   }
 
-  // Helper method to get count of bulkSp items
   int getBulkSpCount() {
     return _bulkSpModel.bulkSp.length;
   }

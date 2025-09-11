@@ -73,14 +73,12 @@ class _ProfilePageState extends State<ProfilePage> {
         listen: false,
       );
 
-      // Update provider values from controllers
       provider.setName(_nameController.text);
       provider.setNewPassword(_newPasswordController.text);
       provider.setConfirmPassword(_confirmPasswordController.text);
 
       await provider.updateProfile(context);
 
-      // Clear password fields on success if provider indicates success
       if (provider.successMessage != null && mounted) {
         _newPasswordController.clear();
         _confirmPasswordController.clear();
@@ -122,27 +120,6 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Notification toggle
-                // const Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Text(
-                //       "Enable / Disable Notifications",
-                //       style: TextStyle(
-                //         color: Colors.red,
-                //         fontWeight: FontWeight.w500,
-                //       ),
-                //     ),
-                //     SizedBox(width: 5),
-                //     Switch(
-                //       value: false,
-                //       onChanged: null,
-                //       inactiveTrackColor: Colors.grey,
-                //       inactiveThumbColor: Colors.white,
-                //       activeColor: Colors.orange,
-                //     ),
-                //   ],
-                // ),
                 const SizedBox(height: 20),
 
                 Form(

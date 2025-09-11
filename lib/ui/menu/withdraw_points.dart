@@ -36,7 +36,6 @@ class _WithdrawPointsState extends State<WithdrawPoints> {
           await SharedPreferences.getInstance();
       setState(() {
         userId = sharedPreferences.getString('user_id');
-        print('User ID: $userId');
       });
     } catch (error) {
       setState(() {

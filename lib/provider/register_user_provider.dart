@@ -9,33 +9,23 @@ class RegisterUserProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   RegisterUserModel? _registerResponse;
-  // String? _email;
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   RegisterUserModel? get registerResponse => _registerResponse;
-  // String? get email => _email;
 
-  // Set email for registration
-  // void setEmail(String value) {
-  //   _email = value;
-  //   notifyListeners();
-  // }
-
-  // Clear all state
   void reset() {
     _isLoading = false;
     _errorMessage = null;
     _registerResponse = null;
-    // _email = null;
+
     notifyListeners();
   }
 
-  // Register user
   Future<bool> registerUser({
     required String mobile,
     required String name,
-    //required String email,
+
     required String password,
     required String confirmPassword,
     required BuildContext context,
@@ -54,7 +44,6 @@ class RegisterUserProvider extends ChangeNotifier {
     final response = await authService.registerUser(
       mobile: mobile,
       name: name,
-      // email: email,
       password: password,
       confirmPassword: confirmPassword,
     );
@@ -66,7 +55,6 @@ class RegisterUserProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
-      // Show success message
       showCustomSnackBar(
         context: context,
         message: response.message,
@@ -78,7 +66,6 @@ class RegisterUserProvider extends ChangeNotifier {
       _errorMessage = response?.message ?? "Registration failed";
       notifyListeners();
 
-      // Show error message
       showCustomSnackBar(
         context: context,
         message: _errorMessage!,

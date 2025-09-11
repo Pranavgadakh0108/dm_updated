@@ -74,7 +74,6 @@ class UpdateProfileService {
       );
       return result?.success ?? false;
     } catch (e) {
-      print('Update failed: $e');
       return false;
     }
   }

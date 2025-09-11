@@ -28,7 +28,6 @@ class ChartsScreen extends StatelessWidget {
       body: Consumer<GameMarketProvider>(
         builder: (context, market, _) {
           return ListView.builder(
-            // padding: EdgeInsets.all(8),
             padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
             itemCount: market.gamesList?.length,
             itemBuilder: (context, index) {
@@ -40,7 +39,6 @@ class ChartsScreen extends StatelessWidget {
                 ),
                 margin: EdgeInsets.symmetric(vertical: 6),
                 child: Padding(
-                  //padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   padding: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.width * 0.01,
                     vertical: MediaQuery.of(context).size.height * 0.012,

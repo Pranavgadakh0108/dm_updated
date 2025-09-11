@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/fund_history.dart';
@@ -52,11 +54,11 @@ class GetFundHistory {
       }
 
       showCustomSnackBar(
-          context: context,
-          message: errorMessage,
-          backgroundColor: Colors.redAccent,
-          durationSeconds: 3,
-        );
+        context: context,
+        message: errorMessage,
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 3,
+      );
 
       return null;
     }

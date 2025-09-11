@@ -42,13 +42,6 @@ class _AddFundScreenWithQRState extends State<AddFundScreenWithQR> {
       qrProvider.getQrCodeProvider(context);
     });
   }
-  // bool _showErrorIcon = false;
-
-  // void _validateAmount() {
-  //   setState(() {
-  //     _showErrorIcon = _amountController.text.isEmpty;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +132,6 @@ class _AddFundScreenWithQRState extends State<AddFundScreenWithQR> {
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
-                      // onPressed: _validateAmount,
                       onPressed: () {
                         if (_globalKey.currentState!.validate()) {
                           final depositeManualPoints = DepositeManualPoints(

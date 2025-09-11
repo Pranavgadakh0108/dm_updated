@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+
 
 import 'package:dmboss/provider/register_user_provider.dart';
 import 'package:dmboss/ui/login_screen1.dart';
@@ -82,7 +82,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                     children: [
                       SizedBox(height: screenHeight * 0.05),
 
-                      // App logo
+                      
                       Container(
                         height: screenHeight * 0.2,
                         width: screenHeight * 0.2,
@@ -99,7 +99,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                       ),
                       SizedBox(height: screenHeight * 0.03),
 
-                      // Mobile field (read-only)
+                      
                       CustomPhoneField(
                         controller: TextEditingController(
                           text: widget.mobileNumber,
@@ -109,7 +109,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                       ),
                       SizedBox(height: screenHeight * 0.025),
 
-                      // Name field
+                      
                       CustomTextField(
                         controller: nameController,
                         hintText: 'Name',
@@ -127,29 +127,29 @@ class _LoginScreen3State extends State<LoginScreen3> {
                       ),
                       SizedBox(height: screenHeight * 0.025),
 
-                      // Email field
-                      // CustomTextField(
-                      //   controller: emailController,
-                      //   hintText: 'Email',
-                      //   icon: Icons.email,
-                      //   keyboardType: TextInputType.emailAddress,
-                      //   onChanged: (value) {
-                      //     emailController.text = value;
-                      //     registerProvider.setEmail(value);
-                      //   },
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty) {
-                      //       return "Enter the Email first...";
-                      //     }
-                      //     if (!emailRegex.hasMatch(value)) {
-                      //       return "Enter valid Email address";
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
-                      // SizedBox(height: screenHeight * 0.025),
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
 
-                      // Password field
+                      
                       CustomTextField(
                         controller: passwordController,
                         hintText: 'Password',
@@ -163,9 +163,9 @@ class _LoginScreen3State extends State<LoginScreen3> {
                           if (value == null || value.isEmpty) {
                             return "Enter the Password first...";
                           }
-                          // if (!passwordRegExp.hasMatch(value)) {
-                          //   return "Enter valid Password";
-                          // }
+                          
+                          
+                          
                           if (value.length < 4 || value.length > 4) {
                             return "Password required 4 digits";
                           }
@@ -174,7 +174,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                       ),
                       SizedBox(height: screenHeight * 0.025),
 
-                      // Confirm Password field
+                      
                       CustomTextField(
                         controller: confirmPasswordController,
                         hintText: 'Confirm Password',
@@ -190,9 +190,9 @@ class _LoginScreen3State extends State<LoginScreen3> {
                               value != passwordController.text) {
                             return "Enter the correct Password";
                           }
-                          // if (!passwordRegExp.hasMatch(value)) {
-                          //   return "Enter valid Password";
-                          // }
+                          
+                          
+                          
                           if (value.length < 4 || value.length > 4) {
                             return "Password required 4 digits";
                           }
@@ -201,7 +201,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                       ),
                       SizedBox(height: screenHeight * 0.025),
 
-                      // Error message
+                      
                       if (registerProvider.errorMessage != null)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
@@ -211,7 +211,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                           ),
                         ),
 
-                      // Continue Button
+                      
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orangeAccent,
@@ -219,7 +219,7 @@ class _LoginScreen3State extends State<LoginScreen3> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          // padding: const EdgeInsets.symmetric(vertical: 15),
+                          
                           padding: EdgeInsets.symmetric(
                             vertical:
                                 MediaQuery.of(context).size.height * 0.015,

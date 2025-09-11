@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: empty_catches, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -21,7 +21,6 @@ class _EnableNotificationsState extends State<EnableNotifications> {
     _loadNotificationStatus();
   }
 
-  // Load notification status from shared preferences
   Future<void> _loadNotificationStatus() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -30,7 +29,6 @@ class _EnableNotificationsState extends State<EnableNotifications> {
         _isLoading = false;
       });
     } catch (e) {
-      print('Error loading notification status: $e');
       setState(() {
         _notificationsEnabled = false;
         _isLoading = false;
@@ -38,20 +36,15 @@ class _EnableNotificationsState extends State<EnableNotifications> {
     }
   }
 
-  // Save notification status to shared preferences
   Future<void> _saveNotificationStatus(bool enabled) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('notifications_enabled', enabled);
-    } catch (e) {
-      print('Error saving notification status: $e');
-    }
+    } catch (e) {}
   }
 
-  // Enable notifications
   Future<void> _enableNotifications() async {
     try {
-      // Request permission
       final bool isAllowed = await AwesomeNotifications()
           .requestPermissionToSendNotifications();
 
@@ -60,9 +53,6 @@ class _EnableNotificationsState extends State<EnableNotifications> {
           _notificationsEnabled = true;
         });
         await _saveNotificationStatus(true);
-
-        // Start your notification polling service if you have one
-        // NotificationPollingService.startPolling();
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -81,7 +71,6 @@ class _EnableNotificationsState extends State<EnableNotifications> {
         );
       }
     } catch (e) {
-      print('Error enabling notifications: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error enabling notifications'),
@@ -91,19 +80,14 @@ class _EnableNotificationsState extends State<EnableNotifications> {
     }
   }
 
-  // Disable notifications
   Future<void> _disableNotifications() async {
     try {
-      // Cancel all pending notifications
       await AwesomeNotifications().cancelAll();
 
       setState(() {
         _notificationsEnabled = false;
       });
       await _saveNotificationStatus(false);
-
-      // Stop your notification polling service if you have one
-      // NotificationPollingService.stopPolling();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -112,7 +96,6 @@ class _EnableNotificationsState extends State<EnableNotifications> {
         ),
       );
     } catch (e) {
-      print('Error disabling notifications: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error disabling notifications'),
@@ -122,7 +105,6 @@ class _EnableNotificationsState extends State<EnableNotifications> {
     }
   }
 
-  // Toggle notifications
   Future<void> _toggleNotifications(bool value) async {
     if (value) {
       await _enableNotifications();
@@ -131,7 +113,6 @@ class _EnableNotificationsState extends State<EnableNotifications> {
     }
   }
 
-  // Check current notification status
   Future<void> _checkNotificationStatus() async {
     try {
       final bool isAllowed = await AwesomeNotifications()
@@ -140,9 +121,7 @@ class _EnableNotificationsState extends State<EnableNotifications> {
         _notificationsEnabled = isAllowed;
       });
       await _saveNotificationStatus(isAllowed);
-    } catch (e) {
-      print('Error checking notification status: $e');
-    }
+    } catch (e) {}
   }
 
   @override
@@ -171,7 +150,6 @@ class _EnableNotificationsState extends State<EnableNotifications> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Notification toggle
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -194,7 +172,6 @@ class _EnableNotificationsState extends State<EnableNotifications> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Additional information
                   Container(
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -228,7 +205,6 @@ class _EnableNotificationsState extends State<EnableNotifications> {
 
                   const SizedBox(height: 20),
 
-                  // Refresh status button
                   ElevatedButton.icon(
                     onPressed: _checkNotificationStatus,
                     icon: Icon(Icons.refresh),
@@ -241,10 +217,8 @@ class _EnableNotificationsState extends State<EnableNotifications> {
 
                   const SizedBox(height: 30),
 
-                  // App notification settings redirect (optional)
                   TextButton(
                     onPressed: () {
-                      // This will open the app's notification settings in system
                       AwesomeNotifications().showNotificationConfigPage();
                     },
                     child: Text(

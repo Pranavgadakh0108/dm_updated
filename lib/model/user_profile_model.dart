@@ -29,7 +29,6 @@ class User {
   String? id;
   String? mobile;
   String? name;
-  //String? email;
   int? wallet;
   String? session;
   String? code;
@@ -71,7 +70,6 @@ class User {
     id: json?["_id"],
     mobile: json?["mobile"],
     name: json?["name"],
-    // email: json?["email"],
     wallet: json?["wallet"],
     session: json?["session"],
     code: json?["code"],
@@ -93,7 +91,6 @@ class User {
     "_id": id,
     "mobile": mobile,
     "name": name,
-    // "email": email,
     "wallet": wallet,
     "session": session,
     "code": code,

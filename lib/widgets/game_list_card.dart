@@ -21,17 +21,14 @@ class GameListCard extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 6,
-      ), // add safe padding
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             decoration: const BoxDecoration(shape: BoxShape.circle),
-            //padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
+
             child: Image.asset(
               "assets/images/$icon",
               height: 70,

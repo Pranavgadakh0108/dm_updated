@@ -3,15 +3,13 @@ import 'package:dmboss/service/game_market_service.dart';
 import 'package:flutter/material.dart';
 
 class GameMarketProvider extends ChangeNotifier {
-  GamesModel? _gamesModel; // Changed from List<GamesModel> to GamesModel
+  GamesModel? _gamesModel;
   String? _errorMessage;
   bool _isLoading = false;
   String? _selectedGameId;
 
-  // Getter for the entire games model
   GamesModel? get gamesModel => _gamesModel;
 
-  // Getter for the list of games (convenience accessor)
   List<Game>? get gamesList => _gamesModel?.games;
 
   String? get errorMessage => _errorMessage;
@@ -26,7 +24,7 @@ class GameMarketProvider extends ChangeNotifier {
     final result = await service.getGamesService(context);
 
     if (result != null) {
-      _gamesModel = result; // Store the entire GamesModel
+      _gamesModel = result;
       _errorMessage = null;
     } else {
       _errorMessage = 'Failed to fetch games.';
@@ -47,7 +45,6 @@ class GameMarketProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Helper method to get a specific game by ID
   Game? getGameById(String gameId) {
     if (_gamesModel?.games == null) return null;
     return _gamesModel?.games.firstWhere(
@@ -55,15 +52,4 @@ class GameMarketProvider extends ChangeNotifier {
       orElse: () => throw Exception('Game not found'),
     );
   }
-
-  // Helper method to get a specific game by market name
-  // Game? getGameByMarketName(String marketName) {
-  //   if (_gamesModel?.games == null) return null;
-  //   return _gamesModel?.games.firstWhere(
-  //     (game) =>
-  //         game.bazar?.toLowerCase().contains(marketName.toLowerCase()) ||
-  //         marketName.toLowerCase().contains(game.bazar?.toLowerCase()),
-  //     orElse: () => throw Exception('Game not found'),
-  //   );
-  // }
 }

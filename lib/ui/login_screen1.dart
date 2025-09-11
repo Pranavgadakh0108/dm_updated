@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/provider/games_settings_provider.dart';
 import 'package:dmboss/provider/mobile_exist_provider.dart';
@@ -23,7 +21,7 @@ class LoginScreen1 extends StatefulWidget {
 class _LoginScreen1State extends State<LoginScreen1> {
   final TextEditingController mobileController = TextEditingController();
   final GlobalKey<FormState> _globalKey = GlobalKey();
-  bool _isNavigating = false; // Add this flag to prevent multiple navigations
+  bool _isNavigating = false;
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -85,11 +83,10 @@ class _LoginScreen1State extends State<LoginScreen1> {
         backgroundColor: Colors.white,
         body: Consumer<MobileCheckProvider>(
           builder: (context, mobileCheckProvider, child) {
-            // Handle navigation when response arrives
             if (mobileCheckProvider.mobileExistResponse != null &&
                 !mobileCheckProvider.isLoading &&
                 !_isNavigating) {
-              _isNavigating = true; // Set flag to prevent multiple navigations
+              _isNavigating = true;
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mobileCheckProvider.mobileExists) {
                   Navigator.pushReplacement(
@@ -109,7 +106,6 @@ class _LoginScreen1State extends State<LoginScreen1> {
                   );
                 }
 
-                // Reset after a delay to allow navigation to complete
                 Future.delayed(const Duration(milliseconds: 100), () {
                   _isNavigating = false;
                   mobileCheckProvider.reset();
@@ -129,7 +125,6 @@ class _LoginScreen1State extends State<LoginScreen1> {
                     children: [
                       SizedBox(height: screenHeight * 0.08),
 
-                      // App logo
                       Container(
                         height: screenHeight * 0.2,
                         width: screenHeight * 0.2,
@@ -181,7 +176,7 @@ class _LoginScreen1State extends State<LoginScreen1> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          // padding: const EdgeInsets.symmetric(vertical: 15),
+
                           padding: EdgeInsets.symmetric(
                             vertical:
                                 MediaQuery.of(context).size.height * 0.015,

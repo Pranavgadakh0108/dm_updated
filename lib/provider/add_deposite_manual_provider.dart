@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:dmboss/service/add_deposite_points_manual.dart';
 import 'package:dmboss/widgets/custom_snackbar.dart';
@@ -47,7 +47,6 @@ class AddDepositePointsManualProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Clear all fields
   void clearFields() {
     _amount = null;
     _transactionId = null;
@@ -56,14 +55,12 @@ class AddDepositePointsManualProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Clear messages
   void clearMessages() {
     _errorMessage = null;
     _successMessage = null;
     notifyListeners();
   }
 
-  // Check if all required fields are filled
   bool get isFormValid {
     return _amount != null &&
         _amount!.isNotEmpty &&
@@ -96,7 +93,6 @@ class AddDepositePointsManualProvider extends ChangeNotifier {
 
       _isLoading = false;
 
-      print("result:---$result");
       //if (result != null) {
       if (result == null) {
         _depositePoints = result;
@@ -123,7 +119,6 @@ class AddDepositePointsManualProvider extends ChangeNotifier {
     } catch (e) {
       _isLoading = false;
       _errorMessage = e.toString();
-      print('Add deposit points error: $e');
 
       showCustomSnackBar(
         context: context,

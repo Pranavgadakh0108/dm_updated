@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dmboss/provider/notification_admin_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

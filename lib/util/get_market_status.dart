@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 const String marketStatusRunningForToday = "Running For Today";
-const String marketStatusRunningForClose = "Running For Today"; // Changed this
+const String marketStatusRunningForClose = "Running For Today";
 const String marketStatusClosedForToday = "Closed For Today";
 const String marketStatusHoliday = "Holiday";
 const String marketStatusInvalidData = "Invalid Data";
@@ -41,12 +41,10 @@ String getMarketStatus(String openTime, String closeTime, String days) {
     final openMinutes = openTimeOfDay.hour * 60 + openTimeOfDay.minute;
     final closeMinutes = closeTimeOfDay.hour * 60 + closeTimeOfDay.minute;
 
-    // Handle the case where market is between 12:00 AM and open time
     if (currentMinutes < openMinutes) {
-      return marketStatusRunningForClose; // Market is running but not open yet
+      return marketStatusRunningForClose;
     }
 
-    // Handle normal open hours
     if (currentMinutes >= openMinutes && currentMinutes < closeMinutes) {
       return marketStatusRunningForToday;
     } else if (currentMinutes >= closeMinutes) {
@@ -91,7 +89,7 @@ String getMarketStatusMessage(String status) {
     case marketStatusRunningForToday:
       return 'Play Now';
     case marketStatusRunningForClose:
-      return 'Play Now'; // Different message for pre-open
+      return 'Play Now';
     case marketStatusClosedForToday:
       return 'Closed Now';
     case marketStatusHoliday:
@@ -116,7 +114,7 @@ Color getMarketStatusColor(String status) {
     case marketStatusRunningForToday:
       return Colors.green;
     case marketStatusRunningForClose:
-      return Colors.green; // Different color for pre-open
+      return Colors.green;
     case marketStatusClosedForToday:
       return Colors.red;
     case marketStatusHoliday:
@@ -133,7 +131,7 @@ Color getMarketButtonColor(String status) {
     case marketStatusRunningForToday:
       return Colors.orange;
     case marketStatusRunningForClose:
-      return Colors.orange; // Different color for pre-open button
+      return Colors.orange;
     case marketStatusClosedForToday:
       return Colors.red;
     case marketStatusHoliday:
@@ -147,7 +145,6 @@ Color getMarketButtonColor(String status) {
 
 bool isMarketOpen(String status) {
   return status == marketStatusRunningForToday;
-  // marketStatusRunningForClose is not considered "open" yet
 }
 
 bool isMarketRunning(String status) {
@@ -191,7 +188,6 @@ String getFormattedDays(String days) {
   }
 }
 
-// Additional helper function to get time until market opens
 String getTimeUntilOpen(String openTime) {
   try {
     final now = DateTime.now();

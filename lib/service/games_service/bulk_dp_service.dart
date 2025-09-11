@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/games_model/bulk_dp_model.dart';
@@ -35,16 +37,8 @@ class BulkDpBetService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Text("Bulk SP bet placed successfully!")),
-        // );
         return response.data;
       } else {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content: Text("Failed to place bulk SP bet: ${response.statusCode}"),
-        //   ),
-        // );
         return null;
       }
     } catch (e) {

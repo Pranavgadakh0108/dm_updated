@@ -4,6 +4,6 @@ import 'package:share_plus/share_plus.dart';
 
 void shareText() {
   String message =
-      "Download DM Boss and earn money at home, Download link- https://dmbossgame.com/dmboss.apk";
+      "Download DM Boss and earn money at home, Download link- https://dmbossonline.com/Dmbossonline.apk";
   Share.share(message);
 }

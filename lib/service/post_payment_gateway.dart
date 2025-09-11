@@ -42,9 +42,6 @@ class PostPaymentGateway {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print(response.data['payment_link']);
-        print("---------------------");
-        print(response.data);
         method == 'Norapay'
             ? makePayment(response.data['upi_intent'])
             : makePayment(response.data['pay_url']);
@@ -67,8 +64,6 @@ class PostPaymentGateway {
       } else {
         errorMessage = e.message ?? "Network error occurred";
       }
-
-      print(e.response?.data);
 
       if (context.mounted) {
         showCustomSnackBar(

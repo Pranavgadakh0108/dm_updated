@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dmboss/model/games_model/single_ank_model.dart';
 import 'package:dmboss/service/games_service/single_ank_service.dart';
 import 'package:dmboss/widgets/custom_snackbar.dart';
@@ -67,7 +69,6 @@ class PanelGroupProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Individual setters for each property
   void setGameId(String value) {
     _singleAnkModel = SingleAnkModel(
       gameId: value,

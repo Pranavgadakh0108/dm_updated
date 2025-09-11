@@ -27,66 +27,54 @@ class GameListScreen extends StatelessWidget {
     required this.resultStatus,
   });
 
-  // Function to check if current time is before open time
   bool _isBeforeOpenTime() {
     final currentTime = getCurrentTimeFormatted();
-    return _compareTimes(currentTime, openTime) > 0; // Changed to < 0
+    return _compareTimes(currentTime, openTime) > 0;
   }
 
-  // Helper function to compare two time strings
   int _compareTimes(String time1, String time2) {
     try {
       final dateTime1 = _parseTimeString(time1);
       final dateTime2 = _parseTimeString(time2);
       return dateTime1.compareTo(dateTime2);
     } catch (e) {
-      // If parsing fails, fallback to showing all games
-      return 0; // Treat as equal, will show all games
+      return 0;
     }
   }
 
-  // Helper function to parse time string in 24-hour format
   DateTime _parseTimeString(String timeString) {
     final now = DateTime.now();
 
-    // Clean the time string - remove any spaces and ensure proper format
     String cleanedTime = timeString
         .trim()
         .replaceAll(' ', '')
         .replaceAll('.', ':');
 
-    // Handle 24-hour format (e.g., "10:00", "22:00", "21:00")
     if (cleanedTime.contains(RegExp(r'^\d{1,2}:\d{2}$'))) {
       final parts = cleanedTime.split(':');
       final hour = int.parse(parts[0]);
       final minute = int.parse(parts[1]);
 
-      // Validate hour and minute ranges
       if (hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59) {
         return DateTime(now.year, now.month, now.day, hour, minute);
       }
     }
 
-    // If format is not recognized or invalid, return current time (fallback)
     return now;
   }
 
-  // Function to check if current time is after close time
   bool _isAfterCloseTime() {
     final currentTime = getCurrentTimeFormatted();
     return _compareTimes(currentTime, closeTime) > 0;
   }
 
-  // Function to check if venue is currently open
   bool isVenueOpen() {
     return !_isBeforeOpenTime() && !_isAfterCloseTime();
   }
 
-  // Filter games based on time condition
   List<Map<String, dynamic>> _getFilteredGames() {
     try {
       if (_isBeforeOpenTime()) {
-        // Before open time - show only limited games
         final limitedGames = [
           'Single Ank',
           'Single Patti',
@@ -101,11 +89,9 @@ class GameListScreen extends StatelessWidget {
             .where((game) => limitedGames.contains(game['title']))
             .toList();
       } else {
-        // After open time - show all games
         return gameList;
       }
     } catch (e) {
-      // If any error occurs in time comparison, show all games as fallback
       return gameList;
     }
   }
@@ -113,9 +99,6 @@ class GameListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filteredGames = _getFilteredGames();
-
-    // You can now use marketId for API calls or other operations
-    print("Market ID in GameListScreen: $marketId");
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -147,7 +130,7 @@ class GameListScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, // 3 items in a row
+            crossAxisCount: 3,
             crossAxisSpacing: 15,
             mainAxisSpacing: 30,
             childAspectRatio: 0.9,
@@ -209,7 +192,7 @@ class GameListScreen extends StatelessWidget {
                       builder: (context) => SinglePatti(
                         title: filteredGames[index]['title'],
                         gameName: title,
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                         openTime: openTime,
                       ),
                     ),
@@ -221,7 +204,7 @@ class GameListScreen extends StatelessWidget {
                       builder: (context) => DoublePatti(
                         title: filteredGames[index]['title'],
                         gameName: title,
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                         openTime: openTime,
                       ),
                     ),
@@ -233,7 +216,7 @@ class GameListScreen extends StatelessWidget {
                       builder: (context) => TripplePatti(
                         title: filteredGames[index]['title'],
                         gameName: title,
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                         openTime: openTime,
                       ),
                     ),
@@ -245,7 +228,7 @@ class GameListScreen extends StatelessWidget {
                       builder: (context) => GroupJodi(
                         title: filteredGames[index]['title'],
                         gameName: title,
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                       ),
                     ),
                   );
@@ -256,7 +239,7 @@ class GameListScreen extends StatelessWidget {
                       builder: (context) => PanelGroup(
                         title: filteredGames[index]['title'],
                         gameName: title,
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                         openTime: openTime,
                       ),
                     ),
@@ -268,7 +251,7 @@ class GameListScreen extends StatelessWidget {
                       builder: (context) => HalfSangam(
                         title: filteredGames[index]['title'],
                         gameName: title,
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                       ),
                     ),
                   );
@@ -279,7 +262,7 @@ class GameListScreen extends StatelessWidget {
                       builder: (context) => BulkJodii(
                         title: filteredGames[index]['title'],
                         gameName: title,
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                       ),
                     ),
                   );
@@ -291,7 +274,7 @@ class GameListScreen extends StatelessWidget {
                         title: filteredGames[index]['title'],
                         gameName: title,
                         openTime: openTime,
-                        marketId: marketId, // Pass marketId
+                        marketId: marketId,
                       ),
                     ),
                   );

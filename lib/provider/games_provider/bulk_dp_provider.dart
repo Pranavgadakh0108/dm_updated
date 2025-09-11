@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:dmboss/model/games_model/bulk_dp_model.dart';
 import 'package:dmboss/service/games_service/bulk_dp_service.dart';
 import 'package:dmboss/widgets/custom_snackbar.dart';
@@ -41,7 +39,6 @@ class BulkDpBetProvider extends ChangeNotifier {
     _isLoading = false;
 
     if (response != null) {
-      
       _betResponse = response;
       showCustomSnackBar(
         context: context,
@@ -66,7 +63,6 @@ class BulkDpBetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Individual setters for each property
   void setGameId(String value) {
     _bulkDpModel = BulkDpModel(
       gameId: value,
@@ -85,7 +81,6 @@ class BulkDpBetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Methods to manage the bulkSp list
   void addBulkDpItem(BulkDp item) {
     _bulkDpModel = BulkDpModel(
       gameId: _bulkDpModel.gameId,
@@ -126,12 +121,10 @@ class BulkDpBetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Helper method to get total amount from all bulkSp items
   int getTotalAmount() {
     return _bulkDpModel.bulkDp.fold(0, (sum, item) => sum + item.amount);
   }
 
-  // Helper method to get count of bulkSp items
   int getBulkDpCount() {
     return _bulkDpModel.bulkDp.length;
   }

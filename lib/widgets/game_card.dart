@@ -22,19 +22,17 @@ class GameCard extends StatelessWidget {
       color: Colors.white,
       shadowColor: Colors.grey,
       elevation: 3,
-      // margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+
       margin: EdgeInsets.symmetric(
         horizontal: MediaQuery.of(context).size.width * 0.03,
         vertical: MediaQuery.of(context).size.height * 0.007,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
-        // padding: const EdgeInsets.all(12),
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Left section
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -77,7 +75,6 @@ class GameCard extends StatelessWidget {
               ],
             ),
 
-            // Right section
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

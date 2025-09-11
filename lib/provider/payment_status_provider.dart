@@ -48,7 +48,6 @@ class PaymentStatusProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Clear all fields
   void clearFields() {
     _amount = null;
     _name = null;
@@ -57,14 +56,12 @@ class PaymentStatusProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Clear messages
   void clearMessages() {
     _errorMessage = null;
     _successMessage = null;
     notifyListeners();
   }
 
-  // Check if all required fields are filled
   bool get isFormValid {
     return _amount != null &&
         _amount!.isNotEmpty &&
@@ -95,7 +92,6 @@ class PaymentStatusProvider extends ChangeNotifier {
         paymentGateWayIntegration,
         paymentStatusModelTnxRedirected,
         method,
-
       );
 
       if (result != null) {

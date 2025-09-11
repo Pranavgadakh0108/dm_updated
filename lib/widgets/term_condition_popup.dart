@@ -10,7 +10,7 @@ void showTermsPopup(
 ) {
   showDialog(
     context: context,
-    barrierDismissible: false, // Force user to click OK
+    barrierDismissible: false,
     builder: (context) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         gameSettingsProviders.getGameSettings(context);
@@ -27,7 +27,6 @@ void showTermsPopup(
                 borderRadius: BorderRadius.circular(12),
               ),
               backgroundColor: Colors.white,
-              // contentPadding: const EdgeInsets.all(16),
               contentPadding: EdgeInsets.all(
                 MediaQuery.of(context).size.width * 0.04,
               ),

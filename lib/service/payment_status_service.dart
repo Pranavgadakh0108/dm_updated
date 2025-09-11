@@ -37,18 +37,12 @@ class PaymentStatusService {
 
       final response = await dio.post(
         '/deposit/pg/status',
-        data: method =="Norapay"? paymentGateway1.toJson() : paymentGateWay.toJson(),
+        data: method == "Norapay"
+            ? paymentGateway1.toJson()
+            : paymentGateWay.toJson(),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print(response.data['payment_link']);
-        print("---------------------");
-        print(response.data);
-
-        // Access the first element of the results array (index 0) which contains the "create" data
-
-        // makePayment(response.data['results']['pay_url']);
-
         return PaymentStatusModelRedirected.fromJson(response.data);
       } else {
         throw Exception('Failed to do payment: ${response.statusCode}');
@@ -68,8 +62,6 @@ class PaymentStatusService {
       } else {
         errorMessage = e.message ?? "Network error occurred";
       }
-
-      print(e.response?.data);
 
       if (context.mounted) {
         showCustomSnackBar(

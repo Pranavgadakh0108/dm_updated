@@ -39,7 +39,6 @@ class ProfileUpdateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Clear messages
   void clearMessages() {
     _errorMessage = null;
     _successMessage = null;
@@ -55,7 +54,6 @@ class ProfileUpdateProvider extends ChangeNotifier {
     try {
       final profileService = UpdateProfileService();
 
-      // Use the service method that returns UpdateProfileModel
       final result = await profileService.updateProfile(
         name: _name,
         newPassword: _newPassword,
@@ -68,7 +66,6 @@ class ProfileUpdateProvider extends ChangeNotifier {
         _updateProfileModel = result;
         _successMessage = 'Profile updated successfully';
 
-        // Clear password fields after successful update
         _newPassword = null;
         _confirmPassword = null;
 
@@ -103,7 +100,6 @@ class ProfileUpdateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Alternative simple method that returns boolean
   Future<bool> updateProfileSimple() async {
     _isLoading = true;
     _errorMessage = null;

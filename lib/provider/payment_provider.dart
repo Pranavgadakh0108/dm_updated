@@ -50,13 +50,12 @@ class PaymentProvider extends ChangeNotifier {
     _redirectUrl = value.isNotEmpty ? value : null;
     notifyListeners();
   }
-  
-  void setOrderId(String value){
+
+  void setOrderId(String value) {
     _orderId = value.isNotEmpty ? value : null;
     notifyListeners();
   }
 
-  // Clear all fields
   void clearFields() {
     _amount = null;
     _name = null;
@@ -65,14 +64,12 @@ class PaymentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Clear messages
   void clearMessages() {
     _errorMessage = null;
     _successMessage = null;
     notifyListeners();
   }
 
-  // Check if all required fields are filled
   bool get isFormValid {
     return _amount != null &&
         _amount!.isNotEmpty &&

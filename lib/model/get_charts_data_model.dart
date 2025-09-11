@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getChartDataModel = getChartDataModelFromJson(jsonString);
 
 import 'dart:convert';
 

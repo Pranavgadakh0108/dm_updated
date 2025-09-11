@@ -27,7 +27,6 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
   ];
 
   void onTapSelectItem(int index) {
-    // Handle support tab separately
     if (index == 4) {
       openWhatsApp(supportPhoneNumber);
       return;
@@ -42,8 +41,15 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        showExitDialog(context);
-        return false; // prevent default back
+        if (selectedIndex == 2) {
+          showExitDialog(context);
+          return false;
+        } else {
+          setState(() {
+            selectedIndex = 2;
+          });
+          return false;
+        }
       },
       child: Scaffold(
         body: screens[selectedIndex],

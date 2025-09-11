@@ -71,7 +71,6 @@ class BulkJodiBetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Individual setters for each property
   void setGameId(String value) {
     _bulkJodiModel = BulkJodiModel(
       gameId: value,
@@ -116,7 +115,6 @@ class BulkJodiBetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Methods to manage the bulkJodi list
   void addBulkJodiItem(BulkJodi item) {
     _bulkJodiModel = BulkJodiModel(
       gameId: _bulkJodiModel.gameId,
@@ -165,22 +163,18 @@ class BulkJodiBetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Helper method to get total amount from all bulkJodi items
   int getTotalAmount() {
     return _bulkJodiModel.bulkJodi.fold(0, (sum, item) => sum + item.amount);
   }
 
-  // Helper method to get count of bulkJodi items
   int getBulkJodiCount() {
     return _bulkJodiModel.bulkJodi.length;
   }
 
-  // Helper method to check if bulkJodi list is empty
   bool isBulkJodiEmpty() {
     return _bulkJodiModel.bulkJodi.isEmpty;
   }
 
-  // Helper method to get a specific bulkJodi item by index
   BulkJodi? getBulkJodiItem(int index) {
     if (index >= 0 && index < _bulkJodiModel.bulkJodi.length) {
       return _bulkJodiModel.bulkJodi[index];

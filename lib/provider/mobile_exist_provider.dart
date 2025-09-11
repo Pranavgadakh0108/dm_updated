@@ -18,14 +18,11 @@ class MobileCheckProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   MobileExistModel? get mobileExistResponse => _mobileExistResponse;
 
-  // Update mobile number
   void setMobileNumber(String value) {
     _mobileNumber = value;
-    print(value);
     notifyListeners();
   }
 
-  // Clear all state
   void reset() {
     _isLoading = false;
     _mobileExists = false;
@@ -35,7 +32,6 @@ class MobileCheckProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Check mobile existence
   Future<void> checkMobileExists(
     BuildContext context,
     String mobileNumber,
@@ -61,52 +57,34 @@ class MobileCheckProvider extends ChangeNotifier {
       _mobileExists = response.exists;
 
       if (response.exists) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content: Text("Mobile number already exists"),
-        //     backgroundColor: Colors.green,
-        //   ),
-        // );
         showCustomSnackBar(
           context: context,
           message: "Mobile number already exists",
           backgroundColor: Colors.green,
-          durationSeconds: 2
+          durationSeconds: 2,
         );
       } else {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content: Text("Mobile number not Exist. Register First."),
-        //     backgroundColor: Colors.orange,
-        //   ),
-        // );
-         showCustomSnackBar(
+        showCustomSnackBar(
           context: context,
           message: "Mobile number not Exist. Register First.",
           backgroundColor: Colors.orange,
-          durationSeconds: 2
+          durationSeconds: 2,
         );
       }
     } else {
       _errorMessage = "Failed to check mobile number";
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text("Failed to check mobile number"),
-      //     backgroundColor: Colors.redAccent,
-      //   ),
-      // );
+
       showCustomSnackBar(
-          context: context,
-          message: "Failed to check mobile number",
-          backgroundColor: Colors.red,
-          durationSeconds: 2
-        );
+        context: context,
+        message: "Failed to check mobile number",
+        backgroundColor: Colors.red,
+        durationSeconds: 2,
+      );
     }
 
     notifyListeners();
   }
 
-  // Alternative simplified method that returns just the boolean result
   Future<bool?> checkMobileExistsSimple(String mobileNumber) async {
     if (mobileNumber.isEmpty) {
       _errorMessage = "Mobile number is required";

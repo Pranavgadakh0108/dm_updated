@@ -84,13 +84,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             );
           },
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.refresh),
-        //     onPressed: _retryLoading,
-        //     tooltip: 'Refresh',
-        //   ),
-        // ],
+
         actions: [
           Container(
             margin: EdgeInsets.all(screenWidth * 0.02),
@@ -121,13 +115,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
     return Consumer<GetTransactionHistoryProvider>(
       builder: (context, provider, _) {
-        // Show empty state if no transactions
         if (provider.transactionHistoryModel == null ||
             provider.transactionHistoryModel!.transactions.isEmpty) {
           return _buildEmptyState();
         }
 
-        // Show data state
         return _buildDataState(provider);
       },
     );
@@ -238,9 +230,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           itemBuilder: (context, index) {
             final transaction =
                 provider.transactionHistoryModel!.transactions[index];
-            print(transaction.type?.name.toString());
-            print("transaction mrket :${transaction.market}");
-            print("transaction gametype :${transaction.gameType}");
+
             final isDebit = transaction.amount < 0;
             final amountColor =
                 isDebit ||
@@ -270,7 +260,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Date and Time
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -296,11 +285,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    // Amount and Narration
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Amount Section
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -355,12 +342,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                             ],
                           ),
                         ),
-
-                        // SizedBox(width: 10,),
                       ],
                     ),
 
-                    // Transaction Type Badge
                     if (transaction.narration != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8),

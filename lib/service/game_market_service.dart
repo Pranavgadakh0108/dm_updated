@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/games_model.dart';
@@ -28,7 +30,6 @@ class GameMarketService {
       final result = await dio.get("/games/games");
 
       if (result.statusCode == 200) {
-        // Parse the response using the GamesModel
         return GamesModel.fromJson(result.data);
       } else {
         showCustomSnackBar(
@@ -53,11 +54,11 @@ class GameMarketService {
       }
 
       showCustomSnackBar(
-          context: context,
-          message: errorMessage,
-          backgroundColor: Colors.redAccent,
-          durationSeconds: 3,
-        );
+        context: context,
+        message: errorMessage,
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 3,
+      );
 
       return null;
     }

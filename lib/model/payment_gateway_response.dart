@@ -1,56 +1,3 @@
-// // To parse this JSON data, do
-// //
-// //     final paymentGatewayResponse = paymentGatewayResponseFromJson(jsonString);
-
-// import 'dart:convert';
-
-// PaymentGatewayResponse paymentGatewayResponseFromJson(String? str) =>
-//     PaymentGatewayResponse.fromJson(json.decode(str ?? ""));
-
-// String? paymentGatewayResponseToJson(PaymentGatewayResponse data) =>
-//     json.encode(data.toJson());
-
-// class PaymentGatewayResponse {
-//   bool? success;
-//   String? message;
-//   String? depositId;
-//   String? merchantTxnid;
-//   String? norapayTxnid;
-//   String? paymentLink;
-//   String? qrData;
-
-//   PaymentGatewayResponse({
-//     required this.success,
-//     required this.message,
-//     required this.depositId,
-//     required this.merchantTxnid,
-//     required this.norapayTxnid,
-//     required this.paymentLink,
-//     required this.qrData,
-//   });
-
-//   factory PaymentGatewayResponse.fromJson(Map<String?, dynamic>? json) =>
-//       PaymentGatewayResponse(
-//         success: json?["success"],
-//         message: json?["message"],
-//         depositId: json?["deposit_id"],
-//         merchantTxnid: json?["merchant_txnid"],
-//         norapayTxnid: json?["norapay_txnid"],
-//         paymentLink: json?["payment_link"],
-//         qrData: json?["qr_data"],
-//       );
-
-//   Map<String?, dynamic>? toJson() => {
-//     "success": success,
-//     "message": message,
-//     "deposit_id": depositId,
-//     "merchant_txnid": merchantTxnid,
-//     "norapay_txnid": norapayTxnid,
-//     "payment_link": paymentLink,
-//     "qr_data": qrData,
-//   };
-// }
-
 import 'dart:convert';
 
 PaymentGatewayResponse paymentGatewayResponseFromJson(String str) =>
@@ -77,17 +24,18 @@ class PaymentGatewayResponse {
         success: json["success"] as bool? ?? false,
         method: json["method"] as String? ?? "",
         action: json["action"] as String? ?? "",
-        results: List<Result>.from((json["results"] as List? ?? []).map((x) => Result.fromJson(x))),
+        results: List<Result>.from(
+          (json["results"] as List? ?? []).map((x) => Result.fromJson(x)),
+        ),
       );
 
   Map<String, dynamic> toJson() => {
-        "success": success,
-        "method": method,
-        "action": action,
-        "results": List<dynamic>.from(results.map((x) => x.toJson())),
-      };
+    "success": success,
+    "method": method,
+    "action": action,
+    "results": List<dynamic>.from(results.map((x) => x.toJson())),
+  };
 
-  // Helper method to get the create data easily
   CreateData? getCreateData() {
     for (var result in results) {
       if (result.label == "create") {
@@ -103,23 +51,19 @@ class Result {
   int httpStatus;
   Map<String, dynamic> data;
 
-  Result({
-    required this.label,
-    required this.httpStatus,
-    required this.data,
-  });
+  Result({required this.label, required this.httpStatus, required this.data});
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
-        label: json["label"] as String? ?? "",
-        httpStatus: json["http_status"] as int? ?? 0,
-        data: (json["data"] as Map<String, dynamic>?) ?? {},
-      );
+    label: json["label"] as String? ?? "",
+    httpStatus: json["http_status"] as int? ?? 0,
+    data: (json["data"] as Map<String, dynamic>?) ?? {},
+  );
 
   Map<String, dynamic> toJson() => {
-        "label": label,
-        "http_status": httpStatus,
-        "data": data,
-      };
+    "label": label,
+    "http_status": httpStatus,
+    "data": data,
+  };
 }
 
 class CreateData {
@@ -146,26 +90,26 @@ class CreateData {
   });
 
   factory CreateData.fromJson(Map<String, dynamic> json) => CreateData(
-        success: json["success"] as bool? ?? false,
-        message: json["message"] as String? ?? "",
-        depositId: json["deposit_id"] as String? ?? "",
-        merchantTxnid: json["merchant_txnid"] as String?,
-        norapayTxnid: json["norapay_txnid"] as String?,
-        paymentLink: json["payment_link"] as String?,
-        qrData: json["qr_data"] as String?,
-        upiIntent: json["upi_intent"] as String?,
-        androidIntentUrl: json["android_intent_url"] as String?,
-      );
+    success: json["success"] as bool? ?? false,
+    message: json["message"] as String? ?? "",
+    depositId: json["deposit_id"] as String? ?? "",
+    merchantTxnid: json["merchant_txnid"] as String?,
+    norapayTxnid: json["norapay_txnid"] as String?,
+    paymentLink: json["payment_link"] as String?,
+    qrData: json["qr_data"] as String?,
+    upiIntent: json["upi_intent"] as String?,
+    androidIntentUrl: json["android_intent_url"] as String?,
+  );
 
   Map<String, dynamic> toJson() => {
-        "success": success,
-        "message": message,
-        "deposit_id": depositId,
-        "merchant_txnid": merchantTxnid,
-        "norapay_txnid": norapayTxnid,
-        "payment_link": paymentLink,
-        "qr_data": qrData,
-        "upi_intent": upiIntent,
-        "android_intent_url": androidIntentUrl,
-      };
+    "success": success,
+    "message": message,
+    "deposit_id": depositId,
+    "merchant_txnid": merchantTxnid,
+    "norapay_txnid": norapayTxnid,
+    "payment_link": paymentLink,
+    "qr_data": qrData,
+    "upi_intent": upiIntent,
+    "android_intent_url": androidIntentUrl,
+  };
 }

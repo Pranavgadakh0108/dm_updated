@@ -12,7 +12,6 @@ class AddButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.orange,
-        // padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
         padding: EdgeInsets.symmetric(
           horizontal: MediaQuery.of(context).size.width * 0.13,
           vertical: MediaQuery.of(context).size.height * 0.013,

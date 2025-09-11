@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final PendingWithdrawCountModel = PendingWithdrawCountModelFromJson(jsonString);
-
 import 'dart:convert';
 
 PendingWithdrawCountModel pendingWithdrawCountModelFromJson(String str) =>

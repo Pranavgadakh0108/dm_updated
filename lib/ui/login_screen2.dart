@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:dmboss/provider/games_settings_provider.dart';
 import 'package:dmboss/provider/login_user_provider.dart';
 import 'package:dmboss/ui/login_screen1.dart';
@@ -39,7 +37,6 @@ class _LoginScreen2State extends State<LoginScreen2> {
       );
 
       if (success && mounted) {
-        // Login success - navigate to home screen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const AppNavigationBar()),
@@ -120,9 +117,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                               if (value == null || value.isEmpty) {
                                 return "Enter the Password first...";
                               }
-                              // if (!passwordRegExp.hasMatch(value)) {
-                              //   return "Enter valid Password";
-                              // }
+
                               if (value.length < 4 || value.length > 4) {
                                 return "Password required 4 digits";
                               }
@@ -138,7 +133,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              // padding: const EdgeInsets.symmetric(vertical: 15),
+
                               padding: EdgeInsets.symmetric(
                                 vertical:
                                     MediaQuery.of(context).size.height * 0.015,
@@ -161,7 +156,6 @@ class _LoginScreen2State extends State<LoginScreen2> {
                           ),
                           SizedBox(height: screenHeight * 0.03),
 
-                          // Error message if any
                           if (loginProvider.errorMessage != null)
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -178,7 +172,6 @@ class _LoginScreen2State extends State<LoginScreen2> {
                               ),
                             ),
 
-                          // Common section
                           _buildCommonSection(isSmallScreen),
                         ],
                       ),
@@ -186,7 +179,6 @@ class _LoginScreen2State extends State<LoginScreen2> {
                   ),
                 ),
 
-                // Loading overlay
                 if (loginProvider.isLoading)
                   Container(
                     color: Colors.black.withOpacity(0.3),

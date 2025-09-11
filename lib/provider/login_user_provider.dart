@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:dmboss/model/login_user_model.dart';
 import 'package:dmboss/service/login_user.dart';
 import 'package:dmboss/widgets/custom_snackbar.dart';
@@ -16,13 +14,11 @@ class LoginUserProvider extends ChangeNotifier {
   LoginUserModel? get loginResponse => _loginResponse;
   String? get mobile => _mobile;
 
-  // Set mobile for login
   void setMobile(String value) {
     _mobile = value;
     notifyListeners();
   }
 
-  // Clear all state
   void reset() {
     _isLoading = false;
     _errorMessage = null;
@@ -31,7 +27,6 @@ class LoginUserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Login user
   Future<bool> loginUser({
     required String mobile,
     required String password,
@@ -60,10 +55,8 @@ class LoginUserProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
-      // Store login data (token, user info) - This now properly stores the token
       await authService.storeLoginData(response);
 
-      // Show success message
       showCustomSnackBar(
         context: context,
         message: response.message,
@@ -77,7 +70,6 @@ class LoginUserProvider extends ChangeNotifier {
           response?.message ?? "Login failed. Please check your credentials.";
       notifyListeners();
 
-      // Show error message
       showCustomSnackBar(
         context: context,
         message: _errorMessage!,
@@ -89,7 +81,6 @@ class LoginUserProvider extends ChangeNotifier {
     }
   }
 
-  // Simple login without full response
   Future<bool> loginUserSimple({
     required String mobile,
     required String password,
@@ -117,12 +108,6 @@ class LoginUserProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text("Login successful!"),
-      //     backgroundColor: Colors.green,
-      //   ),
-      // );
       showCustomSnackBar(
         context: context,
         message: "Login successful!",
@@ -144,21 +129,13 @@ class LoginUserProvider extends ChangeNotifier {
     }
   }
 
-  // Check login status
   Future<bool> checkLoginStatus() async {
     final authService = AuthService();
     return await authService.isLoggedIn();
   }
 
-  // Get stored token
   Future<String?> getStoredToken() async {
     final authService = AuthService();
     return await authService.getStoredToken();
   }
-
-  // Logout
-  // Future<void> logout() async {
-  //   clearAuthData(context);
-  //   reset(); // Reset provider state
-  // }
 }

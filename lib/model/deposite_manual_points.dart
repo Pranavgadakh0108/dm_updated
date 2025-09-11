@@ -5,7 +5,6 @@ class DepositeManualPoints {
   DepositeManualPoints({required this.transactionId, required this.amount});
 
   factory DepositeManualPoints.fromJson(Map<String, dynamic> json) {
-    // Handle amount field which might be string or int
     dynamic amountValue = json["amount"];
     int parsedAmount = 0;
 

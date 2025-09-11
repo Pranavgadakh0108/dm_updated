@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: control_flow_in_finally
 
 import 'package:dmboss/provider/get_bet_history_provider.dart';
 import 'package:dmboss/util/utc_to_ist.dart';
@@ -45,7 +45,7 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
   }
 
   Future<void> _loadBetHistory() async {
-    if (!mounted) return; // Check if widget is still mounted
+    if (!mounted) return;
 
     setState(() {
       _isLoading = true;
@@ -59,7 +59,7 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
       );
       await provider.getBetHistoryProvider(context);
     } catch (error) {
-      if (!mounted) return; // Check again before error handling
+      if (!mounted) return;
       setState(() {
         _errorMessage = 'Failed to load bid history. Please try again.';
       });
@@ -77,7 +77,7 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-     final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -97,13 +97,7 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
             );
           },
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.refresh),
-        //     onPressed: _retryLoading,
-        //     tooltip: 'Refresh',
-        //   ),
-        // ],
+
         actions: [
           Container(
             margin: EdgeInsets.all(screenWidth * 0.02),
@@ -134,12 +128,10 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
 
     return Consumer<GetBetHistoryProvider>(
       builder: (context, provider, _) {
-        // Show empty state if no bids
         if (provider.gamesList == null || provider.gamesList!.bets.isEmpty) {
           return _buildEmptyState();
         }
 
-        // Show data state
         return _buildDataState(provider);
       },
     );
@@ -266,7 +258,6 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header row with date and status
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -297,8 +288,7 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                         Expanded(
                           flex: 3,
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start, // Centered
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildCompactDetail(bid.market),
                               const SizedBox(height: 2),
@@ -382,12 +372,7 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black
-                                        // color: isWon
-                                        //     ? Colors.green
-                                        //     : isLost
-                                        //     ? Colors.red
-                                        //     : Colors.orange,
+                                        color: Colors.black,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
@@ -419,11 +404,6 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // Icon(
-                                //   _getStatusIcon(bid.status),
-                                //   size: 12,
-                                //   color: _getStatusColor(bid.status),
-                                // ),
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
@@ -469,14 +449,6 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
     return RichText(
       text: TextSpan(
         children: [
-          // TextSpan(
-          //   text: "$label: ",
-          //   style: TextStyle(
-          //     fontSize: 12,
-          //     color: Colors.grey[600],
-          //     fontWeight: FontWeight.w500,
-          //   ),
-          // ),
           TextSpan(
             text: value,
             style: TextStyle(
@@ -490,7 +462,6 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
     );
   }
 
-  // Helper method to get status icon
   IconData _getStatusIcon(String status) {
     if (status.toLowerCase().contains('win') ||
         status.toLowerCase().contains('success')) {

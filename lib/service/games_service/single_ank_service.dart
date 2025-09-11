@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dio/dio.dart';
 import 'package:dmboss/data/appdata.dart';
 import 'package:dmboss/model/games_model/single_ank_model.dart';
@@ -35,16 +37,8 @@ class SingleAnkBetService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Text("Bet placed successfully!")),
-        // );
         return response.data;
       } else {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content: Text("Failed to place bet: ${response.statusCode}"),
-        //   ),
-        // );
         return null;
       }
     } catch (e) {
@@ -60,16 +54,12 @@ class SingleAnkBetService {
         errorMessage = e.toString();
       }
 
-      // ScaffoldMessenger.of(
-      //   context,
-      // ).showSnackBar(SnackBar(content: Text("Error: $errorMessage")));
-
       showCustomSnackBar(
-          context: context,
-          message: errorMessage,
-          backgroundColor: Colors.redAccent,
-          durationSeconds: 2
-        );
+        context: context,
+        message: errorMessage,
+        backgroundColor: Colors.redAccent,
+        durationSeconds: 2,
+      );
 
       return null;
     }

@@ -52,11 +52,11 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
 
   Color _getStatusColor(int status) {
     switch (status) {
-      case 0: // Pending
+      case 0:
         return Colors.orange;
-      case 1: // Approved
+      case 1:
         return Colors.green;
-      case 2: // Rejected
+      case 2:
         return Colors.red;
       default:
         return Colors.grey;
@@ -128,13 +128,11 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
 
     return Consumer<GetWithdrawHistoryProvider>(
       builder: (context, provider, _) {
-        // Show empty state if no withdrawal requests
         if (provider.withdrawHistoryModel == null ||
             provider.withdrawHistoryModel!.data.isEmpty) {
           return _buildEmptyState();
         }
 
-        // Show data state
         return _buildDataState(provider);
       },
     );
@@ -258,10 +256,6 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
               margin: const EdgeInsets.symmetric(vertical: 6),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
-                // side: BorderSide(
-                //   color: statusColor.withOpacity(0.3),
-                //   width: 1.5,
-                // ),
               ),
               child: Padding(
                 padding: EdgeInsets.all(
@@ -270,7 +264,6 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header with Date and Status Badge
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -312,11 +305,9 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
                     ),
                     const SizedBox(height: 5),
 
-                    // Amount and Details
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Amount Section
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -340,7 +331,6 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
                           ],
                         ),
 
-                        // Payment Method Section
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -367,7 +357,10 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
                     const SizedBox(height: 5),
 
                     Text(
-                      _getStatusDescription(withdrawal.status ?? 0, withdrawal.rejectionNote ?? " "),
+                      _getStatusDescription(
+                        withdrawal.status ?? 0,
+                        withdrawal.rejectionNote ?? " ",
+                      ),
                       style: TextStyle(
                         fontSize: 11,
                         color: statusColor,
@@ -391,7 +384,9 @@ class _WithdrawPendingRequestsState extends State<WithdrawPendingRequests> {
       case 1:
         return "Your withdrawal has been approved successfully!";
       case 2:
-        return rejectionNote.isEmpty ? "Your withdrawal request has been rejected. Please contact support for details." : "Rejection Reason: $rejectionNote" ;
+        return rejectionNote.isEmpty
+            ? "Your withdrawal request has been rejected. Please contact support for details."
+            : "Rejection Reason: $rejectionNote";
       default:
         return "Unknown status. Please contact support.";
     }

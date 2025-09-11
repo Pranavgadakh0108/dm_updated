@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:dmboss/provider/get_fund_history_provider.dart';
 import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -87,23 +89,19 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.001),
         child: Consumer<GetFundHistoryProvider>(
           builder: (context, provider, _) {
-            // Show loading state
             if (_isLoading) {
               return _buildLoadingState();
             }
 
-            // Show error state
             if (_errorMessage != null) {
               return _buildErrorState(_errorMessage!);
             }
 
-            // Show empty state
             if (provider.gamesList == null ||
                 provider.gamesList!.deposits.isEmpty) {
               return _buildEmptyState();
             }
 
-            // Show data state
             return _buildDataState(provider);
           },
         ),
@@ -218,7 +216,6 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
         itemBuilder: (context, index) {
           final deposit = provider.gamesList!.deposits[index];
 
-          // Format date properly
           final formattedDate = _formatDate(deposit.date);
 
           return Container(
@@ -239,7 +236,6 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Date and Points row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -276,15 +272,6 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
                   ],
                 ),
                 const SizedBox(height: 5),
-
-                // Text(
-                //   "Method: ${deposit.method}",
-                //   style: const TextStyle(
-                //     fontSize: 12,
-                //     fontWeight: FontWeight.w500,
-                //   ),
-                // ),
-                // const SizedBox(height: 8),
 
                 Text(
                   _getStatusMessage(deposit.status ?? 0),
@@ -334,11 +321,11 @@ class _AddFundHistoryScreenState extends State<AddFundHistoryScreen> {
 
   Color _getStatusColor(int status) {
     switch (status) {
-      case 1: // Approved
+      case 1:
         return Colors.green;
-      case 2: // Rejected
+      case 2:
         return Colors.red;
-      default: // Pending (0 or any other)
+      default:
         return Colors.orange;
     }
   }
