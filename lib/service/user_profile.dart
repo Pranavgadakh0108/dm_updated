@@ -104,7 +104,7 @@ class UserProfileService {
         );
         return null;
       }
-    } on DioException catch (e) {
+    } on DioException {
       return null;
     } catch (e) {
       return null;

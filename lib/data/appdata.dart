@@ -1,8 +1,6 @@
 import 'package:dmboss/ui/add_bank_details.dart';
 import 'package:dmboss/ui/menu/add_fund_history.dart';
 import 'package:dmboss/ui/menu/add_fund_screen.dart';
-import 'package:dmboss/ui/menu/bid_history_screen.dart';
-import 'package:dmboss/ui/menu/transaction_history_screen.dart';
 import 'package:dmboss/ui/menu/winning_history_screen.dart';
 import 'package:dmboss/ui/menu/withdraw_points.dart';
 import 'package:dmboss/ui/withdraw_pending_requests.dart';

@@ -2,6 +2,7 @@ import 'package:dmboss/model/add_bank_details_model.dart';
 import 'package:dmboss/model/get_bank_details_model.dart';
 import 'package:dmboss/provider/add_bank_details_provider.dart';
 import 'package:dmboss/provider/get_bank_details_provider.dart';
+import 'package:dmboss/ui/menu/withdraw_points.dart';
 import 'package:dmboss/widgets/custom_profile_text_field.dart';
 import 'package:dmboss/widgets/game_app_bar.dart';
 import 'package:dmboss/widgets/orange_button.dart';
@@ -224,7 +225,16 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
                             ifscCode: ifscController.text,
                             bankName: bankNameController.text,
                           );
-                          addProvider.addBankDetails(context, addbankDetails);
+                          addProvider
+                              .addBankDetails(context, addbankDetails)
+                              .then((_) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => WithdrawPoints(),
+                                  ),
+                                );
+                              });
                         }
                       },
                     ),

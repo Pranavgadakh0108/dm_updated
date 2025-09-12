@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:dmboss/provider/games_settings_provider.dart';
+import 'package:dmboss/util/get_time_in_12_hours.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -52,7 +53,7 @@ void showTermsPopup(
                     Text(
                       "Minimum Withdrawal is ${provider.gameSettings?.data.minWithdraw} Rs. Maximum Withdraw Unlimited Per Day.\n"
                       "Process Time Minimum 1 Hour Maximum 72 Hours. Depending On Bank Server.\n"
-                      "Withdraw Request Timing Is Morning 10:00 AM To Night 10:00 PM.\n"
+                      "Withdraw Request Timing Is ${convertTimeStringTo12HourFormat(provider.gameSettings?.data.withdrawOpenTime ?? "")} To ${convertTimeStringTo12HourFormat(provider.gameSettings?.data.withdrawCloseTime ?? "")}.\n"
                       "Withdraw Is Available On All Days Of Week.\n",
                       style: TextStyle(
                         fontSize: 12,
