@@ -23,6 +23,7 @@
         <package android:name="com.whatsapp" />
         <package android:name="com.whatsapp.w4b" /> <!-- WhatsApp Business -->
     </queries>
+    
 
     <application
         android:label="DM Boss"
@@ -80,4 +81,12 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="upi" />
+        </intent>
+    </queries>
+
 </manifest>

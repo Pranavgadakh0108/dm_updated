@@ -15,20 +15,36 @@ Future<void> makePhoneCall(String number) async {
   }
 }
 
+// Future<void> makePayment(String url) async {
+//   final Uri uri = Uri.parse(url);
+
+//   try {
+//     bool launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+
+//     if (!launched) {
+//       debugPrint("Could not launch payment Gateway");
+//     }
+//   } catch (e) {
+//     debugPrint("Error launching Payment Gateway: $e");
+//   }
+// }
+
 Future<void> makePayment(String url) async {
   final Uri uri = Uri.parse(url);
-
   try {
-    bool launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
-
+    bool launched = await launchUrl(
+      uri, 
+      mode: LaunchMode.externalNonBrowserApplication
+    );
     if (!launched) {
       debugPrint("Could not launch payment Gateway");
+      await launchUrl(uri, mode: LaunchMode.inAppWebView);
     }
   } catch (e) {
     debugPrint("Error launching Payment Gateway: $e");
+    await launchUrl(uri, mode: LaunchMode.inAppWebView);
   }
 }
-
 
 
 

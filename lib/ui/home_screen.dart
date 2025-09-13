@@ -745,13 +745,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                           if (getMarketStatus(
                                                     game.open ?? "",
                                                     game.close ?? "",
-                                                    game.days.name ?? "",
+                                                    game.days ?? "",
                                                   ) ==
                                                   "Closed For Today" ||
                                               getMarketStatus(
                                                     game.open ?? "",
                                                     game.close ?? "",
-                                                    game.days.name ?? "",
+                                                    game.days ?? "",
                                                   ) ==
                                                   "Holiday" ||
                                               game.result.status.name ==
@@ -793,17 +793,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: GameCard(
                                           title: game.bazar ?? "",
                                           numbers:
-                                              "${game.result.openPanna?.isEmpty ?? false ? '***' : game.result.openPanna}-"
-                                              "${game.result.open?.isEmpty ?? false ? '*' : game.result.open}"
-                                              "${game.result.close?.isEmpty ?? false ? '*' : game.result.close}-"
-                                              "${game.result.closePanna?.isEmpty ?? false ? '***' : game.result.closePanna}",
+                                              "${game.result.openPanna.isEmpty ?? false ? '***' : game.result.openPanna}-"
+                                              "${game.result.open.isEmpty ?? false ? '*' : game.result.open}"
+                                              "${game.result.close.isEmpty ?? false ? '*' : game.result.close}-"
+                                              "${game.result.closePanna.isEmpty ?? false ? '***' : game.result.closePanna}",
                                           statusText:
                                               game.result.status.name !=
                                                   "completed"
                                               ? getMarketStatus(
                                                   game.open ?? "",
                                                   game.close ?? "",
-                                                  game.days.name ?? "",
+                                                  game.days ?? "",
                                                 )
                                               : "Closed for Today",
                                           statusColor:
@@ -813,7 +813,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   getMarketStatus(
                                                     game.open ?? "",
                                                     game.close ?? "",
-                                                    game.days.name ?? "",
+                                                    game.days ?? "",
                                                   ),
                                                 )
                                               : Colors.red,
@@ -824,7 +824,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   getMarketStatus(
                                                     game.open ?? "",
                                                     game.close ?? "",
-                                                    game.days.name ?? "",
+                                                    game.days ?? "",
                                                   ),
                                                 )
                                               : "Colosed Now",
@@ -835,7 +835,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   getMarketStatus(
                                                     game.open ?? "",
                                                     game.close ?? "",
-                                                    game.days.name ?? "",
+                                                    game.days ?? "",
                                                   ),
                                                 )
                                               : Colors.red,
